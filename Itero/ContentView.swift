@@ -5,17 +5,34 @@
 //  Created by Filippo Cilia on 25/02/2026.
 //
 
+import CoreSpotlight
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("selectedView") var selectedView: String?
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView(selection: $selectedView) {
+            Tab("Home", systemImage: "house", value: HomeView.homeTag) {
+                HomeView()
+            }
+
+            Tab("Open", systemImage: "list.bullet", value: ProjectsView.openTag) {
+                ProjectsView()
+            }
+
+            Tab("Awards", systemImage: "rosette", value: AwardsView.awardsTag) {
+                AwardsView()
+            }
+            Tab("Settings", systemImage: "gear", value: AwardsView.awardsTag) {
+                SettingsView()
+            }
         }
-        .padding()
+        .onContinueUserActivity(CSSearchableItemActionType, perform: moveToHome)
+    }
+
+    func moveToHome(_ input: Any) {
+        selectedView = HomeView.homeTag
     }
 }
 
