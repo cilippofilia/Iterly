@@ -14,7 +14,7 @@ struct TaskCell: View {
         Text(title)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.orange.opacity(0.3))
+            .background(Color.secondary.gradient.opacity(0.2))
             .clipShape(.rect(cornerRadius: 12))
     }
 }

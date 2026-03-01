@@ -8,22 +8,23 @@
 import SwiftUI
 
 struct TasksSection: View {
-    let tasks: [ProjectTask]
+    let tasks: [ProjectTask]?
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Up next:")
-                .font(.headline)
-                .foregroundStyle(.secondary)
-
-            ForEach(tasks.enumerated(), id: \.element.id) { index, task in
-                NavigationLink(value: HomeDestination.task(id: task.id)) {
-                    TaskCell(title: task.title)
+        if let tasks, !tasks.isEmpty {
+            VStack(alignment: .leading) {
+                Text("Coming up tasks")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+                ForEach(tasks) { task in
+                    NavigationLink(value: HomeDestination.task) {
+                        TaskCell(title: task.title)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
 }
 

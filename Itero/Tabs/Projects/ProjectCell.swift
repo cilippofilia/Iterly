@@ -11,6 +11,7 @@ struct ProjectCell: View {
     let title: String
     let tasksCount: Int
     let progressValue: Double
+    let progressColor: Color
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -23,6 +24,7 @@ struct ProjectCell: View {
                 .foregroundStyle(.secondary)
 
             ProgressView(value: progressValue)
+                .tint(progressColor)
         }
         .padding()
         .frame(maxWidth: .infinity, minHeight: 70, alignment: .leading)
@@ -30,5 +32,5 @@ struct ProjectCell: View {
 }
 
 #Preview {
-    ProjectCell(title: "Drinko", tasksCount: 4, progressValue: 5.5)
+    ProjectCell(title: "Drinko", tasksCount: 4, progressValue: 5.5, progressColor: .red)
 }

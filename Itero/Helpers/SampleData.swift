@@ -66,14 +66,14 @@ enum SampleData {
         let now = Date.now
 
         let onboarding = Project(
-            title: "Drinko",
+            title: "Drinko.",
             details: "Onboarding refresh",
             projectPriority: .high,
             projectStatus: .inProgress,
             startDate: now,
             dueDate: calendar.date(byAdding: .day, value: 14, to: now),
             creationDate: calendar.date(byAdding: .day, value: -3, to: now) ?? now,
-            isPinned: false
+            isPinned: true
         )
 
         let onboardingTasks = [

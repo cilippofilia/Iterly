@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct TaskPlaceholderView: View {
-    let taskID: UUID
+    let title: String
 
     var body: some View {
-        Text("Task \(0)")
+        Text("Task \(title)")
             .navigationTitle("Task")
     }
 }
 
 #Preview {
     NavigationStack {
-        TaskPlaceholderView(taskID: UUID())
+        TaskPlaceholderView(title: "Test task")
     }
 }

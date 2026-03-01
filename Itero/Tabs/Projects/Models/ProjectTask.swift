@@ -13,10 +13,10 @@ final class ProjectTask: Identifiable {
     var id: UUID
     var title: String
     var details: String?
-    var status: TaskStatus
+    var status: ProjectTask.Status
     var startDate: Date?
     var dueDate: Date?
-    var priority: TaskPriority
+    var priority: ProjectTask.Priority
     var creationDate: Date
     var project: Project?
 
@@ -24,10 +24,10 @@ final class ProjectTask: Identifiable {
         id: UUID = UUID(),
         title: String = "",
         details: String? = nil,
-        status: TaskStatus = .default,
+        status: ProjectTask.Status = .default,
         startDate: Date? = nil,
         dueDate: Date? = nil,
-        priority: TaskPriority = .default,
+        priority: ProjectTask.Priority = .default,
         creationDate: Date = .now,
         project: Project? = nil
     ) {
@@ -43,20 +43,23 @@ final class ProjectTask: Identifiable {
     }
 }
 
-enum TaskPriority: String, CaseIterable, Codable {
-    static let `default` = Self.notSet
+// MARK: Enums
+extension ProjectTask {
+    enum Priority: String, CaseIterable, Codable {
+        static let `default` = Self.notSet
 
-    case notSet
-    case low
-    case normal
-    case high
-}
+        case notSet
+        case low
+        case normal
+        case high
+    }
 
-enum TaskStatus: String, CaseIterable, Codable {
-    static let `default` = Self.notSet
+    enum Status: String, CaseIterable, Codable {
+        static let `default` = Self.notSet
 
-    case notSet
-    case notStarted
-    case inProgress
-    case done
+        case notSet
+        case notStarted
+        case inProgress
+        case done
+    }
 }

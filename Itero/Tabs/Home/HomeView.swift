@@ -22,7 +22,11 @@ struct HomeView: View {
     )
     private var pinnedProjects: [Project]
 
-    @Query(sort: \Project.creationDate, order: .reverse)
+    @Query(
+        filter: #Predicate<Project> { $0.isPinned == false },
+        sort: \Project.creationDate,
+        order: .reverse
+    )
     private var projects: [Project]
 
     @Query(sort: \ProjectTask.creationDate, order: .reverse)
@@ -33,12 +37,16 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     PinnedProjectsSection(projects: pinnedProjects)
-                        .padding()
+                        .padding(.bottom)
+
                     ProjectsSection(projects: Array(projects.prefix(5)))
-                        .padding(.vertical)
+                        .padding(.bottom)
+
                     TasksSection(tasks: Array(tasks.prefix(5)))
+                        .padding(.bottom)
                 }
             }
+            .scrollBounceBehavior(.basedOnSize)
             .navigationTitle("Home")
             .toolbar {
                 Button(
@@ -51,10 +59,10 @@ struct HomeView: View {
             }
             .navigationDestination(for: HomeDestination.self) { destination in
                 switch destination {
-                case .project(let id):
-                    ProjectPlaceholderView(projectID: id)
-                case .task(let id):
-                    TaskPlaceholderView(taskID: id)
+                case .project:
+                    ProjectPlaceholderView(title: "Test Project")
+                case .task:
+                    TaskPlaceholderView(title: "Test Task")
                 }
             }
             .contentMargins(.bottom, 70, for: .scrollContent)
@@ -63,8 +71,8 @@ struct HomeView: View {
 }
 
 enum HomeDestination: Hashable {
-    case project(id: UUID)
-    case task(id: UUID)
+    case project
+    case task
 }
 
 #Preview {

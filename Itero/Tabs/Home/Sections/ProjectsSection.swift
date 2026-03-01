@@ -21,13 +21,14 @@ struct ProjectsSection: View {
 
                 LazyVGrid(columns: columns) {
                     ForEach(projects) { project in
-                        NavigationLink(value: HomeDestination.project(id: project.id)) {
+                        NavigationLink(value: HomeDestination.project) {
                             ProjectCell(
                                 title: project.title,
                                 tasksCount: project.tasks?.count ?? 0,
-                                progressValue: project.completionAmount
+                                progressValue: project.completionAmount,
+                                progressColor: project.highlight.color
                             )
-                            .background(Color.yellow.opacity(0.3))
+                            .background(Color.secondary.gradient.opacity(0.2))
                             .clipShape(.rect(cornerRadius: 12))
                         }
                         .buttonStyle(.plain)

@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct ProjectPlaceholderView: View {
-    let projectID: UUID
+    let title: String
 
     var body: some View {
-        Text("Project \(index)")
+        Text("Project \(title)")
             .navigationTitle("Project")
     }
 }
 
 #Preview {
     NavigationStack {
-        ProjectPlaceholderView(projectID: UUID())
+        ProjectPlaceholderView(title: "Test project")
     }
 }

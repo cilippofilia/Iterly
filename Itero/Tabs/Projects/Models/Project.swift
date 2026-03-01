@@ -5,7 +5,7 @@
 //  Created by Filippo Cilia on 01/03/2026.
 //
 
-import SwiftUI
+import Foundation
 import SwiftData
 
 @Model
@@ -13,14 +13,16 @@ final class Project: Identifiable {
     var id: UUID
     var title: String
     var details: String?
-    var projectPriority: ProjectPriority
-    var projectStatus: ProjectStatus
-    @Relationship(deleteRule: .cascade, inverse: \ProjectTask.project)
-    var tasks: [ProjectTask]?
+    var priority: Project.Priority
+    var status: Project.Status
+    var highlight: ProjectColor
     var startDate: Date?
     var dueDate: Date?
     var creationDate: Date
     var isPinned: Bool
+
+    @Relationship(deleteRule: .cascade, inverse: \ProjectTask.project)
+    var tasks: [ProjectTask]?
 
     var completionAmount: Double {
         let originalTasks = tasks ?? []
@@ -34,8 +36,9 @@ final class Project: Identifiable {
         id: UUID = UUID(),
         title: String = "",
         details: String? = nil,
-        projectPriority: ProjectPriority = .default,
-        projectStatus: ProjectStatus = .default,
+        projectPriority: Project.Priority = .default,
+        projectStatus: Project.Status = .default,
+        color: ProjectColor = ProjectColor.accentColor,
         tasks: [ProjectTask]? = [],
         startDate: Date? = nil,
         dueDate: Date? = nil,
@@ -45,8 +48,9 @@ final class Project: Identifiable {
         self.id = id
         self.title = title
         self.details = details
-        self.projectPriority = projectPriority
-        self.projectStatus = projectStatus
+        self.priority = projectPriority
+        self.status = projectStatus
+        self.highlight = color
         self.tasks = tasks
         self.startDate = startDate
         self.dueDate = dueDate
@@ -55,20 +59,23 @@ final class Project: Identifiable {
     }
 }
 
-enum ProjectPriority: String, CaseIterable, Codable {
-    static let `default` = Self.notSet
+// MARK: Enums
+extension Project {
+    enum Priority: String, CaseIterable, Codable {
+        static let `default` = Self.notSet
 
-    case notSet
-    case low
-    case normal
-    case high
-}
+        case notSet
+        case low
+        case normal
+        case high
+    }
 
-enum ProjectStatus: String, CaseIterable, Codable {
-    static let `default` = Self.notSet
+    enum Status: String, CaseIterable, Codable {
+        static let `default` = Self.notSet
 
-    case notSet
-    case notStarted
-    case inProgress
-    case done
+        case notSet
+        case notStarted
+        case inProgress
+        case done
+    }
 }
