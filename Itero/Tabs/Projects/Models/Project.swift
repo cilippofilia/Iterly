@@ -10,13 +10,13 @@ import SwiftData
 
 @Model
 final class Project: Identifiable {
-    var id: UUID
-    var title: String
-    var details: String?
-    var priority: Project.Priority
-    var status: Project.Status
-    var highlight: ProjectColor
-    var startDate: Date?
+    var id: UUID = UUID()
+    var title: String? = "Project Title"
+    var details: String? = nil
+    var priority: ProjectPriority? = ProjectPriority.default
+    var status: ProjectStatus? = ProjectStatus.default
+    var highlight: ProjectColor? = ProjectColor.accentColor
+    var startDate: Date? = nil
     var dueDate: Date?
     var creationDate: Date
     var isPinned: Bool
@@ -36,8 +36,8 @@ final class Project: Identifiable {
         id: UUID = UUID(),
         title: String = "",
         details: String? = nil,
-        projectPriority: Project.Priority = .default,
-        projectStatus: Project.Status = .default,
+        projectPriority: ProjectPriority = .default,
+        projectStatus: ProjectStatus = .default,
         color: ProjectColor = ProjectColor.accentColor,
         tasks: [ProjectTask]? = [],
         startDate: Date? = nil,
@@ -56,26 +56,5 @@ final class Project: Identifiable {
         self.dueDate = dueDate
         self.creationDate = creationDate
         self.isPinned = isPinned
-    }
-}
-
-// MARK: Enums
-extension Project {
-    enum Priority: String, CaseIterable, Codable {
-        static let `default` = Self.notSet
-
-        case notSet
-        case low
-        case normal
-        case high
-    }
-
-    enum Status: String, CaseIterable, Codable {
-        static let `default` = Self.notSet
-
-        case notSet
-        case notStarted
-        case inProgress
-        case done
     }
 }

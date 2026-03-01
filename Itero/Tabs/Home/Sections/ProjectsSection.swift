@@ -23,10 +23,10 @@ struct ProjectsSection: View {
                     ForEach(projects) { project in
                         NavigationLink(value: HomeDestination.project) {
                             ProjectCell(
-                                title: project.title,
+                                title: project.title ?? "",
                                 tasksCount: project.tasks?.count ?? 0,
                                 progressValue: project.completionAmount,
-                                progressColor: project.highlight.color
+                                progressColor: project.highlight?.color ?? .accentColor
                             )
                             .background(Color.secondary.gradient.opacity(0.2))
                             .clipShape(.rect(cornerRadius: 12))

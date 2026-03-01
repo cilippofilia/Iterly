@@ -19,6 +19,7 @@ struct ProjectCell: View {
                 .bold()
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
+
             Text(String.localizedStringWithFormat(NSLocalizedString("tasks_count", comment: "Tasks count"), tasksCount))
                 .font(.caption)
                 .foregroundStyle(.secondary)

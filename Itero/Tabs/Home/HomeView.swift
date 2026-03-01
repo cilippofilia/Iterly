@@ -28,45 +28,92 @@ struct HomeView: View {
         order: .reverse
     )
     private var projects: [Project]
-
-    @Query(sort: \ProjectTask.creationDate, order: .reverse)
+    
+    @Query(sort: \ProjectTask.dueDate, order: .reverse)
     private var tasks: [ProjectTask]
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    PinnedProjectsSection(projects: pinnedProjects)
-                        .padding(.bottom)
-
-                    ProjectsSection(projects: Array(projects.prefix(5)))
-                        .padding(.bottom)
-
-                    TasksSection(tasks: Array(tasks.prefix(5)))
-                        .padding(.bottom)
+            Group {
+                if pinnedProjects.isEmpty, projects.isEmpty, tasks.isEmpty {
+                    unavailableView
+                } else {
+                    availableView
                 }
             }
-            .scrollBounceBehavior(.basedOnSize)
             .navigationTitle("Home")
             .toolbar {
-                Button(
-                    "Add Data",
-                    systemImage: "plus",
-                    action: {
-                        viewModel.addSampleData(modelContext: modelContext)
-                    }
-                )
-            }
-            .navigationDestination(for: HomeDestination.self) { destination in
-                switch destination {
-                case .project:
-                    ProjectPlaceholderView(title: "Test Project")
-                case .task:
-                    TaskPlaceholderView(title: "Test Task")
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    #if DEBUG
+                    ereaseAllDataButton
+                    addSampleDataButton
+                    #else
+                    // TODO: Create project button
+                    #endif
                 }
             }
-            .contentMargins(.bottom, 70, for: .scrollContent)
         }
+    }
+}
+
+extension HomeView {
+    private var unavailableView: some View {
+        ContentUnavailableView {
+            Label("No projects found", systemImage: "folder.badge.questionmark")
+        } description: {
+            Text("There are no active projects at the moment. Create one to get started.")
+        } actions: {
+            #if DEBUG
+            addSampleDataButton
+            #else
+            // TODO: Create project button
+            #endif
+        }
+    }
+
+    private var availableView: some View {
+        ScrollView {
+            VStack(alignment: .leading) {
+                PinnedProjectsSection(projects: pinnedProjects)
+                    .padding(.bottom)
+
+                ProjectsSection(projects: Array(projects.prefix(5)))
+                    .padding(.bottom)
+
+                TasksSection(tasks: Array(tasks.prefix(5)))
+                    .padding(.bottom)
+            }
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .navigationDestination(for: HomeDestination.self) { destination in
+            switch destination {
+            case .project:
+                ProjectPlaceholderView(title: "Test Project")
+            case .task:
+                TaskPlaceholderView(title: "Test Task")
+            }
+        }
+        .contentMargins(.bottom, 70, for: .scrollContent)
+    }
+
+    var addSampleDataButton: some View {
+        Button(
+            "Add Data",
+            systemImage: "plus",
+            action: {
+                viewModel.addSampleData(modelContext: modelContext)
+            }
+        )
+    }
+    var ereaseAllDataButton: some View {
+        Button(
+            "Erase Data",
+            systemImage: "trash",
+            role: .destructive,
+            action: {
+                viewModel.eraseAllData(modelContext: modelContext)
+            }
+        )
     }
 }
 

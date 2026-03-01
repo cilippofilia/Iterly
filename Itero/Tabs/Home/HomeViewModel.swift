@@ -1,4 +1,4 @@
-import Observation
+import Foundation
 import SwiftData
 
 @MainActor
@@ -6,5 +6,19 @@ import SwiftData
 final class HomeViewModel {
     func addSampleData(modelContext: ModelContext) {
         SampleData.insertSample(in: modelContext)
+    }
+
+    func eraseAllData(modelContext: ModelContext) {
+        do {
+            try modelContext.delete(model: Project.self)
+            try modelContext.delete(
+                model: ProjectTask.self,
+                where: #Predicate { $0.project == nil }
+            )
+
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to erase data: \(error)")
+        }
     }
 }

@@ -9,9 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
     @AppStorage("selectedView") var selectedView: String?
-    @State private var viewModel = ContentViewModel()
+    @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         TabView(selection: $selectedView) {
@@ -27,21 +26,6 @@ struct ContentView: View {
                 SettingsView()
             }
         }
-        .task {
-            viewModel.seedIfNeeded(modelContext: modelContext)
-        }
-    }
-}
-
-@MainActor
-@Observable
-final class ContentViewModel {
-    private(set) var hasSeededSampleData = false
-
-    func seedIfNeeded(modelContext: ModelContext) {
-        guard !hasSeededSampleData else { return }
-        SampleData.seedIfNeeded(in: modelContext)
-        hasSeededSampleData = true
     }
 }
 
