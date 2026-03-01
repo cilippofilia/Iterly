@@ -6,72 +6,35 @@
 //
 
 import CoreSpotlight
+import SwiftData
 import SwiftUI
 
 struct HomeView: View {
     static let homeTag: String? = "Home"
 
-    private let projectRows = [
-        GridItem(.fixed(100))
-    ]
+    @Environment(\.modelContext) private var modelContext
+    @State private var viewModel = HomeViewModel()
+
+    @Query(
+        filter: #Predicate<Project> { $0.isPinned == true },
+        sort: \Project.creationDate,
+        order: .reverse
+    )
+    private var pinnedProjects: [Project]
+
+    @Query(sort: \Project.creationDate, order: .reverse)
+    private var projects: [Project]
+
+    @Query(sort: \ProjectTask.creationDate, order: .reverse)
+    private var tasks: [ProjectTask]
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    // pinned section
-                    HStack {
-                        Image(systemName: "pin.fill")
-                            .imageScale(.small)
-                            .rotationEffect(Angle(degrees: 45))
-                        Text("Pinned")
-                            .font(.headline)
-                    }
-                    .padding(.horizontal)
-                    .foregroundStyle(.secondary)
-
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                        ForEach(0...2, id: \.self) { i in
-                            NavigationLink(value: HomeDestination.project(i)) {
-                                ProjectCell(title: "Drinko", tasksCount: i)
-                                    .background(Color.green.opacity(0.3))
-                                    .clipShape(.rect(cornerRadius: 12))
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.horizontal)
-
-                    // projects
-                    ScrollView(.horizontal) {
-                        LazyHGrid(rows: projectRows) {
-                            // add limit of 5 then 6th will be a `see more` that opens projects tabs
-                            ForEach(0...5, id: \.self) { i in
-                                NavigationLink(value: HomeDestination.project(i)) {
-                                    ProjectCell(title: "Drinko", tasksCount: i)
-                                        .background(Color.yellow.opacity(0.3))
-                                        .clipShape(.rect(cornerRadius: 12))
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .padding(.horizontal)
-                    }
-                    .scrollIndicators(.hidden)
-
-                    // tasks
-                    VStack(alignment: .leading) {
-                        Text("Up next:")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
-                        ForEach(0...5, id: \.self) { i in
-                            NavigationLink(value: HomeDestination.task(i)) {
-                                TaskCell(title: "Task \(i)")
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.horizontal)
+                    PinnedProjectsSection(projects: pinnedProjects)
+                    ProjectsSection(projects: Array(projects.prefix(5)))
+                    TasksSection(tasks: Array(tasks.prefix(5)))
                 }
             }
             .navigationTitle("Home")
@@ -80,7 +43,7 @@ struct HomeView: View {
                     "Add Data",
                     systemImage: "plus",
                     action: {
-                        print("Adding data...")
+                        viewModel.addSampleData(modelContext: modelContext)
                     }
                 )
             }
@@ -99,4 +62,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .modelContainer(SampleData.previewContainer)
 }

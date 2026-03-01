@@ -1,6 +1,6 @@
 {
   "fill" : {
-    "automatic-gradient" : "display-p3:0.00000,0.00000,0.00000,1.00000"
+    "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
   },
   "groups" : [
     {
@@ -10,7 +10,7 @@
           "fill-specializations" : [
             {
               "value" : {
-                "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+                "automatic-gradient" : "extended-gray:1.00000,1.00000"
               }
             },
             {
@@ -20,6 +20,7 @@
               }
             }
           ],
+          "glass" : true,
           "image-name" : "i.svg",
           "name" : "i",
           "position" : {
@@ -34,12 +35,12 @@
       "lighting" : "individual",
       "name" : "i",
       "shadow" : {
-        "kind" : "neutral",
+        "kind" : "layer-color",
         "opacity" : 0.5
       },
       "translucency" : {
         "enabled" : true,
-        "value" : 0.5
+        "value" : 0.2
       }
     },
     {
@@ -47,11 +48,28 @@
       "blur-material" : null,
       "layers" : [
         {
-          "fill" : {
-            "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
-          },
+          "fill-specializations" : [
+            {
+              "value" : {
+                "automatic-gradient" : "extended-gray:1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+              }
+            }
+          ],
           "image-name" : "arrows.svg",
-          "name" : "arrows"
+          "name" : "arrows",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
       "lighting" : "individual",
@@ -65,9 +83,38 @@
         ]
       },
       "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.2
+      }
+    },
+    {
+      "layers" : [
+        {
+          "fill" : {
+            "solid" : "extended-gray:1.00000,0.25000"
+          },
+          "image-name" : "Group.svg",
+          "name" : "grid",
+          "position" : {
+            "scale" : 1.9,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "name" : "grid",
+      "opacity" : 1,
+      "shadow" : {
         "kind" : "neutral",
         "opacity" : 0.5
       },
+      "specular" : false,
       "translucency" : {
         "enabled" : true,
         "value" : 0.5
