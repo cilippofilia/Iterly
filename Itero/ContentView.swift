@@ -21,10 +21,7 @@ struct ContentView: View {
                 ProjectsView()
             }
 
-            Tab("Awards", systemImage: "rosette", value: AwardsView.awardsTag) {
-                AwardsView()
-            }
-            Tab("Settings", systemImage: "gear", value: AwardsView.awardsTag) {
+            Tab("Settings", systemImage: "gear", value: SettingsView.settingsTag) {
                 SettingsView()
             }
         }

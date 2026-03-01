@@ -25,6 +25,7 @@ struct HomeView: View {
                             .imageScale(.small)
                             .rotationEffect(Angle(degrees: 45))
                         Text("Pinned")
+                            .font(.headline)
                     }
                     .padding(.horizontal)
                     .foregroundStyle(.secondary)
@@ -49,11 +50,14 @@ struct HomeView: View {
                         }
                         .padding(.horizontal)
                     }
+                    .scrollTargetBehavior(.paging)
                     .scrollIndicators(.hidden)
 
                     // tasks
                     VStack(alignment: .leading) {
-                        Text("Up next")
+                        Text("Up next:")
+                            .font(.headline)
+                            .foregroundStyle(.secondary)
                         ForEach(0...5, id: \.self) { i in
                             Text("Task \(i)")
                                 .padding()
@@ -70,7 +74,9 @@ struct HomeView: View {
                 Button(
                     "Add Data",
                     systemImage: "plus",
-                    action: { print("Adding data...") }
+                    action: {
+                        print("Adding data...")
+                    }
                 )
             }
 //            .navigationDestination(item: $viewModel.selectedTask) { task in
