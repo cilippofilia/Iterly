@@ -1,6 +1,6 @@
 //
 //  ProjectDetailView.swift
-//  Itero
+//  Iterly
 //
 //  Created by Filippo Cilia on 02/03/2026.
 //

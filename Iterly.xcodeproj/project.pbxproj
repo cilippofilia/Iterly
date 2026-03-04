@@ -11,9 +11,9 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		18EAF1F32F4F72660007C73B /* Itera */ = {
+		18EAF1F32F4F72660007C73B /* Iterly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Itera;
+			path = Iterly;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		18EAF1E82F4F72660007C73B = {
 			isa = PBXGroup;
 			children = (
-				18EAF1F32F4F72660007C73B /* Itera */,
+				18EAF1F32F4F72660007C73B /* Iterly */,
 				18EAF1F22F4F72660007C73B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,7 +61,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				18EAF1F32F4F72660007C73B /* Itera */,
+				18EAF1F32F4F72660007C73B /* Iterly */,
 			);
 			name = Iterly;
 			packageProductDependencies = (

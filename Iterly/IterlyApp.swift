@@ -1,6 +1,6 @@
 //
-//  IteraApp.swift
-//  Itero
+//  IterlyApp.swift
+//  Iterly
 //
 //  Created by Filippo Cilia on 25/02/2026.
 //
@@ -9,7 +9,7 @@ import SwiftData
 import SwiftUI
 
 @main
-struct IteraApp: App {
+struct IterlyApp: App {
     private static let modelContainer: ModelContainer = {
         let schema = Schema([Project.self, ProjectTask.self])
         // TODO: change to false before release

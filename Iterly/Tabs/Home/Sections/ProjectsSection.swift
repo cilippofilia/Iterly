@@ -1,13 +1,13 @@
 //
-//  PinnedProjectsSection.swift
-//  Itero
+//  ProjectsSection.swift
+//  Iterly
 //
 //  Created by Filippo Cilia on 25/02/2026.
 //
 
 import SwiftUI
 
-struct PinnedProjectsSection: View {
+struct ProjectsSection: View {
     let projects: [Project]?
 
     var columns: [GridItem] {
@@ -15,9 +15,9 @@ struct PinnedProjectsSection: View {
     }
 
     var body: some View {
-        if let projects, !projects.isEmpty {
-            VStack(alignment: .leading) {
-                pinnedHeaderView
+        VStack(alignment: .leading) {
+            if let projects, !projects.isEmpty {
+                headerView
 
                 LazyVGrid(columns: columns) {
                     ForEach(projects) { project in
@@ -39,12 +39,10 @@ struct PinnedProjectsSection: View {
         }
     }
 
-    var pinnedHeaderView: some View {
+    var headerView: some View {
         HStack {
-            Image(systemName: "pin.fill")
-                .imageScale(.small)
-                .rotationEffect(Angle(degrees: 45))
-            Text("Pinned")
+            Image(systemName: "folder")
+            Text("Projects")
                 .font(.headline)
         }
         .padding(.horizontal)
@@ -54,6 +52,6 @@ struct PinnedProjectsSection: View {
 
 #Preview {
     NavigationStack {
-        PinnedProjectsSection(projects: SampleData.makeProjects())
+        ProjectsSection(projects: SampleData.makeProjects())
     }
 }

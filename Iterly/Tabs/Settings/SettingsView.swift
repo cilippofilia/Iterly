@@ -1,14 +1,14 @@
 //
-//  ProjectsView.swift
-//  Itero
+//  SettingsView.swift
+//  Iterly
 //
 //  Created by Filippo Cilia on 25/02/2026.
 //
 
 import SwiftUI
 
-struct ProjectsView: View {
-    static let openTag: String? = "Open"
+struct SettingsView: View {
+    static let settingsTag: String? = "Settings"
 
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
@@ -16,5 +16,5 @@ struct ProjectsView: View {
 }
 
 #Preview {
-    ProjectsView()
+    SettingsView()
 }
