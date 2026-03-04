@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum ProjectStatus: String, CaseIterable, Codable {
     static let `default` = Self.notStarted
@@ -22,6 +23,17 @@ enum ProjectStatus: String, CaseIterable, Codable {
             "In Progress"
         case .done:
             "Done"
+        }
+    }
+
+    var backgroundColor: Color {
+        switch self {
+        case .inProgress:
+            return .yellow
+        case .done:
+            return .green
+        case .notStarted:
+            return .secondary
         }
     }
 }
@@ -41,6 +53,17 @@ enum TaskStatus: String, CaseIterable, Codable {
             "In Progress"
         case .done:
             "Done"
+        }
+    }
+
+    var backgroundColor: Color {
+        switch self {
+        case .inProgress:
+            return .yellow
+        case .done:
+            return .green
+        case .notStarted:
+            return .secondary
         }
     }
 }

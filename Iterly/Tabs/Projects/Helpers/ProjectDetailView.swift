@@ -26,7 +26,29 @@ struct ProjectDetailView: View {
                 }
 
                 GroupBox("Info") {
-                    LabeledContent("Status", value: project.status?.title ?? "Unknown")
+                    LabeledContent("Status") {
+                        Menu {
+                            Picker("Status", selection: Binding(
+                                get: { project.status ?? .default },
+                                set: { project.status = $0 }
+                            )) {
+                                ForEach(ProjectStatus.allCases, id: \.self) { status in
+                                    Text(status.title)
+                                        .tag(status)
+                                }
+                            }
+                        } label: {
+                            let currentStatus = project.status ?? .default
+                            Text(currentStatus.title.uppercased())
+                                .font(.caption2)
+                                .bold()
+                                .contentTransition(.numericText())
+                                .padding(4)
+                                .background(currentStatus.backgroundColor.opacity(0.5))
+                                .clipShape(.rect(cornerRadius: 4, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
+                    }
                     LabeledContent("Priority", value: project.priority?.title ?? "Normal")
 
                     if let startDate = project.startDate {
@@ -87,7 +109,7 @@ struct ProjectDetailView: View {
                                     .bold()
                                     .contentTransition(.numericText())
                                     .padding(4)
-                                    .background(badgeColor(for: task).opacity(0.5))
+                                    .background(task.status.backgroundColor.opacity(0.5))
                                     .clipShape(.rect(cornerRadius: 4, style: .continuous))
                             }
                             .buttonStyle(.plain)
@@ -104,15 +126,6 @@ struct ProjectDetailView: View {
             if let task = project.tasks?.first(where: { $0.id == taskId }) {
                 TaskDetailView(task: task)
             }
-        }
-    }
-
-    private func badgeColor(for task: ProjectTask) -> Color {
-        switch task.status {
-        case .inProgress:
-            return .yellow
-        default:
-            return .secondary
         }
     }
 

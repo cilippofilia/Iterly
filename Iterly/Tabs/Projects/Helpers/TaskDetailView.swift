@@ -26,7 +26,25 @@ struct TaskDetailView: View {
 
                 GroupBox("Info") {
                     LabeledContent("Status") {
-                        Text(task.status.title)
+                        Menu {
+                            Picker("Status", selection: Binding(
+                                get: { task.status },
+                                set: { task.status = $0 }
+                            )) {
+                                ForEach(TaskStatus.allCases, id: \.self) { status in
+                                    Text(status.title)
+                                        .tag(status)
+                                }
+                            }
+                        } label: {
+                            Text(task.status.title.uppercased())
+                                .font(.caption2)
+                                .bold()
+                                .padding(4)
+                                .background(task.status.backgroundColor.opacity(0.5))
+                                .clipShape(.rect(cornerRadius: 4, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
                     }
 
                     LabeledContent("Priority", value: task.priority.title)
@@ -56,17 +74,6 @@ struct TaskDetailView: View {
             .padding([.horizontal, .bottom])
         }
         .scrollBounceBehavior(.basedOnSize)
-    }
-
-    private func statusBadgeColor(for status: TaskStatus) -> Color {
-        switch status {
-        case .inProgress:
-            return .yellow
-        case .done:
-            return .green
-        case .notStarted:
-            return .secondary
-        }
     }
 }
 
