@@ -13,14 +13,13 @@ struct ProjectDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                if let title = project.title {
-                    Text(title)
-                        .font(.title)
-                        .bold()
-                        .foregroundStyle(.primary)
-                }
-                if let details = project.details, !details.isEmpty {
-                    Text(details)
+                Text(project.title)
+                    .font(.title)
+                    .bold()
+                    .foregroundStyle(.primary)
+
+                if project.details.isEmpty == false {
+                    Text(project.details)
                         .foregroundStyle(.secondary)
                         .padding(.bottom)
                 }
@@ -29,7 +28,7 @@ struct ProjectDetailView: View {
                     LabeledContent("Status") {
                         Menu {
                             Picker("Status", selection: Binding(
-                                get: { project.status ?? .default },
+                                get: { project.status },
                                 set: { project.status = $0 }
                             )) {
                                 ForEach(ProjectStatus.allCases, id: \.self) { status in
@@ -38,29 +37,18 @@ struct ProjectDetailView: View {
                                 }
                             }
                         } label: {
-                            let currentStatus = project.status ?? .default
-                            Text(currentStatus.title.uppercased())
-                                .font(.caption2)
-                                .bold()
-                                .contentTransition(.numericText())
-                                .padding(4)
-                                .background(currentStatus.backgroundColor.opacity(0.5))
-                                .clipShape(.rect(cornerRadius: 4, style: .continuous))
+                            Text(project.status.title)
                         }
                         .buttonStyle(.plain)
                     }
-                    LabeledContent("Priority", value: project.priority?.title ?? "Normal")
+                    LabeledContent("Priority", value: project.priority.title)
 
-                    if let startDate = project.startDate {
-                        LabeledContent("Start Date") {
-                            Text(startDate, format: .dateTime.month().day().year())
-                        }
+                    LabeledContent("Start Date") {
+                        Text(project.startDate, format: .dateTime.month().day().year())
                     }
 
-                    if let dueDate = project.dueDate {
-                        LabeledContent("Due Date") {
-                            Text(dueDate, format: .dateTime.month().day().year())
-                        }
+                    LabeledContent("Due Date") {
+                        Text(project.dueDate, format: .dateTime.month().day().year())
                     }
                 }
                 .padding(.bottom)

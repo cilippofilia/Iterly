@@ -71,7 +71,7 @@ enum SampleData {
             projectPriority: .high,
             projectStatus: .inProgress,
             startDate: now,
-            dueDate: calendar.date(byAdding: .day, value: 14, to: now),
+            dueDate: calendar.date(byAdding: .day, value: 14, to: now) ?? now,
             creationDate: calendar.date(byAdding: .day, value: -3, to: now) ?? now,
             isPinned: true
         )
@@ -91,8 +91,8 @@ enum SampleData {
             details: "Weekly reporting",
             projectPriority: .normal,
             projectStatus: .notStarted,
-            startDate: calendar.date(byAdding: .day, value: 2, to: now),
-            dueDate: calendar.date(byAdding: .day, value: 30, to: now),
+            startDate: calendar.date(byAdding: .day, value: 2, to: now) ?? now,
+            dueDate: calendar.date(byAdding: .day, value: 30, to: now) ?? now,
             creationDate: calendar.date(byAdding: .day, value: -5, to: now) ?? now,
             isPinned: false
         )
@@ -108,8 +108,8 @@ enum SampleData {
             details: "Campaign and timeline",
             projectPriority: .low,
             projectStatus: .notStarted,
-            startDate: calendar.date(byAdding: .day, value: 7, to: now),
-            dueDate: calendar.date(byAdding: .day, value: 45, to: now),
+            startDate: calendar.date(byAdding: .day, value: 7, to: now) ?? now,
+            dueDate: calendar.date(byAdding: .day, value: 45, to: now) ?? now,
             creationDate: calendar.date(byAdding: .day, value: -1, to: now) ?? now,
             isPinned: false
         )
@@ -125,8 +125,8 @@ enum SampleData {
             details: "Reduce tech debt",
             projectPriority: .normal,
             projectStatus: .inProgress,
-            startDate: calendar.date(byAdding: .day, value: -2, to: now),
-            dueDate: calendar.date(byAdding: .day, value: 21, to: now),
+            startDate: calendar.date(byAdding: .day, value: -2, to: now) ?? now,
+            dueDate: calendar.date(byAdding: .day, value: 21, to: now) ?? now,
             creationDate: calendar.date(byAdding: .day, value: -10, to: now) ?? now,
             isPinned: false
         )

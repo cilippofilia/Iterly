@@ -12,10 +12,10 @@ import SwiftData
 final class ProjectTask: Identifiable {
     var id: UUID
     var title: String
-    var details: String?
+    var details: String
     var status: TaskStatus
-    var startDate: Date?
-    var dueDate: Date?
+    var startDate: Date
+    var dueDate: Date
     var priority: TaskPriority
     var creationDate: Date
     var project: Project?
@@ -23,10 +23,10 @@ final class ProjectTask: Identifiable {
     init(
         id: UUID = UUID(),
         title: String = "",
-        details: String? = nil,
+        details: String = "",
         status: TaskStatus = .default,
-        startDate: Date? = nil,
-        dueDate: Date? = nil,
+        startDate: Date = .now,
+        dueDate: Date = .now,
         priority: TaskPriority = .default,
         creationDate: Date = .now,
         project: Project? = nil

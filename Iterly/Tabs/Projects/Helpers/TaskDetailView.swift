@@ -18,8 +18,8 @@ struct TaskDetailView: View {
                     .bold()
                     .foregroundStyle(.primary)
 
-                if let details = task.details, !details.isEmpty {
-                    Text(details)
+                if task.details.isEmpty == false {
+                    Text(task.details)
                         .foregroundStyle(.secondary)
                         .padding(.bottom)
                 }
@@ -37,28 +37,19 @@ struct TaskDetailView: View {
                                 }
                             }
                         } label: {
-                            Text(task.status.title.uppercased())
-                                .font(.caption2)
-                                .bold()
-                                .padding(4)
-                                .background(task.status.backgroundColor.opacity(0.5))
-                                .clipShape(.rect(cornerRadius: 4, style: .continuous))
+                            Text(task.status.title)
                         }
                         .buttonStyle(.plain)
                     }
 
                     LabeledContent("Priority", value: task.priority.title)
 
-                    if let startDate = task.startDate {
-                        LabeledContent("Start Date") {
-                            Text(startDate, format: .dateTime.month().day().year())
-                        }
+                    LabeledContent("Start Date") {
+                        Text(task.startDate, format: .dateTime.month().day().year())
                     }
 
-                    if let dueDate = task.dueDate {
-                        LabeledContent("Due Date") {
-                            Text(dueDate, format: .dateTime.month().day().year())
-                        }
+                    LabeledContent("Due Date") {
+                        Text(task.dueDate, format: .dateTime.month().day().year())
                     }
 
                     LabeledContent("Created") {

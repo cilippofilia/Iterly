@@ -11,13 +11,13 @@ import SwiftData
 @Model
 final class Project: Identifiable, Hashable {
     var id: UUID = UUID()
-    var title: String? = "Project Title"
-    var details: String? = nil
-    var priority: ProjectPriority? = ProjectPriority.default
-    var status: ProjectStatus? = ProjectStatus.default
-    var highlight: ProjectColor? = ProjectColor.accentColor
-    var startDate: Date? = nil
-    var dueDate: Date?
+    var title: String = ""
+    var details: String = ""
+    var priority: ProjectPriority = ProjectPriority.default
+    var status: ProjectStatus = ProjectStatus.default
+    var highlight: ProjectColor = ProjectColor.accentColor
+    var startDate: Date = .now
+    var dueDate: Date = .now
     var creationDate: Date
     var isPinned: Bool
 
@@ -35,13 +35,13 @@ final class Project: Identifiable, Hashable {
     init(
         id: UUID = UUID(),
         title: String = "",
-        details: String? = nil,
+        details: String = "",
         projectPriority: ProjectPriority = .default,
         projectStatus: ProjectStatus = .default,
         color: ProjectColor = ProjectColor.accentColor,
         tasks: [ProjectTask]? = [],
-        startDate: Date? = nil,
-        dueDate: Date? = nil,
+        startDate: Date = .now,
+        dueDate: Date = .now,
         creationDate: Date = .now,
         isPinned: Bool = false
     ) {
