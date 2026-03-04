@@ -69,7 +69,18 @@ struct TaskDetailView: View {
 }
 
 #Preview {
+    let project = SampleData.makeProjects()[0]
+    let task = project.tasks?.first ?? ProjectTask(
+        title: "Test title",
+        details: "Test details",
+        status: .default,
+        dueDate: .distantFuture,
+        priority: .default,
+        creationDate: .now,
+        project: project
+    )
+
     NavigationStack {
-        TaskDetailView(task: SampleData.makeProjects()[0].tasks?[0] ?? .init(id: UUID(), title: "Test title", details: "Test details", status: .default, dueDate: .distantFuture, priority: .default, creationDate: .now, project: SampleData.makeProjects()[0]))
+        TaskDetailView(task: task)
     }
 }

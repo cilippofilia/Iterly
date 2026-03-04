@@ -18,6 +18,7 @@ final class Project: Identifiable, Hashable {
     var highlight: ProjectColor = ProjectColor.accentColor
     var creationDate: Date = Date.now
     var isPinned: Bool = false
+    var currentRelease: ProjectRelease?
 
     @Relationship(deleteRule: .cascade, inverse: \ProjectTask.project)
     var tasks: [ProjectTask]?
@@ -39,7 +40,8 @@ final class Project: Identifiable, Hashable {
         color: ProjectColor = ProjectColor.accentColor,
         tasks: [ProjectTask]? = [],
         creationDate: Date = Date.now,
-        isPinned: Bool = false
+        isPinned: Bool = false,
+        currentRelease: ProjectRelease? = nil
     ) {
         self.id = id
         self.title = title
@@ -50,6 +52,8 @@ final class Project: Identifiable, Hashable {
         self.tasks = tasks
         self.creationDate = creationDate
         self.isPinned = isPinned
+        self.currentRelease = currentRelease
+        self.currentRelease?.project = self
     }
 
     // MARK: HASHABLE CONFORMANCE METHODS

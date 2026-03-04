@@ -11,7 +11,7 @@ import SwiftData
 enum SampleData {
     @MainActor
     static let previewContainer: ModelContainer = {
-        let schema = Schema([Project.self, ProjectTask.self])
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {
@@ -36,6 +36,9 @@ enum SampleData {
             for project in projects {
                 context.insert(project)
                 project.tasks?.forEach { context.insert($0) }
+                if let currentRelease = project.currentRelease {
+                    context.insert(currentRelease)
+                }
             }
 
             try context.save()
@@ -52,6 +55,9 @@ enum SampleData {
             for project in projects {
                 context.insert(project)
                 project.tasks?.forEach { context.insert($0) }
+                if let currentRelease = project.currentRelease {
+                    context.insert(currentRelease)
+                }
             }
 
             try context.save()
@@ -73,6 +79,7 @@ enum SampleData {
             creationDate: calendar.date(byAdding: .day, value: -3, to: now) ?? now,
             isPinned: true
         )
+        onboarding.currentRelease = ProjectRelease(version: "2.2", build: "85", project: onboarding)
 
         let onboardingTasks = [
             ProjectTask(title: "Design the welcome flow", details: "Design onboarding to explain key areas of the app - Learn, Cocktails, Cabinet.", status: .inProgress, priority: .high, project: onboarding),
@@ -92,6 +99,7 @@ enum SampleData {
             creationDate: calendar.date(byAdding: .day, value: -5, to: now) ?? now,
             isPinned: false
         )
+        insights.currentRelease = ProjectRelease(version: "0.9.2", build: "45", project: insights)
 
         let insightsTasks = [
             ProjectTask(title: "Define report metrics", status: .notStarted, priority: .high, project: insights),
@@ -107,6 +115,7 @@ enum SampleData {
             creationDate: calendar.date(byAdding: .day, value: -1, to: now) ?? now,
             isPinned: false
         )
+        marketing.currentRelease = ProjectRelease(version: "2.0.0", build: "201", project: marketing)
 
         let marketingTasks = [
             ProjectTask(title: "Draft announcement", status: .notStarted, priority: .normal, project: marketing),
@@ -122,6 +131,7 @@ enum SampleData {
             creationDate: calendar.date(byAdding: .day, value: -10, to: now) ?? now,
             isPinned: false
         )
+        cleanup.currentRelease = ProjectRelease(version: "3.2.1", build: "332", project: cleanup)
 
         let cleanupTasks = [
             ProjectTask(title: "Remove legacy screens", status: .inProgress, priority: .normal, project: cleanup),

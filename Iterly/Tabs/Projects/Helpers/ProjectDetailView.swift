@@ -57,6 +57,7 @@ struct ProjectDetailView: View {
                         }
                         .buttonStyle(.plain)
                     }
+                    LabeledContent("Current Release", value: releaseText(for: project))
                 }
                 .padding(.bottom)
 
@@ -136,6 +137,26 @@ struct ProjectDetailView: View {
                 task.status = .done
             }
         }
+    }
+
+    private func releaseText(for project: Project) -> String {
+        guard let release = project.currentRelease else {
+            return "Not Set"
+        }
+
+        if release.version.isEmpty, release.build.isEmpty {
+            return "Not Set"
+        }
+
+        if release.version.isEmpty {
+            return "Build \(release.build)"
+        }
+
+        if release.build.isEmpty {
+            return "v\(release.version)"
+        }
+
+        return "v\(release.version) (\(release.build))"
     }
 }
 
