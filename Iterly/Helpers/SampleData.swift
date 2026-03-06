@@ -109,7 +109,10 @@ enum SampleData {
 
         let insightsTasks = [
             ProjectTask(title: "Define report metrics", status: .notStarted, priority: .high, project: insights),
-            ProjectTask(title: "Prototype charts", status: .notStarted, priority: .medium, project: insights)
+            ProjectTask(title: "Prototype charts", status: .notStarted, priority: .medium, project: insights),
+            ProjectTask(title: "Prepare data sources", status: .inProgress, priority: .high, project: insights),
+            ProjectTask(title: "Review metric definitions", status: .blocked, priority: .medium, project: insights),
+            ProjectTask(title: "Baseline report snapshots", status: .done, priority: .low, project: insights)
         ]
         insights.tasks = insightsTasks
 
@@ -125,7 +128,10 @@ enum SampleData {
 
         let marketingTasks = [
             ProjectTask(title: "Draft announcement", status: .notStarted, priority: .medium, project: marketing),
-            ProjectTask(title: "Prepare assets", status: .notStarted, priority: .medium, project: marketing)
+            ProjectTask(title: "Prepare assets", status: .notStarted, priority: .medium, project: marketing),
+            ProjectTask(title: "Align launch timing", status: .inProgress, priority: .high, project: marketing),
+            ProjectTask(title: "Legal approval", status: .blocked, priority: .medium, project: marketing),
+            ProjectTask(title: "Press kit final pass", status: .done, priority: .low, project: marketing)
         ]
         marketing.tasks = marketingTasks
 
@@ -142,7 +148,9 @@ enum SampleData {
         let cleanupTasks = [
             ProjectTask(title: "Remove legacy screens", status: .inProgress, priority: .medium, project: cleanup),
             ProjectTask(title: "Update API clients", status: .notStarted, priority: .high, project: cleanup),
-            ProjectTask(title: "Audit permissions", status: .notStarted, priority: .medium, project: cleanup)
+            ProjectTask(title: "Audit permissions", status: .notStarted, priority: .medium, project: cleanup),
+            ProjectTask(title: "Dependency upgrade plan", status: .blocked, priority: .high, project: cleanup),
+            ProjectTask(title: "Purge deprecated flags", status: .done, priority: .low, project: cleanup)
         ]
         cleanup.tasks = cleanupTasks
 

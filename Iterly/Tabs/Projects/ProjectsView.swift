@@ -17,6 +17,8 @@ struct ProjectsView: View {
     @Query(sort: \Project.creationDate, order: .reverse)
     private var projects: [Project]
 
+    let orderedStatuses: [TaskStatus] = [.blocked, .inProgress, .done, .notStarted]
+
     var body: some View {
         NavigationStack {
             Group {
@@ -25,7 +27,7 @@ struct ProjectsView: View {
                 } else {
                     List(projects) { project in
                         NavigationLink(value: project) {
-                            ProjectCell(
+                            ProjectRowView(
                                 title: project.title,
                                 tasks: project.tasks ?? [],
                                 blockedAmount: project.blockedAmount,
@@ -38,7 +40,7 @@ struct ProjectsView: View {
                     .listStyle(.insetGrouped)
                 }
             }
-            .scrollBounceBehavior(.basedOnSize)
+//            .scrollBounceBehavior(.basedOnSize)
             .listRowSpacing(8)
             .navigationTitle("Projects")
             .navigationDestination(for: Project.self) { project in
@@ -47,6 +49,21 @@ struct ProjectsView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     createProjectButton
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                if !projects.isEmpty {
+                    HStack(spacing: .zero) {
+                        ForEach(orderedStatuses, id: \.self) { status in
+                            Circle().fill(status.backgroundColor)
+                                .frame(width: 6, height: 6)
+                                .padding(.trailing, 2)
+                            Text(status.title)
+                                .font(.caption2)
+                                .padding(.trailing, 8)
+                        }
+                    }
+                    .padding(.bottom)
                 }
             }
         }

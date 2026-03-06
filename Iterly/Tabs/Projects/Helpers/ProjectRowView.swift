@@ -1,21 +1,19 @@
 //
-//  ProjectCell.swift
+//  ProjectRowView.swift
 //  Iterly
 //
-//  Created by Filippo Cilia on 01/03/2026.
+//  Created by Filippo Cilia on 06/03/2026.
 //
 
 import SwiftUI
 
-struct ProjectCell: View {
+struct ProjectRowView: View {
     let title: String
     let tasks: [ProjectTask]
 
     let blockedAmount: CGFloat
     let inProgressAmount: CGFloat
     let doneAmount: CGFloat
-
-    let orderedStatuses: [TaskStatus] = [.blocked, .inProgress, .done, .notStarted]
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -46,5 +44,5 @@ struct ProjectCell: View {
 
 #Preview {
     let data = SampleData.makeProjects()[0]
-    ProjectCell(title: data.title, tasks: data.tasks ?? [], blockedAmount: 0.1, inProgressAmount: 0.2, doneAmount: 0.3)
+    ProjectRowView(title: data.title, tasks: data.tasks ?? [], blockedAmount: 0.1, inProgressAmount: 0.3, doneAmount: 0.4)
 }
