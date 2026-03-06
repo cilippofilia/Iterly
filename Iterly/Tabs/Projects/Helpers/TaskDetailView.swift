@@ -39,6 +39,7 @@ struct TaskDetailView: View {
                             }
                         } label: {
                             Text(task.status.title)
+                                .badgeStyle(backgroundColor: task.status.backgroundColor)
                         }
                         .buttonStyle(.plain)
                     }
@@ -56,6 +57,7 @@ struct TaskDetailView: View {
                             }
                         } label: {
                             Text(task.priority.title)
+                                .badgeStyle(backgroundColor: task.priority.backgroundColor)
                         }
                         .buttonStyle(.plain)
                     }
