@@ -25,6 +25,18 @@ enum SampleData {
     }()
 
     @MainActor
+    static let emptyPreviewContainer: ModelContainer = {
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [configuration])
+        } catch {
+            fatalError("Failed to create empty preview container: \(error)")
+        }
+    }()
+
+    @MainActor
     static func seedIfNeeded(in context: ModelContext) {
         let descriptor = FetchDescriptor<Project>()
 

@@ -34,10 +34,23 @@ struct ProjectsView: View {
                                 inProgressAmount: project.inProgressAmount,
                                 doneAmount: project.doneAmount
                             )
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                Button(action: {
+                                    project.isPinned.toggle()
+                                }) {
+                                    Label("Pin", systemImage: "pin")
+                                }
+                                Button(role: .destructive, action: {
+                                    modelContext.delete(project)
+                                }) {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                         }
                         .buttonStyle(.plain)
                     }
                     .listStyle(.insetGrouped)
+                    .contentMargins(.bottom, 70, for: .scrollContent)
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
@@ -51,7 +64,7 @@ struct ProjectsView: View {
                     createProjectButton
                 }
             }
-            .safeAreaInset(edge: .bottom) {
+            .overlay(alignment: .bottom) {
                 if !projects.isEmpty {
                     HStack(spacing: .zero) {
                         ForEach(orderedStatuses, id: \.self) { status in
@@ -63,7 +76,10 @@ struct ProjectsView: View {
                                 .padding(.trailing, 8)
                         }
                     }
-                    .padding(.bottom)
+                    .padding(8)
+                    .background(.ultraThinMaterial)
+                    .clipShape(.rect(cornerRadius: 8, style: .continuous))
+                    .padding(.bottom, 8)
                 }
             }
         }
@@ -81,11 +97,22 @@ struct ProjectsView: View {
 }
 
 #Preview("Light") {
-    ProjectsView()
-        .modelContainer(SampleData.previewContainer)
+    TabView {
+        ProjectsView()
+            .modelContainer(SampleData.previewContainer)
+    }
 }
 #Preview("Dark") {
-    ProjectsView()
-        .modelContainer(SampleData.previewContainer)
-        .preferredColorScheme(.dark)
+    TabView {
+        ProjectsView()
+            .modelContainer(SampleData.previewContainer)
+            .preferredColorScheme(.dark)
+    }
+}
+#Preview("Dark - no projects") {
+    TabView {
+        ProjectsView()
+            .modelContainer(SampleData.emptyPreviewContainer)
+            .preferredColorScheme(.dark)
+    }
 }
