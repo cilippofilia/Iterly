@@ -9,9 +9,14 @@ import SwiftData
 import SwiftUI
 
 struct ProjectDetailView: View {
-    let project: Project
+    @Environment(\.modelContext) private var modelContext
+    @Bindable var project: Project
 
     var body: some View {
+        let tasks = project.tasks ?? []
+        let activeTasks = tasks.filter { $0.status != .done }
+        let completedTasks = tasks.filter { $0.status == .done }
+
         ScrollView {
             VStack(alignment: .leading) {
                 Text(project.title)
@@ -64,12 +69,30 @@ struct ProjectDetailView: View {
                 }
                 .padding(.bottom)
 
-                if let tasks = project.tasks, !tasks.isEmpty {
+                if !activeTasks.isEmpty {
                     Text("Tasks")
                         .font(.headline)
                         .foregroundStyle(.secondary)
 
-                    ForEach(tasks) { task in
+                    ForEach(activeTasks) { task in
+                        TaskRowView(task: task)
+                    }
+
+                    Button(action: {
+                        addTask()
+                    }) {
+                        Label("Add task", systemImage: "plus")
+                    }
+                    .padding(4)
+                }
+
+                if !completedTasks.isEmpty {
+                    Text("Completed Tasks")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .padding(.top)
+
+                    ForEach(completedTasks) { task in
                         TaskRowView(task: task)
                     }
                 }
@@ -114,6 +137,18 @@ struct ProjectDetailView: View {
         }
 
         return "v\(release.version) (\(release.build))"
+    }
+
+    private func addTask() {
+        withAnimation(.snappy) {
+            let newTask = ProjectTask(project: project)
+            modelContext.insert(newTask)
+
+            if project.tasks == nil {
+                project.tasks = []
+            }
+            project.tasks?.append(newTask)
+        }
     }
 }
 
