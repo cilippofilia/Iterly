@@ -75,7 +75,6 @@ extension HomeView {
                     .padding(.bottom)
             }
         }
-        .scrollBounceBehavior(.basedOnSize)
         .navigationDestination(for: Project.self) { project in
             ProjectDetailView(project: project)
         }
