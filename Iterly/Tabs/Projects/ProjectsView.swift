@@ -17,7 +17,10 @@ struct ProjectsView: View {
     @State private var projectPendingDeletion: Project?
     @State private var showDeletionAlert: Bool = false
 
-    @Query(sort: \Project.creationDate, order: .reverse)
+    @Query(sort: [
+        SortDescriptor(\Project.lastUpdated, order: .reverse),
+        SortDescriptor(\Project.creationDate, order: .reverse)
+    ])
     private var projects: [Project]
 
     let orderedStatuses: [TaskStatus] = [.blocked, .inProgress, .done, .notStarted]
@@ -42,6 +45,7 @@ struct ProjectsView: View {
                             .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                 Button(action: {
                                     project.isPinned.toggle()
+                                    project.touch()
                                 }) {
                                     Label("Pin", systemImage: "pin")
                                 }
@@ -62,7 +66,6 @@ struct ProjectsView: View {
                     .contentMargins(.bottom, 70, for: .scrollContent)
                 }
             }
-            .scrollBounceBehavior(.basedOnSize)
             .listRowSpacing(8)
             .navigationTitle("Projects")
             .navigationDestination(for: Project.self) { project in

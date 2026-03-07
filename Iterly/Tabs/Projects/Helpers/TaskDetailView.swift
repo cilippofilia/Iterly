@@ -30,7 +30,10 @@ struct TaskDetailView: View {
                         Menu {
                             Picker("Status", selection: Binding(
                                 get: { task.status },
-                                set: { task.status = $0 }
+                                set: {
+                                    task.status = $0
+                                    task.project.touch()
+                                }
                             )) {
                                 ForEach(TaskStatus.allCases, id: \.self) { status in
                                     Text(status.title)
@@ -48,7 +51,10 @@ struct TaskDetailView: View {
                         Menu {
                             Picker("Priority", selection: Binding(
                                 get: { task.priority },
-                                set: { task.priority = $0 }
+                                set: {
+                                    task.priority = $0
+                                    task.project.touch()
+                                }
                             )) {
                                 ForEach(TaskPriority.allCases, id: \.self) { priority in
                                     Text(priority.title)
@@ -66,7 +72,10 @@ struct TaskDetailView: View {
                         "Due Date",
                         selection: Binding(
                             get: { task.dueDate },
-                            set: { task.dueDate = $0 }
+                            set: {
+                                task.dueDate = $0
+                                task.project.touch()
+                            }
                         ),
                         displayedComponents: .date
                     )

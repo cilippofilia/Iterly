@@ -17,6 +17,7 @@ final class Project: Identifiable, Hashable {
     var status: ProjectStatus = ProjectStatus.default
     var highlight: ProjectColor = ProjectColor.accentColor
     var creationDate: Date = Date.now
+    var lastUpdated: Date = Date.now
     var isPinned: Bool = false
     var currentRelease: ProjectRelease?
 
@@ -54,6 +55,7 @@ final class Project: Identifiable, Hashable {
         color: ProjectColor = ProjectColor.accentColor,
         tasks: [ProjectTask]? = [],
         creationDate: Date = Date.now,
+        lastUpdated: Date = Date.now,
         isPinned: Bool = false,
         currentRelease: ProjectRelease? = nil
     ) {
@@ -65,9 +67,14 @@ final class Project: Identifiable, Hashable {
         self.highlight = color
         self.tasks = tasks
         self.creationDate = creationDate
+        self.lastUpdated = lastUpdated
         self.isPinned = isPinned
         self.currentRelease = currentRelease
         self.currentRelease?.project = self
+    }
+
+    func touch() {
+        lastUpdated = .now
     }
 
     // MARK: HASHABLE CONFORMANCE METHODS

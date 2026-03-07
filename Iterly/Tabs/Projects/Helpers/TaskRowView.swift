@@ -62,7 +62,10 @@ struct TaskRowView: View {
             Menu {
                 Picker("Status", selection: Binding(
                     get: { task.status },
-                    set: { task.status = $0 }
+                    set: {
+                        task.status = $0
+                        task.project.touch()
+                    }
                 )) {
                     ForEach(TaskStatus.allCases, id: \.self) { status in
                         Text(status.title)
@@ -85,6 +88,7 @@ struct TaskRowView: View {
             } else {
                 task.status = .done
             }
+            task.project.touch()
         }
     }
 }

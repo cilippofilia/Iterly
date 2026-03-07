@@ -110,12 +110,14 @@ enum SampleData {
         let calendar = Calendar.current
         let now = Date.now
 
+        let onboardingDate = calendar.date(byAdding: .day, value: -3, to: now) ?? now
         let onboarding = Project(
             title: "Drinko.",
             details: "Cocktail making masterclass at your fingertips.",
             projectPriority: .high,
             projectStatus: .live,
-            creationDate: calendar.date(byAdding: .day, value: -3, to: now) ?? now,
+            creationDate: onboardingDate,
+            lastUpdated: onboardingDate,
             isPinned: true
         )
         onboarding.currentRelease = ProjectRelease(version: "2.2", build: "85", project: onboarding)
@@ -136,12 +138,14 @@ enum SampleData {
         ]
         onboarding.tasks = onboardingTasks
 
+        let insightsDate = calendar.date(byAdding: .day, value: -5, to: now) ?? now
         let insights = Project(
             title: "Insights",
             details: "Weekly reporting",
             projectPriority: .medium,
             projectStatus: .dev,
-            creationDate: calendar.date(byAdding: .day, value: -5, to: now) ?? now,
+            creationDate: insightsDate,
+            lastUpdated: insightsDate,
             isPinned: false
         )
         insights.currentRelease = ProjectRelease(version: "0.9.2", build: "45", project: insights)
@@ -155,12 +159,14 @@ enum SampleData {
         ]
         insights.tasks = insightsTasks
 
+        let marketingDate = calendar.date(byAdding: .day, value: -1, to: now) ?? now
         let marketing = Project(
             title: "Launch Plan",
             details: "Campaign and timeline",
             projectPriority: .low,
             projectStatus: .plan,
-            creationDate: calendar.date(byAdding: .day, value: -1, to: now) ?? now,
+            creationDate: marketingDate,
+            lastUpdated: marketingDate,
             isPinned: false
         )
         marketing.currentRelease = ProjectRelease(version: "2.0.0", build: "201", project: marketing)
@@ -174,12 +180,14 @@ enum SampleData {
         ]
         marketing.tasks = marketingTasks
 
+        let cleanupDate = calendar.date(byAdding: .day, value: -10, to: now) ?? now
         let cleanup = Project(
             title: "Tech Cleanup",
             details: "Reduce tech debt",
             projectPriority: .medium,
             projectStatus: .blocked,
-            creationDate: calendar.date(byAdding: .day, value: -10, to: now) ?? now,
+            creationDate: cleanupDate,
+            lastUpdated: cleanupDate,
             isPinned: false
         )
         cleanup.currentRelease = ProjectRelease(version: "3.2.1", build: "332", project: cleanup)
@@ -193,12 +201,14 @@ enum SampleData {
         ]
         cleanup.tasks = cleanupTasks
 
+        let paymentsDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
         let payments = Project(
             title: "Payments Revamp",
             details: "Streamline checkout and subscriptions.",
             projectPriority: .high,
             projectStatus: .dev,
-            creationDate: calendar.date(byAdding: .day, value: -7, to: now) ?? now,
+            creationDate: paymentsDate,
+            lastUpdated: paymentsDate,
             isPinned: true
         )
         payments.currentRelease = ProjectRelease(version: "1.4.0", build: "119", project: payments)
@@ -213,12 +223,14 @@ enum SampleData {
         ]
         payments.tasks = paymentsTasks
 
+        let communityDate = calendar.date(byAdding: .day, value: -2, to: now) ?? now
         let community = Project(
             title: "Community Beta",
             details: "Invite-only social layer for power users.",
             projectPriority: .medium,
             projectStatus: .plan,
-            creationDate: calendar.date(byAdding: .day, value: -2, to: now) ?? now,
+            creationDate: communityDate,
+            lastUpdated: communityDate,
             isPinned: false
         )
         community.currentRelease = ProjectRelease(version: "0.3.0", build: "27", project: community)
@@ -233,12 +245,14 @@ enum SampleData {
         ]
         community.tasks = communityTasks
 
+        let designSystemDate = calendar.date(byAdding: .day, value: -14, to: now) ?? now
         let designSystem = Project(
             title: "Design System",
             details: "Unify tokens, components, and accessibility.",
             projectPriority: .low,
             projectStatus: .dev,
-            creationDate: calendar.date(byAdding: .day, value: -14, to: now) ?? now,
+            creationDate: designSystemDate,
+            lastUpdated: designSystemDate,
             isPinned: false
         )
         designSystem.currentRelease = ProjectRelease(version: "0.7.1", build: "64", project: designSystem)

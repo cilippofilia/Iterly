@@ -35,7 +35,10 @@ struct ProjectDetailView: View {
                         Menu {
                             Picker("Status", selection: Binding(
                                 get: { project.status },
-                                set: { project.status = $0 }
+                                set: {
+                                    project.status = $0
+                                    project.touch()
+                                }
                             )) {
                                 ForEach(ProjectStatus.allCases, id: \.self) { status in
                                     Text(status.title)
@@ -52,7 +55,10 @@ struct ProjectDetailView: View {
                         Menu {
                             Picker("Priority", selection: Binding(
                                 get: { project.priority },
-                                set: { project.priority = $0 }
+                                set: {
+                                    project.priority = $0
+                                    project.touch()
+                                }
                             )) {
                                 ForEach(ProjectPriority.allCases, id: \.self) { priority in
                                     Text(priority.title)
@@ -110,6 +116,7 @@ struct ProjectDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {
                     project.isPinned.toggle()
+                    project.touch()
                 }) {
                     Image(systemName: "pin")
                         .rotationEffect(Angle(degrees: 45))
@@ -148,6 +155,7 @@ struct ProjectDetailView: View {
                 project.tasks = []
             }
             project.tasks?.append(newTask)
+            project.touch()
         }
     }
 }
