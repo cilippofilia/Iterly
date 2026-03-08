@@ -75,7 +75,7 @@ struct ProjectRowView: View {
         statusTitle: data.status.title,
         statusColor: data.status.backgroundColor,
         currentRelease: data.currentRelease,
-        tasks: data.tasks ?? [],
+        tasks: data.topLevelTasks,
         blockedAmount: 0.1,
         inProgressAmount: 0.3,
         doneAmount: 0.4

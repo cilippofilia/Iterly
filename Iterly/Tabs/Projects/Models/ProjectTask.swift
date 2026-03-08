@@ -19,6 +19,12 @@ final class ProjectTask: Identifiable {
     var creationDate: Date = Date.now
     var project: Project
 
+    @Relationship(deleteRule: .cascade)
+    var subtasks: [ProjectTask]?
+
+    @Relationship(inverse: \ProjectTask.subtasks)
+    var parentTask: ProjectTask?
+
     init(
         id: UUID = UUID(),
         title: String = "Task",
@@ -27,7 +33,9 @@ final class ProjectTask: Identifiable {
         dueDate: Date = Date.now.addingTimeInterval(14 * 24 * 60 * 60), // 2 weeks from now
         priority: TaskPriority = TaskPriority.default,
         creationDate: Date = Date.now,
-        project: Project
+        project: Project,
+        subtasks: [ProjectTask]? = nil,
+        parentTask: ProjectTask? = nil
     ) {
         self.id = id
         self.title = title
@@ -37,5 +45,7 @@ final class ProjectTask: Identifiable {
         self.priority = priority
         self.creationDate = creationDate
         self.project = project
+        self.subtasks = subtasks
+        self.parentTask = parentTask
     }
 }

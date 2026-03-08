@@ -25,7 +25,7 @@ struct PinnedProjectsSection: View {
                         NavigationLink(value: project) {
                             ProjectCell(
                                 title: project.title,
-                                tasks: project.tasks ?? [],
+                                tasks: project.topLevelTasks,
                                 blockedAmount: project.blockedAmount,
                                 inProgressAmount: project.inProgressAmount,
                                 doneAmount: project.doneAmount

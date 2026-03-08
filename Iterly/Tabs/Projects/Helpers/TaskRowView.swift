@@ -13,6 +13,11 @@ struct TaskRowView: View {
 
     var body: some View {
         let isDone = task.status == .done
+        let subtaskCount = task.subtasks?.count ?? 0
+        let subtaskLabel = String.localizedStringWithFormat(
+            NSLocalizedString("subtasks_count", comment: "Subtasks count"),
+            subtaskCount
+        )
 
         HStack(alignment: .firstTextBaseline) {
             Button(
@@ -36,6 +41,12 @@ struct TaskRowView: View {
                         .foregroundStyle(isDone ? .secondary : .primary)
                         .strikethrough(isDone, color: .secondary)
                         .multilineTextAlignment(.leading)
+
+                    if subtaskCount > 0 {
+                        Text(subtaskLabel)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
 
                     HStack(spacing: 0) {
                         Text(task.priority.badgeTitle)

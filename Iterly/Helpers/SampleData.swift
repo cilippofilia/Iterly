@@ -136,7 +136,12 @@ enum SampleData {
             ProjectTask(title: "UK Release", status: .done, priority: .medium, project: onboarding),
             ProjectTask(title: "App Store screenshots", status: .done, priority: .low, project: onboarding)
         ]
-        onboarding.tasks = onboardingTasks
+        let onboardingSubtasks = [
+            ProjectTask(title: "Map entry points", status: .inProgress, priority: .medium, project: onboarding, parentTask: onboardingTasks[0]),
+            ProjectTask(title: "Prepare motion tokens", status: .notStarted, priority: .low, project: onboarding, parentTask: onboardingTasks[0])
+        ]
+        onboardingTasks[0].subtasks = onboardingSubtasks
+        onboarding.tasks = onboardingTasks + onboardingSubtasks
 
         let insightsDate = calendar.date(byAdding: .day, value: -5, to: now) ?? now
         let insights = Project(
@@ -221,7 +226,11 @@ enum SampleData {
             ProjectTask(title: "Upgrade paywall copy", status: .notStarted, priority: .medium, project: payments),
             ProjectTask(title: "QA sandbox purchases", status: .done, priority: .low, project: payments)
         ]
-        payments.tasks = paymentsTasks
+        let paymentsSubtasks = [
+            ProjectTask(title: "Sketch retry states", status: .notStarted, priority: .medium, project: payments, parentTask: paymentsTasks[0])
+        ]
+        paymentsTasks[0].subtasks = paymentsSubtasks
+        payments.tasks = paymentsTasks + paymentsSubtasks
 
         let communityDate = calendar.date(byAdding: .day, value: -2, to: now) ?? now
         let community = Project(
@@ -264,7 +273,12 @@ enum SampleData {
             ProjectTask(title: "Icon sizing rules", status: .done, priority: .low, project: designSystem),
             ProjectTask(title: "Typography scale update", status: .blocked, priority: .medium, project: designSystem)
         ]
-        designSystem.tasks = designSystemTasks
+        let designSystemSubtasks = [
+            ProjectTask(title: "Button states audit", status: .inProgress, priority: .low, project: designSystem, parentTask: designSystemTasks[0]),
+            ProjectTask(title: "Input field variants", status: .notStarted, priority: .medium, project: designSystem, parentTask: designSystemTasks[0])
+        ]
+        designSystemTasks[0].subtasks = designSystemSubtasks
+        designSystem.tasks = designSystemTasks + designSystemSubtasks
 
         return [onboarding, insights, marketing, cleanup, payments, community, designSystem]
     }

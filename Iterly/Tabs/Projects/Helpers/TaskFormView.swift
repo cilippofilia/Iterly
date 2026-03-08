@@ -14,6 +14,7 @@ struct TaskFormView: View {
 
     let project: Project
     private let task: ProjectTask?
+    private let parentTask: ProjectTask?
     private let onDelete: (() -> Void)?
 
     @State private var title = ""
@@ -26,9 +27,15 @@ struct TaskFormView: View {
     @State private var showCloseAlert: Bool = false
     @State private var showDeleteAlert: Bool = false
 
-    init(project: Project, task: ProjectTask? = nil, onDelete: (() -> Void)? = nil) {
+    init(
+        project: Project,
+        task: ProjectTask? = nil,
+        parentTask: ProjectTask? = nil,
+        onDelete: (() -> Void)? = nil
+    ) {
         self.project = project
         self.task = task
+        self.parentTask = parentTask ?? task?.parentTask
         self.onDelete = onDelete
         _isEditing = State(initialValue: task != nil)
         _title = State(initialValue: task?.title ?? "")
@@ -139,7 +146,8 @@ struct TaskFormView: View {
             dueDate: dueDate,
             priority: priority,
             creationDate: .now,
-            project: project
+            project: project,
+            parentTask: parentTask
         )
 
         modelContext.insert(task)
@@ -148,6 +156,13 @@ struct TaskFormView: View {
             project.tasks = []
         }
         project.tasks?.append(task)
+
+        if let parentTask {
+            if parentTask.subtasks == nil {
+                parentTask.subtasks = []
+            }
+            parentTask.subtasks?.append(task)
+        }
         project.touch()
 
         do {
@@ -188,6 +203,10 @@ struct TaskFormView: View {
         guard let task else { return }
         if let index = project.tasks?.firstIndex(where: { $0.id == task.id }) {
             project.tasks?.remove(at: index)
+        }
+        if let parentTask,
+           let index = parentTask.subtasks?.firstIndex(where: { $0.id == task.id }) {
+            parentTask.subtasks?.remove(at: index)
         }
         modelContext.delete(task)
         project.touch()

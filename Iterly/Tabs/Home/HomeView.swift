@@ -83,6 +83,7 @@ extension HomeView {
                 let upcomingTasks = tasks
                     .filter { $0.project.status != .closed }
                     .filter { $0.status != .done }
+                    .filter { $0.parentTask == nil }
                     .sorted { lhs, rhs in
                         if lhs.dueDate != rhs.dueDate {
                             return lhs.dueDate < rhs.dueDate

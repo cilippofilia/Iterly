@@ -31,7 +31,7 @@ struct TasksSection: View {
 #Preview {
     NavigationStack {
         ScrollView {
-            TasksSection(tasks: SampleData.makeProjects().flatMap { $0.tasks ?? [] })
+            TasksSection(tasks: SampleData.makeProjects().flatMap { $0.topLevelTasks })
         }
     }
     .modelContainer(SampleData.makePreviewContainer())

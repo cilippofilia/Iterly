@@ -23,22 +23,26 @@ final class Project: Identifiable, Hashable {
     @Relationship(deleteRule: .cascade, inverse: \ProjectTask.project)
     var tasks: [ProjectTask]?
 
+    var topLevelTasks: [ProjectTask] {
+        (tasks ?? []).filter { $0.parentTask == nil }
+    }
+
     var inProgressAmount: Double {
-        let originalTasks = tasks ?? []
+        let originalTasks = topLevelTasks
         guard originalTasks.isEmpty == false else { return 0 }
 
         let inProgressTasks = originalTasks.filter { $0.status == .inProgress }
         return Double(inProgressTasks.count) / Double(originalTasks.count)
     }
     var blockedAmount: Double {
-        let originalTasks = tasks ?? []
+        let originalTasks = topLevelTasks
         guard originalTasks.isEmpty == false else { return 0 }
 
         let blockedTasks = originalTasks.filter { $0.status == .blocked }
         return Double(blockedTasks.count) / Double(originalTasks.count)
     }
     var doneAmount: Double {
-        let originalTasks = tasks ?? []
+        let originalTasks = topLevelTasks
         guard originalTasks.isEmpty == false else { return 0 }
 
         let completedTasks = originalTasks.filter { $0.status == .done }

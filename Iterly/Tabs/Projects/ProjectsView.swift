@@ -130,7 +130,7 @@ struct ProjectsView: View {
                 statusTitle: project.status.title,
                 statusColor: project.status.backgroundColor,
                 currentRelease: project.currentRelease,
-                tasks: project.tasks ?? [],
+                tasks: project.topLevelTasks,
                 blockedAmount: project.blockedAmount,
                 inProgressAmount: project.inProgressAmount,
                 doneAmount: project.doneAmount

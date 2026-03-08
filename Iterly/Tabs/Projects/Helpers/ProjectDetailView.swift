@@ -17,7 +17,7 @@ struct ProjectDetailView: View {
     @Bindable var project: Project
 
     var body: some View {
-        let tasks = project.tasks ?? []
+        let tasks = project.topLevelTasks
         let activeTasks = tasks.filter { $0.status != .done && $0.status != .closed }
         let completedTasks = tasks.filter { $0.status == .done }
         let closedTasks = tasks.filter { $0.status == .closed }

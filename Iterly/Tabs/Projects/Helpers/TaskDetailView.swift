@@ -11,6 +11,8 @@ import SwiftUI
 struct TaskDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var taskToEdit: ProjectTask?
+    @State private var showAddSubtaskSheet: Bool = false
+
     let task: ProjectTask
 
     var body: some View {
@@ -19,11 +21,19 @@ struct TaskDetailView: View {
                 headerSection
                 infoBoxSection
                 goToProjectButton
+                if task.parentTask == nil {
+                    subtasksSection
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding([.horizontal, .bottom])
         }
         .navigationTitle(task.project.title)
+        .navigationDestination(for: UUID.self) { taskId in
+            if let task = task.project.tasks?.first(where: { $0.id == taskId }) {
+                TaskDetailView(task: task)
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Edit", systemImage: "pencil.line") {
@@ -35,6 +45,13 @@ struct TaskDetailView: View {
             NavigationStack {
                 TaskFormView(project: task.project, task: task) {
                     dismiss()
+                }
+            }
+        }
+        .sheet(isPresented: $showAddSubtaskSheet) {
+            if canHaveSubtasks {
+                NavigationStack {
+                    TaskFormView(project: task.project, parentTask: task)
                 }
             }
         }
@@ -162,6 +179,70 @@ private extension TaskDetailView {
             Label("Go to Project", systemImage: "folder")
         }
         .buttonStyle(.borderedProminent)
+    }
+
+    var addSubtaskButton: some View {
+        Button(action: {
+            showAddSubtaskSheet = true
+        }) {
+            Label("Add subtask", systemImage: "plus")
+        }
+        .buttonStyle(.borderedProminent)
+    }
+
+    @ViewBuilder
+    var subtasksSection: some View {
+        if canHaveSubtasks {
+            let subtasks = task.subtasks ?? []
+            let activeSubtasks = subtasks.filter { $0.status != .done && $0.status != .closed }
+            let completedSubtasks = subtasks.filter { $0.status == .done }
+            let closedSubtasks = subtasks.filter { $0.status == .closed }
+
+            VStack(alignment: .leading) {
+                if !activeSubtasks.isEmpty {
+                    tasksSection(label: "Subtasks", for: activeSubtasks)
+                    addSubtaskButton
+                        .padding(4)
+                } else {
+                    noSubtasksAvailableView
+                }
+                if !completedSubtasks.isEmpty {
+                    tasksSection(label: "Completed Subtasks", for: completedSubtasks)
+                }
+                if !closedSubtasks.isEmpty {
+                    tasksSection(label: "Closed Subtasks", for: closedSubtasks)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    func tasksSection(
+        label: String,
+        for tasks: [ProjectTask]
+    ) -> some View {
+        Text(label)
+            .font(.headline)
+            .foregroundStyle(.secondary)
+            .padding(.top)
+        ForEach(tasks) { task in
+            TaskRowView(task: task)
+        }
+    }
+
+    var noSubtasksAvailableView: some View {
+        ContentUnavailableView(
+            label: { Text("There are no active subtasks") },
+            description: { Text("This task has no subtasks yet. Press the button below to get started.") },
+            actions: {
+                addSubtaskButton
+            }
+        )
+        .padding(8)
+    }
+
+    var canHaveSubtasks: Bool {
+        task.parentTask == nil
     }
 }
 

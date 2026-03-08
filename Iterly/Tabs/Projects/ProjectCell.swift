@@ -46,5 +46,5 @@ struct ProjectCell: View {
 
 #Preview {
     let data = SampleData.makeProjects()[0]
-    ProjectCell(title: data.title, tasks: data.tasks ?? [], blockedAmount: 0.1, inProgressAmount: 0.2, doneAmount: 0.3)
+    ProjectCell(title: data.title, tasks: data.topLevelTasks, blockedAmount: 0.1, inProgressAmount: 0.2, doneAmount: 0.3)
 }
