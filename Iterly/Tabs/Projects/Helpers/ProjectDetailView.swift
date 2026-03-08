@@ -14,7 +14,10 @@ struct ProjectDetailView: View {
     @State private var showPinLimitAlert: Bool = false
     @State private var projectToEdit: Project?
     @State private var showAddTaskSheet: Bool = false
+    @State private var showBrainstormSheet: Bool = false
+
     @Bindable var project: Project
+    @State var projectNote: String = ""
 
     var body: some View {
         let tasks = project.topLevelTasks
@@ -27,6 +30,8 @@ struct ProjectDetailView: View {
                 projectDescriptionView
 
                 infoBoxSection
+
+                brainstormButton
 
                 if !activeTasks.isEmpty {
                     tasksSection(label: "Tasks", for: activeTasks)
@@ -78,6 +83,15 @@ struct ProjectDetailView: View {
                 TaskFormView(project: project)
             }
         }
+        .sheet(isPresented: $showBrainstormSheet) {
+            NavigationStack {
+                BrainstormFormView(text: Binding(
+                    get: { project.note ?? "" },
+                    set: { project.note = $0.isEmpty ? nil : $0 }
+                ))
+            }
+            .presentationDetents([.medium])
+        }
         .alert("Can't Pin Project", isPresented: $showPinLimitAlert) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -103,6 +117,15 @@ private extension ProjectDetailView {
     var projectDescriptionView: some View {
         if let details = project.details, !details.isEmpty {
             Text(details)
+                .foregroundStyle(.secondary)
+                .padding(.bottom)
+        }
+    }
+
+    @ViewBuilder
+    var noteSection: some View {
+        if let note = project.note, !note.isEmpty {
+            Text(note)
                 .foregroundStyle(.secondary)
                 .padding(.bottom)
         }
@@ -199,13 +222,22 @@ private extension ProjectDetailView {
         }
     }
 
+    var brainstormButton: some View {
+        Button(action: {
+            showBrainstormSheet = true
+        }) {
+            Label("Brainstorm", systemImage: "brain")
+                .buttonStyle()
+        }
+    }
+
     var addTaskButton: some View {
         Button(action: {
             showAddTaskSheet = true
         }) {
             Label("Add task", systemImage: "plus")
+                .buttonStyle()
         }
-        .buttonStyle(.borderedProminent)
     }
 
     var noTasksAvailableView: some View {

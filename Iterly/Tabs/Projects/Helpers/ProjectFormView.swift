@@ -15,6 +15,7 @@ struct ProjectFormView: View {
     @State private var viewModel = ProjectViewModel()
     @State private var title = ""
     @State private var details = ""
+    @State private var note = ""
     @State private var version = ""
     @State private var build = ""
     @State private var priority: ProjectPriority = .default
@@ -29,6 +30,7 @@ struct ProjectFormView: View {
         _isEditing = State(initialValue: project != nil)
         _title = State(initialValue: project?.title ?? "")
         _details = State(initialValue: project?.details ?? "")
+        _note = State(initialValue: project?.note ?? "")
         _version = State(initialValue: project?.currentRelease?.version ?? "")
         _build = State(initialValue: project?.currentRelease?.build ?? "")
         _priority = State(initialValue: project?.priority ?? .default)
@@ -67,6 +69,11 @@ struct ProjectFormView: View {
             Section("Release info") {
                 TextField("Version", text: $version)
                 TextField("Build number", text: $build)
+            }
+
+            Section("Brainstorm") {
+                TextField("Note thoughts or features ideas here...", text: $note, axis: .vertical)
+                    .lineLimit(3...6)
             }
 
             if isEditing {
@@ -116,6 +123,7 @@ struct ProjectFormView: View {
         viewModel.createProject(
             title: title,
             details: details,
+            note: note,
             priority: priority,
             status: status,
             isPinned: isPinned,
@@ -129,9 +137,11 @@ struct ProjectFormView: View {
     private func updateProject(_ project: Project) {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
 
         project.title = trimmedTitle
         project.details = trimmedDetails.isEmpty ? nil : trimmedDetails
+        project.note = trimmedNote.isEmpty ? nil : trimmedNote
         project.priority = priority
         project.status = status
         project.isPinned = isPinned

@@ -13,6 +13,7 @@ final class Project: Identifiable, Hashable {
     var id: UUID = UUID()
     var title: String = "Project"
     var details: String? = nil
+    var note: String? = nil
     var priority: ProjectPriority = ProjectPriority.default
     var status: ProjectStatus = ProjectStatus.default
     var creationDate: Date = Date.now
@@ -53,6 +54,7 @@ final class Project: Identifiable, Hashable {
         id: UUID = UUID(),
         title: String = "Project",
         details: String? = nil,
+        note: String? = nil,
         projectPriority: ProjectPriority = ProjectPriority.default,
         projectStatus: ProjectStatus = ProjectStatus.default,
         tasks: [ProjectTask]? = [],
@@ -64,6 +66,7 @@ final class Project: Identifiable, Hashable {
         self.id = id
         self.title = title
         self.details = details
+        self.note = note
         self.priority = projectPriority
         self.status = projectStatus
         self.tasks = tasks

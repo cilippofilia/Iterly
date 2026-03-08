@@ -12,6 +12,7 @@ struct TaskDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var taskToEdit: ProjectTask?
     @State private var showAddSubtaskSheet: Bool = false
+    @State private var showBrainstormSheet: Bool = false
 
     let task: ProjectTask
 
@@ -20,7 +21,10 @@ struct TaskDetailView: View {
             VStack(alignment: .leading) {
                 headerSection
                 infoBoxSection
-                goToProjectButton
+                HStack {
+                    brainstormButton
+                    goToProjectButton
+                }
                 if task.parentTask == nil {
                     subtasksSection
                 }
@@ -54,6 +58,15 @@ struct TaskDetailView: View {
                     TaskFormView(project: task.project, parentTask: task)
                 }
             }
+        }
+        .sheet(isPresented: $showBrainstormSheet) {
+            NavigationStack {
+                BrainstormFormView(text: Binding(
+                    get: { task.note ?? "" },
+                    set: { task.note = $0.isEmpty ? nil : $0 }
+                ))
+            }
+            .presentationDetents([.medium])
         }
     }
 
@@ -178,7 +191,20 @@ private extension TaskDetailView {
         NavigationLink(value: task.project) {
             Label("Go to Project", systemImage: "folder")
         }
-        .buttonStyle(.borderedProminent)
+        .foregroundStyle(.white)
+        .padding(8)
+        .frame(maxWidth: .infinity)
+        .background(Color.blue.gradient)
+        .clipShape(.capsule)
+    }
+
+    var brainstormButton: some View {
+        Button(action: {
+            showBrainstormSheet = true
+        }) {
+            Label("Brainstorm", systemImage: "brain")
+                .buttonStyle()
+        }
     }
 
     var addSubtaskButton: some View {
@@ -186,8 +212,8 @@ private extension TaskDetailView {
             showAddSubtaskSheet = true
         }) {
             Label("Add subtask", systemImage: "plus")
+                .buttonStyle()
         }
-        .buttonStyle(.borderedProminent)
     }
 
     @ViewBuilder

@@ -19,6 +19,7 @@ struct TaskFormView: View {
 
     @State private var title = ""
     @State private var details = ""
+    @State private var note = ""
     @State private var status: TaskStatus = .default
     @State private var priority: TaskPriority = .default
     @State private var dueDate: Date = TaskFormView.defaultDueDate
@@ -40,6 +41,7 @@ struct TaskFormView: View {
         _isEditing = State(initialValue: task != nil)
         _title = State(initialValue: task?.title ?? "")
         _details = State(initialValue: task?.details ?? "")
+        _note = State(initialValue: task?.note ?? "")
         _status = State(initialValue: task?.status ?? .default)
         _priority = State(initialValue: task?.priority ?? .default)
         _dueDate = State(initialValue: task?.dueDate ?? TaskFormView.defaultDueDate)
@@ -74,6 +76,11 @@ struct TaskFormView: View {
 
                 DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
                     .datePickerStyle(.compact)
+            }
+
+            Section("Brainstorm") {
+                TextField("Note thoughts or features ideas here...", text: $note, axis: .vertical)
+                    .lineLimit(3...6)
             }
 
             if isEditing {
@@ -138,10 +145,12 @@ struct TaskFormView: View {
 
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
 
         let task = ProjectTask(
             title: trimmedTitle,
             details: trimmedDetails.isEmpty ? nil : trimmedDetails,
+            note: trimmedNote.isEmpty ? nil : trimmedNote,
             status: status,
             dueDate: dueDate,
             priority: priority,
@@ -177,9 +186,11 @@ struct TaskFormView: View {
     private func updateTask(_ task: ProjectTask) {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
 
         task.title = trimmedTitle
         task.details = trimmedDetails.isEmpty ? nil : trimmedDetails
+        task.note = trimmedNote.isEmpty ? nil : trimmedNote
         task.status = status
         task.priority = priority
         task.dueDate = dueDate

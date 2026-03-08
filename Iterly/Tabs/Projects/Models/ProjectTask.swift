@@ -13,6 +13,7 @@ final class ProjectTask: Identifiable {
     var id: UUID = UUID()
     var title: String = "Task"
     var details: String? = nil
+    var note: String? = nil
     var status: TaskStatus = TaskStatus.default
     var dueDate: Date = Date.now.addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks from now
     var priority: TaskPriority = TaskPriority.default
@@ -29,6 +30,7 @@ final class ProjectTask: Identifiable {
         id: UUID = UUID(),
         title: String = "Task",
         details: String? = nil,
+        note: String? = nil,
         status: TaskStatus = TaskStatus.default,
         dueDate: Date = Date.now.addingTimeInterval(14 * 24 * 60 * 60), // 2 weeks from now
         priority: TaskPriority = TaskPriority.default,
@@ -40,6 +42,7 @@ final class ProjectTask: Identifiable {
         self.id = id
         self.title = title
         self.details = details
+        self.note = note
         self.status = status
         self.dueDate = dueDate
         self.priority = priority

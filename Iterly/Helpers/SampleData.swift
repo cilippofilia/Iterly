@@ -114,6 +114,7 @@ enum SampleData {
         let onboarding = Project(
             title: "Drinko.",
             details: "Cocktail making masterclass at your fingertips.",
+            note: "Focus on the welcome flow and early retention.",
             projectPriority: .high,
             projectStatus: .live,
             creationDate: onboardingDate,
@@ -123,7 +124,7 @@ enum SampleData {
         onboarding.currentRelease = ProjectRelease(version: "2.2", build: "85", project: onboarding)
 
         let onboardingTasks = [
-            ProjectTask(title: "Design the welcome flow", details: "Design onboarding to explain key areas of the app - Learn, Cocktails, Cabinet.", status: .inProgress, priority: .high, project: onboarding),
+            ProjectTask(title: "Design the welcome flow", details: "Design onboarding to explain key areas of the app - Learn, Cocktails, Cabinet.", note: "Include skip and restore options.", status: .inProgress, priority: .high, project: onboarding),
             ProjectTask(title: "Write onboarding copy", status: .notStarted, priority: .medium, project: onboarding),
             ProjectTask(title: "QA localization", status: .notStarted, priority: .medium, project: onboarding),
             ProjectTask(title: "Migrate analytics events", status: .blocked, priority: .high, project: onboarding),
@@ -137,7 +138,7 @@ enum SampleData {
             ProjectTask(title: "App Store screenshots", status: .done, priority: .low, project: onboarding)
         ]
         let onboardingSubtasks = [
-            ProjectTask(title: "Map entry points", status: .inProgress, priority: .medium, project: onboarding, parentTask: onboardingTasks[0]),
+            ProjectTask(title: "Map entry points", note: "Cover onboarding from deep links too.", status: .inProgress, priority: .medium, project: onboarding, parentTask: onboardingTasks[0]),
             ProjectTask(title: "Prepare motion tokens", status: .notStarted, priority: .low, project: onboarding, parentTask: onboardingTasks[0])
         ]
         onboardingTasks[0].subtasks = onboardingSubtasks
@@ -210,6 +211,7 @@ enum SampleData {
         let payments = Project(
             title: "Payments Revamp",
             details: "Streamline checkout and subscriptions.",
+            note: "Coordinate with finance on pricing tiers.",
             projectPriority: .high,
             projectStatus: .dev,
             creationDate: paymentsDate,

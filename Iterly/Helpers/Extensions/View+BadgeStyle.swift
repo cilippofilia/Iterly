@@ -37,8 +37,33 @@ private struct BadgeStyleModifier: ViewModifier {
     }
 }
 
+private struct ButtonStyleModifier: ViewModifier {
+    let foregroundColor: Color
+    let backgroundColor: Color
+
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(foregroundColor)
+            .padding(8)
+            .frame(maxWidth: .infinity)
+            .background(backgroundColor.gradient)
+            .clipShape(.capsule)
+    }
+}
 extension View {
     func badgeStyle(backgroundColor: Color) -> some View {
         modifier(BadgeStyleModifier(backgroundColor: backgroundColor))
+    }
+
+    func buttonStyle(
+        foregroundColor: Color = .white,
+        backgroundColor: Color = .blue
+    ) -> some View {
+        modifier(
+            ButtonStyleModifier(
+                foregroundColor: foregroundColor,
+                backgroundColor: backgroundColor
+            )
+        )
     }
 }

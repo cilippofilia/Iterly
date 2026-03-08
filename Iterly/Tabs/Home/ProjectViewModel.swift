@@ -9,6 +9,7 @@ final class ProjectViewModel {
     func createProject(
         title: String,
         details: String,
+        note: String,
         priority: ProjectPriority,
         status: ProjectStatus,
         isPinned: Bool,
@@ -18,10 +19,12 @@ final class ProjectViewModel {
     ) {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
 
         let project = Project(
             title: trimmedTitle,
             details: trimmedDetails.isEmpty ? nil : trimmedDetails,
+            note: trimmedNote.isEmpty ? nil : trimmedNote,
             projectPriority: priority,
             projectStatus: status,
             creationDate: .now,
