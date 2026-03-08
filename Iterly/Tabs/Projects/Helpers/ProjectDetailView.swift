@@ -31,6 +31,7 @@ struct ProjectDetailView: View {
                 if !activeTasks.isEmpty {
                     tasksSection(label: "Tasks", for: activeTasks)
                     addTaskButton
+                        .padding(4)
                 } else {
                     noTasksAvailableView
                 }
@@ -199,7 +200,6 @@ private extension ProjectDetailView {
             Label("Add task", systemImage: "plus")
         }
         .buttonStyle(.borderedProminent)
-        .padding(4)
     }
 
     var noTasksAvailableView: some View {
@@ -210,6 +210,7 @@ private extension ProjectDetailView {
                 addTaskButton
             }
         )
+        .padding(8)
     }
 }
 
