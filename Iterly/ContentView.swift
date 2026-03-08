@@ -21,10 +21,6 @@ struct ContentView: View {
             Tab("Projects", systemImage: "folder", value: ProjectsView.projectsTag) {
                 ProjectsView()
             }
-
-//            Tab("Settings", systemImage: "gear", value: SettingsView.settingsTag) {
-//                SettingsView()
-//            }
         }
     }
 }
