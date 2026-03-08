@@ -84,18 +84,6 @@ enum TaskPriority: String, CaseIterable, Codable {
         case .medium:
             return .yellow
         case .high:
-            return .orange
-        }
-    }
-    var badgeBackgroundColor: Color {
-        switch self {
-        case .notSet:
-            return .blue
-        case .low:
-            return .yellow
-        case .medium:
-            return .orange
-        case .high:
             return .red
         }
     }

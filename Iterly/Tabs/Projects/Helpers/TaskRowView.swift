@@ -29,7 +29,7 @@ struct TaskRowView: View {
             NavigationLink(value: task.id) {
                 RoundedRectangle(cornerRadius: 2, style: .continuous)
                     .frame(width: 3)
-                    .foregroundStyle(isDone ? .secondary.opacity(0.5) : task.priority.badgeBackgroundColor)
+                    .foregroundStyle(isDone ? .secondary.opacity(0.5) : task.priority.backgroundColor)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(task.title)
