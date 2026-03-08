@@ -161,7 +161,7 @@ struct TaskFormView: View {
 
     private func closeTask() {
         guard let task else { return }
-        status = .done
+        status = .closed
         updateTask(task)
         dismiss()
     }

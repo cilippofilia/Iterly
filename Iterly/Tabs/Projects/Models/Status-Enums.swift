@@ -60,6 +60,7 @@ enum TaskStatus: String, CaseIterable, Codable {
     case notStarted
     case inProgress
     case done
+    case closed
 
     var title: String {
         switch self {
@@ -71,6 +72,8 @@ enum TaskStatus: String, CaseIterable, Codable {
             return "In Progress"
         case .done:
             return "Done"
+        case .closed:
+            return "Closed"
         }
     }
 
@@ -84,6 +87,8 @@ enum TaskStatus: String, CaseIterable, Codable {
             return .yellow
         case .done:
             return .green
+        case .closed:
+            return .purple
         }
     }
 }

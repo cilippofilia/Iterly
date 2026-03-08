@@ -5,7 +5,6 @@
 //  Created by Filippo Cilia on 25/02/2026.
 //
 
-import CoreSpotlight
 import SwiftData
 import SwiftUI
 

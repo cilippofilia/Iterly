@@ -18,16 +18,12 @@ struct ProjectDetailView: View {
 
     var body: some View {
         let tasks = project.tasks ?? []
-        let activeTasks = tasks.filter { $0.status != .done }
+        let activeTasks = tasks.filter { $0.status != .done && $0.status != .closed }
         let completedTasks = tasks.filter { $0.status == .done }
+        let closedTasks = tasks.filter { $0.status == .closed }
 
         ScrollView {
             VStack(alignment: .leading) {
-                Text(project.title)
-                    .font(.title)
-                    .bold()
-                    .foregroundStyle(.primary)
-
                 if let details = project.details, !details.isEmpty {
                     Text(details)
                         .foregroundStyle(.secondary)
@@ -98,14 +94,14 @@ struct ProjectDetailView: View {
                     ForEach(activeTasks) { task in
                         TaskRowView(task: task)
                     }
-
-                    Button(action: {
-                        showAddTaskSheet = true
-                    }) {
-                        Label("Add task", systemImage: "plus")
-                    }
-                    .padding(4)
                 }
+
+                Button(action: {
+                    showAddTaskSheet = true
+                }) {
+                    Label("Add task", systemImage: "plus")
+                }
+                .padding(4)
 
                 if !completedTasks.isEmpty {
                     Text("Completed Tasks")
@@ -118,11 +114,22 @@ struct ProjectDetailView: View {
                     }
                 }
 
-                pinButtonView
+                if !closedTasks.isEmpty {
+                    Text("Closed Tasks")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .padding(.top)
+
+                    ForEach(closedTasks) { task in
+                        TaskRowView(task: task)
+                    }
+                }
+
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding([.horizontal, .bottom])
         }
+        .navigationTitle(project.title)
         .contentMargins(.bottom, 70, for: .scrollContent)
         .navigationDestination(for: UUID.self) { taskId in
             if let task = project.tasks?.first(where: { $0.id == taskId }) {
@@ -130,6 +137,15 @@ struct ProjectDetailView: View {
             }
         }
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: {
+                    project.isPinned.toggle()
+                }) {
+                    Image(systemName: "pin")
+                        .rotationEffect(Angle(degrees: 45))
+                        .symbolVariant(project.isPinned ? .fill : .none)
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Edit", systemImage: "pencil.line") {
                     projectToEdit = project
@@ -167,28 +183,6 @@ struct ProjectDetailView: View {
         }
 
         return "v\(release.version) (\(release.build))"
-    }
-
-    private var pinButtonView: some View {
-        Button(action: {
-            if viewModel.togglePin(project: project, modelContext: modelContext) == false {
-                showPinLimitAlert = true
-            }
-        }) {
-            HStack {
-                Image(systemName: "pin")
-                    .rotationEffect(Angle(degrees: 45))
-                    .symbolVariant(project.isPinned ? .fill : .none)
-
-                Text(project.isPinned ? "Unpin from" : "Pin to") +
-                Text(" dashboard")
-            }
-        }
-        .buttonStyle(.plain)
-        .padding(8)
-        .background(.ultraThinMaterial)
-        .clipShape(.rect(cornerRadius: 8, style: .continuous))
-        .padding(.top)
     }
 }
 
