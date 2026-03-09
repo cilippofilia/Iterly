@@ -19,7 +19,9 @@ struct UnavailableProjectsView: View {
             createProjectButton
         }
         .sheet(isPresented: $showAddProjectSheet) {
-            ProjectFormView()
+            NavigationStack {
+                ProjectFormView()
+            }
         }
     }
 
