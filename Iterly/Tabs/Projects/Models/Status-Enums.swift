@@ -20,35 +20,23 @@ enum ProjectStatus: String, CaseIterable, Codable {
 
     var title: String {
         switch self {
-        case .plan:
-            return "Planning"
-        case .dev:
-            return "Development"
-        case .beta:
-            return "Beta"
-        case .live:
-            return "Live"
-        case .blocked:
-            return "Blocked"
-        case .closed:
-            return "Closed"
+        case .plan: "Planning"
+        case .dev: "Development"
+        case .beta: "Beta"
+        case .live: "Live"
+        case .blocked: "Blocked"
+        case .closed: "Closed"
         }
     }
 
     var backgroundColor: Color {
         switch self {
-        case .plan:
-            return .blue
-        case .dev:
-            return .orange
-        case .beta:
-            return .purple
-        case .live:
-            return .green
-        case .blocked:
-            return .red
-        case .closed:
-            return .gray
+        case .plan: .blue
+        case .dev: .orange
+        case .beta: .purple
+        case .live: .green
+        case .blocked: .red
+        case .closed: .gray
         }
     }
 }
@@ -64,31 +52,21 @@ enum TaskStatus: String, CaseIterable, Codable {
 
     var title: String {
         switch self {
-        case .blocked:
-            return "Blocked"
-        case .notStarted:
-            return "Not Started"
-        case .inProgress:
-            return "In Progress"
-        case .done:
-            return "Done"
-        case .closed:
-            return "Closed"
+        case .blocked: "Blocked"
+        case .notStarted: "Not Started"
+        case .inProgress: "In Progress"
+        case .done: "Done"
+        case .closed: "Closed"
         }
     }
 
     var backgroundColor: Color {
         switch self {
-        case .blocked:
-            return .red
-        case .notStarted:
-            return .gray
-        case .inProgress:
-            return .blue
-        case .done:
-            return .green
-        case .closed:
-            return .gray
+        case .blocked: .red
+        case .notStarted: .gray
+        case .inProgress: .blue
+        case .done: .green
+        case .closed: .gray
         }
     }
 }
