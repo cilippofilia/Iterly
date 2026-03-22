@@ -1,129 +1,118 @@
-# Iterly: Keep product work visible
+# Iterly: Lightweight project tracking for product work
 
 ## About
 
-**Iterly** is a native project tracker for iPhone built with SwiftUI and SwiftData. It is designed for small product teams and solo builders who want a lightweight way to follow projects, releases, and tasks without the overhead of a larger project management tool.
+Iterly is a native SwiftUI project tracker for iPhone. It is built for solo builders and small product teams that want a simpler way to follow projects, tasks, releases, and day-to-day momentum without the weight of a larger PM tool.
 
-The app keeps the current state of work visible through pinned projects, upcoming tasks, release metadata, and status-based project grouping. It also includes built-in sample data so the interface can be explored immediately in previews and in the running app.
+The app centers on two main areas:
 
----
+- a Home tab for pinned projects and upcoming work
+- a Projects tab for editing projects, releases, tasks, subtasks, and brainstorm notes
 
 ## Features
 
 ### Home
-- Pinned projects surfaced at the top of the app for fast access.
-- Upcoming tasks sorted by due date and priority.
-- Project summaries that help you scan current work at a glance.
-- Empty-state handling when no projects or tasks exist yet.
+
+- Dashboard for pinned projects, active projects, and upcoming tasks.
+- Upcoming-task ordering based on due date and priority.
+- Empty-state handling when the data store is empty.
 - Toolbar actions to insert sample data or erase the current store.
 
 ### Projects
+
 - Separate active and closed project sections.
 - Create, edit, pin, close, and delete projects.
-- Support for priority, status, notes, details, and release metadata.
-- A four-project pinning limit to keep the dashboard focused.
-- Project detail screens with progress, task breakdowns, and supporting actions.
+- Track project priority, status, notes, details, and current release metadata.
+- Four-project pinning limit to keep the dashboard focused.
+- Project detail view with progress and task breakdown helpers.
 
 ### Tasks
+
 - Create and edit top-level tasks and nested subtasks.
-- Track task status, priority, due date, notes, and details.
-- Task lists grouped into clearer sections for navigation.
-- Brainstorm flows for quickly drafting notes and ideas while working.
-- Overdue and progress helpers used across the interface.
+- Track task status, priority, due date, notes, and supporting details.
+- Dedicated task detail views and task action surfaces.
+- Brainstorm form for drafting notes and ideas alongside project work.
 
 ### Sample Data And Previews
-- In-memory preview containers for SwiftUI previews.
-- Seeded demo projects, tasks, subtasks, and releases.
-- Reusable sample-data helpers for development and UI iteration.
 
----
+- In-memory preview containers for SwiftUI previews.
+- Seeded sample projects, releases, tasks, and subtasks.
+- Insertable demo data for trying the app without manual setup.
 
 ## Tech Stack
 
-### Core Technologies
-- **Swift 6.2+**
-- **SwiftUI**
-- **SwiftData**
-- **iOS 26.0+**
-
-### Architecture And Patterns
-- **Feature-first structure** with Home and Projects tabs.
-- **`@Observable` view models** for UI-focused logic.
-- **SwiftData `@Model` types** for persistence.
-- **`NavigationStack` and `Tab` APIs** for modern navigation.
-- **Preview-first development** with seeded in-memory model containers.
-
----
+- SwiftUI
+- SwiftData
+- `@Observable` view models
+- Modern `NavigationStack` and `Tab` navigation
+- Preview containers backed by in-memory SwiftData stores
 
 ## Project Structure
 
 ```text
 Iterly/
 ├── Iterly/
-│   ├── Assets/                     # App assets and icon sources
-│   ├── Helpers/                    # Shared UI components and utilities
-│   │   ├── Localization/
-│   │   └── SampleData.swift
-│   ├── Localization/               # String resources
+│   ├── Assets/
+│   ├── Helpers/
+│   ├── Localization/
 │   ├── Tabs/
-│   │   ├── Home/                   # Dashboard, pinned projects, upcoming tasks
-│   │   │   ├── Sections/
-│   │   │   └── HomeViewModel.swift
-│   │   └── Projects/               # Projects list, forms, details, task flows
+│   │   ├── Home/
+│   │   │   ├── Helpers/
+│   │   │   └── Sections/
+│   │   └── Projects/
 │   │       ├── Helpers/
-│   │       ├── Models/
-│   │       └── ProjectsViewModel.swift
-│   ├── ContentView.swift           # Tab navigation
-│   └── IterlyApp.swift             # App entry point and SwiftData container
-│
-├── Iterly.xcodeproj
-└── README.md
+│   │       └── Models/
+│   ├── ContentView.swift
+│   └── IterlyApp.swift
+└── Iterly.xcodeproj
 ```
 
-### Data Model
+The app boots a shared SwiftData container in [`Iterly/IterlyApp.swift`](Iterly/IterlyApp.swift) and exposes two tabs from [`Iterly/ContentView.swift`](Iterly/ContentView.swift): `Home` and `Projects`.
 
-- `Project` stores title, notes, status, priority, timestamps, pinning state, tasks, and an optional current release.
-- `ProjectTask` stores task metadata including due date, priority, status, and parent/child relationships for subtasks.
-- `ProjectRelease` stores version, build, and app URL information for the current release of a project.
+## Data Model
 
----
+- `Project` stores project metadata, pin state, timestamps, current release, and related tasks.
+- `ProjectTask` stores task status, priority, due date, notes, and parent-child task relationships.
+- `ProjectRelease` stores release metadata for the current version of a project.
 
 ## Requirements
 
-- **Xcode** with the iOS 26 SDK
-- **iOS** 26.0 or later
-- **Swift** 6.2 or later
+- Xcode with iOS 18 SDK support
+- iOS 18+
 
----
+The checked-in project currently uses iOS 18 deployment settings for the app target.
 
 ## Getting Started
 
-### Run The App
+1. Clone the repository:
 
-1. Open `Iterly.xcodeproj` in Xcode.
-2. Select the `Iterly` scheme.
-3. Choose an iOS 26 simulator or device.
+```bash
+git clone <your-fork-or-repo-url>
+cd Iterly
+```
+
+2. Open the project in Xcode:
+
+```bash
+open Iterly.xcodeproj
+```
+
+3. Select the `Iterly` scheme and an iPhone simulator or device.
+
 4. Build and run the app.
-
-### Explore With Sample Data
-
-1. Launch the app.
-2. Use the Home toolbar to insert sample content.
-3. Use the erase action when you want to reset the current store.
-
-SwiftUI previews are also seeded through `Iterly/Helpers/SampleData.swift`.
-
----
 
 ## Development Notes
 
-- The app creates a shared SwiftData container in `IterlyApp.swift`.
-- Home-specific logic lives in `HomeViewModel`.
-- Project-list logic lives in `ProjectsViewModel`.
-- Shared task rendering and status helpers live under `Iterly/Helpers`.
+- Shared UI helpers and progress/task utilities live in `Iterly/Helpers`.
+- Home-specific view logic lives in `Iterly/Tabs/Home`.
+- Project, release, and task models live in `Iterly/Tabs/Projects/Models`.
+- Forms and detail screens for project editing live in `Iterly/Tabs/Projects/Helpers`.
+- Preview and demo data are defined in `Iterly/Helpers/SampleData.swift`.
 
----
+## Testing
+
+There is currently no dedicated test target checked into this repository.
 
 ## Author
 
-**Filippo Cilia**
+Filippo Cilia
