@@ -16,6 +16,12 @@ struct ProjectInfoBoxView: View {
                 .bold()
                 .padding([.horizontal, .top])
 
+            LabeledContent("Type") {
+                Label(project.type.title, systemImage: project.type.systemImage)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.horizontal)
+
             LabeledContent("Status") {
                 Menu {
                     Picker("Status", selection: Binding(

@@ -37,6 +37,7 @@ struct ProjectsSection: View {
                         NavigationLink(value: project) {
                             ProjectCell(
                                 title: project.title,
+                                projectType: project.type,
                                 tasks: project.topLevelTasks,
                                 blockedAmount: project.blockedAmount,
                                 inProgressAmount: project.inProgressAmount,

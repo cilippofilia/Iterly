@@ -14,6 +14,7 @@ final class Project: Identifiable, Hashable {
     var title: String = "Project"
     var details: String? = nil
     var note: String? = nil
+    private var typeRawValue: String? = nil
     var priority: ProjectPriority = ProjectPriority.default
     var status: ProjectStatus = ProjectStatus.default
     var creationDate: Date = Date.now
@@ -23,6 +24,11 @@ final class Project: Identifiable, Hashable {
 
     @Relationship(deleteRule: .cascade, inverse: \ProjectTask.project)
     var tasks: [ProjectTask]?
+
+    var type: ProjectType {
+        get { ProjectType(rawValue: typeRawValue ?? "") ?? .default }
+        set { typeRawValue = newValue.rawValue }
+    }
 
     var topLevelTasks: [ProjectTask] {
         (tasks ?? []).filter { $0.parentTask == nil }
@@ -55,6 +61,7 @@ final class Project: Identifiable, Hashable {
         title: String = "Project",
         details: String? = nil,
         note: String? = nil,
+        projectType: ProjectType = ProjectType.default,
         projectPriority: ProjectPriority = ProjectPriority.default,
         projectStatus: ProjectStatus = ProjectStatus.default,
         tasks: [ProjectTask]? = [],
@@ -67,6 +74,7 @@ final class Project: Identifiable, Hashable {
         self.title = title
         self.details = details
         self.note = note
+        self.typeRawValue = projectType.rawValue
         self.priority = projectPriority
         self.status = projectStatus
         self.tasks = tasks

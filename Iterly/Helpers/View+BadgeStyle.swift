@@ -82,7 +82,7 @@ extension View {
         )
     }
     func secondaryCapsuleButtonStyle(
-        foregroundColor: Color = .black,
+        foregroundColor: Color = .primary,
         backgroundColor: Color = .gray.opacity(0.25)
     ) -> some View {
         modifier(

@@ -115,6 +115,7 @@ enum SampleData {
             title: "Drinko.",
             details: "Cocktail making masterclass at your fingertips.",
             note: "Focus on the welcome flow and early retention.",
+            projectType: .app,
             projectPriority: .high,
             projectStatus: .live,
             creationDate: onboardingDate,
@@ -148,6 +149,7 @@ enum SampleData {
         let insights = Project(
             title: "Insights",
             details: "Weekly reporting",
+            projectType: .package,
             projectPriority: .medium,
             projectStatus: .dev,
             creationDate: insightsDate,
@@ -169,6 +171,7 @@ enum SampleData {
         let marketing = Project(
             title: "Launch Plan",
             details: "Campaign and timeline",
+            projectType: .website,
             projectPriority: .low,
             projectStatus: .plan,
             creationDate: marketingDate,
@@ -190,6 +193,7 @@ enum SampleData {
         let cleanup = Project(
             title: "Tech Cleanup",
             details: "Reduce tech debt",
+            projectType: .library,
             projectPriority: .medium,
             projectStatus: .blocked,
             creationDate: cleanupDate,
@@ -212,6 +216,7 @@ enum SampleData {
             title: "Payments Revamp",
             details: "Streamline checkout and subscriptions.",
             note: "Coordinate with finance on pricing tiers.",
+            projectType: .automation,
             projectPriority: .high,
             projectStatus: .dev,
             creationDate: paymentsDate,
@@ -238,6 +243,7 @@ enum SampleData {
         let community = Project(
             title: "Community Beta",
             details: "Invite-only social layer for power users.",
+            projectType: .other,
             projectPriority: .medium,
             projectStatus: .plan,
             creationDate: communityDate,
@@ -260,6 +266,7 @@ enum SampleData {
         let designSystem = Project(
             title: "Design System",
             details: "Unify tokens, components, and accessibility.",
+            projectType: .agentSkill,
             projectPriority: .low,
             projectStatus: .dev,
             creationDate: designSystemDate,

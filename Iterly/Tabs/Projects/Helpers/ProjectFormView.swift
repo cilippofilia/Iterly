@@ -19,6 +19,7 @@ struct ProjectFormView: View {
     @State private var version = ""
     @State private var build = ""
     @State private var appURL = ""
+    @State private var type: ProjectType = .default
     @State private var priority: ProjectPriority = .default
     @State private var status: ProjectStatus = .default
     @State private var isPinned = false
@@ -35,6 +36,7 @@ struct ProjectFormView: View {
         _version = State(initialValue: project?.currentRelease?.version ?? "")
         _build = State(initialValue: project?.currentRelease?.build ?? "")
         _appURL = State(initialValue: project?.currentRelease?.appURL ?? "")
+        _type = State(initialValue: project?.type ?? .default)
         _priority = State(initialValue: project?.priority ?? .default)
         _status = State(initialValue: project?.status ?? .default)
         _isPinned = State(initialValue: project?.isPinned ?? false)
@@ -53,6 +55,13 @@ struct ProjectFormView: View {
             }
 
             Section("Info") {
+                Picker("Type", selection: $type) {
+                    ForEach(ProjectType.allCases, id: \.self) { type in
+                        Label(type.title, systemImage: type.systemImage)
+                            .tag(type)
+                    }
+                }
+
                 Picker("Status", selection: $status) {
                     ForEach(ProjectStatus.allCases, id: \.self) { status in
                         Text(status.title)
@@ -130,6 +139,7 @@ struct ProjectFormView: View {
             title: title,
             details: details,
             note: note,
+            type: type,
             priority: priority,
             status: status,
             isPinned: isPinned,
@@ -150,6 +160,7 @@ struct ProjectFormView: View {
         project.title = trimmedTitle
         project.details = trimmedDetails.isEmpty ? nil : trimmedDetails
         project.note = trimmedNote.isEmpty ? nil : trimmedNote
+        project.type = type
         project.priority = priority
         project.status = status
         project.isPinned = isPinned

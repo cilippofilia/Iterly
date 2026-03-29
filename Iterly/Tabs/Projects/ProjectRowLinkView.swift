@@ -16,6 +16,7 @@ struct ProjectRowLinkView: View {
         NavigationLink(value: project) {
             ProjectRowView(
                 title: project.title,
+                projectType: project.type,
                 statusTitle: project.status.title,
                 statusColor: project.status.backgroundColor,
                 currentRelease: project.currentRelease,
