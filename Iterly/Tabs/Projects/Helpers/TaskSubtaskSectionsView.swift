@@ -16,7 +16,11 @@ struct TaskSubtaskSectionsView: View {
             let sections = TaskSectionsBuilder.sections(for: task.subtasks ?? [])
 
             if !sections.active.isEmpty {
-                TaskListSectionView(title: "Subtasks", tasks: sections.active)
+                TaskListSectionView(
+                    title: "Subtasks",
+                    tasks: sections.active,
+                    shouldNavigate: false
+                )
                 TertiaryCapsuleActionButton(
                     title: "Add subtask",
                     systemImage: "plus",
@@ -39,11 +43,19 @@ struct TaskSubtaskSectionsView: View {
             }
 
             if !sections.completed.isEmpty {
-                TaskListSectionView(title: "Completed Subtasks", tasks: sections.completed)
+                TaskListSectionView(
+                    title: "Completed Subtasks",
+                    tasks: sections.completed,
+                    shouldNavigate: false
+                )
             }
 
             if !sections.closed.isEmpty {
-                TaskListSectionView(title: "Closed Subtasks", tasks: sections.closed)
+                TaskListSectionView(
+                    title: "Closed Subtasks",
+                    tasks: sections.closed,
+                    shouldNavigate: false
+                )
             }
         }
     }

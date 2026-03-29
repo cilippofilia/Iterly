@@ -36,6 +36,7 @@ struct ProjectsView: View {
                 } else {
                     let split = projectsViewModel.splitProjects(projects)
                     List {
+                        // active projects
                         if !split.active.isEmpty {
                             Section {
                                 ForEach(split.active) { project in
@@ -55,6 +56,7 @@ struct ProjectsView: View {
                             }
                         }
 
+                        // closed projects
                         if !split.closed.isEmpty {
                             Section("Closed Projects") {
                                 ForEach(split.closed) { project in

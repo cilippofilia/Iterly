@@ -9,6 +9,7 @@ import SwiftData
 import SwiftUI
 
 struct TasksSection: View {
+    let title: String
     let tasks: [ProjectTask]?
 
     var body: some View {
@@ -16,7 +17,7 @@ struct TasksSection: View {
 
         if !upcomingTasks.isEmpty {
             VStack(alignment: .leading) {
-                Text("Upcoming tasks")
+                Text(title)
                     .font(.headline)
                     .foregroundStyle(.secondary)
                 ForEach(upcomingTasks) { task in
@@ -31,7 +32,7 @@ struct TasksSection: View {
 #Preview {
     NavigationStack {
         ScrollView {
-            TasksSection(tasks: SampleData.makeProjects().flatMap { $0.topLevelTasks })
+            TasksSection(title: "Upcoming task", tasks: SampleData.makeProjects().flatMap { $0.topLevelTasks })
         }
     }
     .modelContainer(SampleData.makePreviewContainer())

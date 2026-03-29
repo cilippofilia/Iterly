@@ -27,8 +27,11 @@ struct HomeAvailableView: View {
                 )
                 .padding(.bottom)
 
-                TasksSection(tasks: Array(upcomingTasks.prefix(10)))
-                    .padding(.bottom)
+                TasksSection(
+                    title: "Upcoming tasks",
+                    tasks: Array(upcomingTasks.prefix(10))
+                )
+                .padding(.bottom)
             }
         }
         .navigationDestination(for: Project.self) { project in

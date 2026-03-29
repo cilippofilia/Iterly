@@ -13,7 +13,11 @@ struct ProjectTaskSectionsView: View {
 
     var body: some View {
         if !sections.active.isEmpty {
-            TaskListSectionView(title: "Tasks", tasks: sections.active)
+            TaskListSectionView(
+                title: "Tasks",
+                tasks: sections.active,
+                shouldNavigate: false
+            )
             TertiaryCapsuleActionButton(
                 title: "Add task",
                 systemImage: "plus",
@@ -36,11 +40,19 @@ struct ProjectTaskSectionsView: View {
         }
 
         if !sections.completed.isEmpty {
-            TaskListSectionView(title: "Completed Tasks", tasks: sections.completed)
+            TaskListSectionView(
+                title: "Completed Tasks",
+                tasks: sections.completed,
+                shouldNavigate: true
+            )
         }
 
         if !sections.closed.isEmpty {
-            TaskListSectionView(title: "Closed Tasks", tasks: sections.closed)
+            TaskListSectionView(
+                title: "Closed Tasks",
+                tasks: sections.closed,
+                shouldNavigate: true
+            )
         }
     }
 }
