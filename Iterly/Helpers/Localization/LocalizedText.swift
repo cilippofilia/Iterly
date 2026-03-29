@@ -8,6 +8,8 @@
 import Foundation
 
 enum LocalizedText {
+    static let noDueDate: String = NSLocalizedString("No due date", comment: "No due date label")
+
     static func tasksCount(_ count: Int) -> String {
         String.localizedStringWithFormat(
             NSLocalizedString("tasks_count", comment: "Tasks count"),

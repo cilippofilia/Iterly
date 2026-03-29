@@ -22,7 +22,8 @@ struct TaskFormView: View {
     @State private var note = ""
     @State private var status: TaskStatus = .default
     @State private var priority: TaskPriority = .default
-    @State private var dueDate: Date = TaskFormView.defaultDueDate
+    @State private var hasDueDate: Bool = false
+    @State private var dueDateDraft: Date = TaskFormView.defaultDueDate
 
     @State private var isEditing: Bool = false
     @State private var showCloseAlert: Bool = false
@@ -44,7 +45,8 @@ struct TaskFormView: View {
         _note = State(initialValue: task?.note ?? "")
         _status = State(initialValue: task?.status ?? .default)
         _priority = State(initialValue: task?.priority ?? .default)
-        _dueDate = State(initialValue: task?.dueDate ?? TaskFormView.defaultDueDate)
+        _hasDueDate = State(initialValue: task?.dueDate != nil)
+        _dueDateDraft = State(initialValue: task?.dueDate ?? TaskFormView.defaultDueDate)
     }
 
     private var canSave: Bool {
@@ -74,8 +76,12 @@ struct TaskFormView: View {
                     }
                 }
 
-                DatePicker("Due Date", selection: $dueDate, displayedComponents: .date)
-                    .datePickerStyle(.compact)
+                Toggle("Has Due Date", isOn: $hasDueDate)
+
+                if hasDueDate {
+                    DatePicker("Due Date", selection: $dueDateDraft, displayedComponents: .date)
+                        .datePickerStyle(.compact)
+                }
             }
 
             Section("Brainstorm") {
@@ -152,7 +158,7 @@ struct TaskFormView: View {
             details: trimmedDetails.isEmpty ? nil : trimmedDetails,
             note: trimmedNote.isEmpty ? nil : trimmedNote,
             status: status,
-            dueDate: dueDate,
+            dueDate: hasDueDate ? dueDateDraft : nil,
             priority: priority,
             creationDate: .now,
             project: project,
@@ -193,7 +199,7 @@ struct TaskFormView: View {
         task.note = trimmedNote.isEmpty ? nil : trimmedNote
         task.status = status
         task.priority = priority
-        task.dueDate = dueDate
+        task.dueDate = hasDueDate ? dueDateDraft : nil
         task.project.touch()
 
         do {

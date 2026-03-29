@@ -12,6 +12,7 @@ struct TaskInfoBoxView: View {
 
     var body: some View {
         let overdueDays = TaskOverdueCalculator.overdueDays(dueDate: task.dueDate)
+        let bottomRowPadding: CGFloat = overdueDays == nil ? 16 : 8
 
         VStack(alignment: .leading) {
             Text("Info")
@@ -62,20 +63,31 @@ struct TaskInfoBoxView: View {
             }
             .padding(.horizontal)
 
-            DatePicker(
-                "Due Date",
-                selection: Binding(
-                    get: { task.dueDate },
-                    set: {
-                        task.dueDate = $0
-                        task.project.touch()
-                    }
-                ),
-                displayedComponents: .date
-            )
-            .datePickerStyle(.compact)
-            .padding(.horizontal)
-            .padding(.vertical, 8)
+            if task.dueDate != nil {
+                DatePicker(
+                    "Due Date",
+                    selection: Binding(
+                        get: { task.dueDate ?? .now },
+                        set: {
+                            task.dueDate = $0
+                            task.project.touch()
+                        }
+                    ),
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.compact)
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, bottomRowPadding)
+            } else {
+                LabeledContent("Due Date") {
+                    Text(LocalizedText.noDueDate)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, bottomRowPadding)
+            }
 
             if let overdueDays {
                 Text(LocalizedText.overdueDays(overdueDays))

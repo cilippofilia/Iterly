@@ -14,10 +14,16 @@ final class HomeViewModel {
         tasks
             .filter { $0.project.status != .closed }
             .filter { $0.status != .done }
+            .filter { $0.status != .closed }
             .filter { $0.parentTask == nil }
+            .filter { $0.dueDate != nil }
             .sorted { lhs, rhs in
-                if lhs.dueDate != rhs.dueDate {
-                    return lhs.dueDate < rhs.dueDate
+                guard let lhsDueDate = lhs.dueDate, let rhsDueDate = rhs.dueDate else {
+                    return lhs.priority.sortRank < rhs.priority.sortRank
+                }
+
+                if lhsDueDate != rhsDueDate {
+                    return lhsDueDate < rhsDueDate
                 }
                 return lhs.priority.sortRank < rhs.priority.sortRank
             }

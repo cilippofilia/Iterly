@@ -25,19 +25,18 @@ struct ProjectRowView: View {
                 Label(projectType.title, systemImage: projectType.systemImage)
                     .labelStyle(.iconOnly)
                     .foregroundStyle(.secondary)
-
                 Text(title)
                     .bold()
                     .lineLimit(1)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxWidth: currentRelease?.displayText == nil ? .infinity : nil, alignment: .leading)
+                if let releaseText = currentRelease?.displayText {
+                    Text(releaseText)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 Text(statusTitle)
                     .badgeStyle(backgroundColor: statusColor)
-            }
-
-            if let releaseText = currentRelease?.displayText {
-                Text(releaseText)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
 
             Text(LocalizedText.tasksCount(tasks.count))

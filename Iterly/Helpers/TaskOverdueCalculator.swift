@@ -8,7 +8,8 @@
 import Foundation
 
 enum TaskOverdueCalculator {
-    static func overdueDays(dueDate: Date, now: Date = .now) -> Int? {
+    static func overdueDays(dueDate: Date?, now: Date = .now) -> Int? {
+        guard let dueDate else { return nil }
         let calendar = Calendar.autoupdatingCurrent
         let dueDay = calendar.startOfDay(for: dueDate)
         let today = calendar.startOfDay(for: now)

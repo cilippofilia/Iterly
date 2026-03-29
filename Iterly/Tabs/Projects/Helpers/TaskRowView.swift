@@ -13,6 +13,10 @@ struct TaskRowView: View {
 
     var body: some View {
         let isDone = task.status == .done
+        let isClosed = task.status == .closed
+        let isActive = isDone == false && isClosed == false
+        let overdueDays = TaskOverdueCalculator.overdueDays(dueDate: task.dueDate)
+        let isOverdue = isActive && overdueDays != nil
         let subtaskCount = task.subtasks?.count ?? 0
         let subtaskLabel = LocalizedText.subtasksCount(subtaskCount)
 
@@ -36,10 +40,31 @@ struct TaskRowView: View {
                     .foregroundStyle(isDone ? .secondary.opacity(0.5) : task.priority.backgroundColor)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(task.title)
-                        .foregroundStyle(isDone ? .secondary : .primary)
-                        .strikethrough(isDone, color: .secondary)
-                        .multilineTextAlignment(.leading)
+                    HStack {
+                        Text(task.title)
+                            .foregroundStyle(isDone ? .secondary : .primary)
+                            .strikethrough(isDone, color: .secondary)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Menu {
+                            Picker("Status", selection: Binding(
+                                get: { task.status },
+                                set: {
+                                    task.status = $0
+                                    task.project.touch()
+                                }
+                            )) {
+                                ForEach(TaskStatus.allCases, id: \.self) { status in
+                                    Text(status.title)
+                                        .tag(status)
+                                }
+                            }
+                        } label: {
+                            Text(task.status.title)
+                                .badgeStyle(backgroundColor: task.status.backgroundColor)
+                        }
+                        .buttonStyle(.plain)
+                    }
 
                     if subtaskCount > 0 {
                         Text(subtaskLabel)
@@ -54,38 +79,31 @@ struct TaskRowView: View {
 
                         Text("Due:")
                             .padding(.trailing, 2)
-                        Text(
-                            task.dueDate,
-                            format: .dateTime.day().month().year()
-                        )
-                        .bold()
+                        if let dueDate = task.dueDate {
+                            Text(
+                                dueDate,
+                                format: .dateTime.day().month().year()
+                            )
+                            .bold()
+                            .strikethrough(isOverdue, color: .secondary)
+                            .padding(.trailing, 4)
+
+                            if let overdueDays, isOverdue {
+                                Text(LocalizedText.overdueDays(overdueDays))
+                                    .font(.caption)
+                                    .foregroundStyle(.red)
+                                    .bold()
+                            }
+                        } else {
+                            Text(LocalizedText.noDueDate)
+                        }
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 }
             }
             .buttonStyle(.plain)
-
-            Spacer(minLength: 8)
-
-            Menu {
-                Picker("Status", selection: Binding(
-                    get: { task.status },
-                    set: {
-                        task.status = $0
-                        task.project.touch()
-                    }
-                )) {
-                    ForEach(TaskStatus.allCases, id: \.self) { status in
-                        Text(status.title)
-                            .tag(status)
-                    }
-                }
-            } label: {
-                Text(task.status.title)
-                    .badgeStyle(backgroundColor: task.status.backgroundColor)
-            }
-            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(4)
     }

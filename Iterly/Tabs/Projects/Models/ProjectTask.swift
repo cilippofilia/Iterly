@@ -15,7 +15,7 @@ final class ProjectTask: Identifiable {
     var details: String? = nil
     var note: String? = nil
     var status: TaskStatus = TaskStatus.default
-    var dueDate: Date = Date.now.addingTimeInterval(14 * 24 * 60 * 60) // 2 weeks from now
+    var dueDate: Date? = nil
     var priority: TaskPriority = TaskPriority.default
     var creationDate: Date = Date.now
     var project: Project
@@ -32,7 +32,7 @@ final class ProjectTask: Identifiable {
         details: String? = nil,
         note: String? = nil,
         status: TaskStatus = TaskStatus.default,
-        dueDate: Date = Date.now.addingTimeInterval(14 * 24 * 60 * 60), // 2 weeks from now
+        dueDate: Date? = nil,
         priority: TaskPriority = TaskPriority.default,
         creationDate: Date = Date.now,
         project: Project,

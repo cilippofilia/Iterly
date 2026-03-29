@@ -30,8 +30,8 @@ struct HomeView: View {
         order: .reverse
     )
     private var projects: [Project]
-    
-    @Query(sort: \ProjectTask.dueDate, order: .reverse)
+
+    @Query
     private var tasks: [ProjectTask]
 
     var body: some View {
