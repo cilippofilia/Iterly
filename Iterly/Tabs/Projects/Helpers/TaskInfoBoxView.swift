@@ -12,12 +12,12 @@ struct TaskInfoBoxView: View {
 
     var body: some View {
         let overdueDays = TaskOverdueCalculator.overdueDays(dueDate: task.dueDate)
-        let bottomRowPadding: CGFloat = overdueDays == nil ? 16 : 8
 
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Info")
                 .bold()
-                .padding([.horizontal, .top])
+                .padding(.horizontal)
+                .padding(.top)
 
             LabeledContent("Status") {
                 Menu {
@@ -77,25 +77,23 @@ struct TaskInfoBoxView: View {
                 )
                 .datePickerStyle(.compact)
                 .padding(.horizontal)
-                .padding(.top, 8)
-                .padding(.bottom, bottomRowPadding)
             } else {
                 LabeledContent("Due Date") {
                     Text(LocalizedText.noDueDate)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal)
-                .padding(.top, 8)
-                .padding(.bottom, bottomRowPadding)
             }
 
             if let overdueDays {
                 Text(LocalizedText.overdueDays(overdueDays))
+                    .font(.caption)
                     .foregroundStyle(.red)
                     .bold()
-                    .padding([.horizontal, .bottom])
+                    .padding(.horizontal)
             }
         }
+        .padding(.bottom)
         .background(.ultraThinMaterial)
         .clipShape(.rect(cornerRadius: 8, style: .continuous))
     }
