@@ -12,6 +12,7 @@ import SwiftData
 final class ProjectRelease: Identifiable {
     var id: UUID = UUID()
     var version: String = ""
+    // Legacy persisted field kept so existing stores continue to open cleanly.
     var build: String = ""
     var appURL: String = ""
 

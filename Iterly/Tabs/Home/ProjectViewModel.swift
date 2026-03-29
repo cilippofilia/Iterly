@@ -15,7 +15,6 @@ final class ProjectViewModel {
         status: ProjectStatus,
         isPinned: Bool,
         version: String,
-        build: String,
         appURL: String,
         modelContext: ModelContext
     ) {
@@ -36,7 +35,7 @@ final class ProjectViewModel {
             isPinned: false
         )
 
-        let release = ProjectRelease(version: version, build: build, appURL: trimmedAppURL, project: project)
+        let release = ProjectRelease(version: version, appURL: trimmedAppURL, project: project)
         project.currentRelease = release
 
         modelContext.insert(project)

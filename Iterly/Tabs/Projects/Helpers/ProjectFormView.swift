@@ -17,7 +17,6 @@ struct ProjectFormView: View {
     @State private var details = ""
     @State private var note = ""
     @State private var version = ""
-    @State private var build = ""
     @State private var appURL = ""
     @State private var type: ProjectType = .default
     @State private var priority: ProjectPriority = .default
@@ -34,7 +33,6 @@ struct ProjectFormView: View {
         _details = State(initialValue: project?.details ?? "")
         _note = State(initialValue: project?.note ?? "")
         _version = State(initialValue: project?.currentRelease?.version ?? "")
-        _build = State(initialValue: project?.currentRelease?.build ?? "")
         _appURL = State(initialValue: project?.currentRelease?.appURL ?? "")
         _type = State(initialValue: project?.type ?? .default)
         _priority = State(initialValue: project?.priority ?? .default)
@@ -79,7 +77,6 @@ struct ProjectFormView: View {
 
             Section("Release info") {
                 TextField("Version", text: $version)
-                TextField("Build number", text: $build)
                 TextField("App URL", text: $appURL)
                     .keyboardType(.URL)
                     .textInputAutocapitalization(.never)
@@ -144,7 +141,6 @@ struct ProjectFormView: View {
             status: status,
             isPinned: isPinned,
             version: version,
-            build: build,
             appURL: appURL,
             modelContext: modelContext
         )
@@ -168,10 +164,10 @@ struct ProjectFormView: View {
 
         if let release = project.currentRelease {
             release.version = version
-            release.build = build
+            release.build = ""
             release.appURL = trimmedAppURL
         } else {
-            let release = ProjectRelease(version: version, build: build, appURL: trimmedAppURL, project: project)
+            let release = ProjectRelease(version: version, appURL: trimmedAppURL, project: project)
             project.currentRelease = release
             modelContext.insert(release)
         }

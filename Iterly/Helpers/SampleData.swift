@@ -122,7 +122,7 @@ enum SampleData {
             lastUpdated: onboardingDate,
             isPinned: true
         )
-        onboarding.currentRelease = ProjectRelease(version: "2.2", build: "85", project: onboarding)
+        onboarding.currentRelease = ProjectRelease(version: "2.2", project: onboarding)
 
         let onboardingTasks = [
             ProjectTask(title: "Design the welcome flow", details: "Design onboarding to explain key areas of the app - Learn, Cocktails, Cabinet.", note: "Include skip and restore options.", status: .inProgress, priority: .high, project: onboarding),
@@ -156,7 +156,7 @@ enum SampleData {
             lastUpdated: insightsDate,
             isPinned: false
         )
-        insights.currentRelease = ProjectRelease(version: "0.9.2", build: "45", project: insights)
+        insights.currentRelease = ProjectRelease(version: "0.9.2", project: insights)
 
         let insightsTasks = [
             ProjectTask(title: "Define report metrics", status: .notStarted, priority: .high, project: insights),
@@ -178,7 +178,7 @@ enum SampleData {
             lastUpdated: marketingDate,
             isPinned: false
         )
-        marketing.currentRelease = ProjectRelease(version: "2.0.0", build: "201", project: marketing)
+        marketing.currentRelease = ProjectRelease(version: "2.0.0", project: marketing)
 
         let marketingTasks = [
             ProjectTask(title: "Draft announcement", status: .notStarted, priority: .medium, project: marketing),
@@ -200,7 +200,7 @@ enum SampleData {
             lastUpdated: cleanupDate,
             isPinned: false
         )
-        cleanup.currentRelease = ProjectRelease(version: "3.2.1", build: "332", project: cleanup)
+        cleanup.currentRelease = ProjectRelease(version: "3.2.1", project: cleanup)
 
         let cleanupTasks = [
             ProjectTask(title: "Remove legacy screens", status: .inProgress, priority: .medium, project: cleanup),
@@ -223,7 +223,7 @@ enum SampleData {
             lastUpdated: paymentsDate,
             isPinned: true
         )
-        payments.currentRelease = ProjectRelease(version: "1.4.0", build: "119", project: payments)
+        payments.currentRelease = ProjectRelease(version: "1.4.0", project: payments)
 
         let paymentsTasks = [
             ProjectTask(title: "Map payment flows", details: "Audit one-time and subscription flows.", status: .inProgress, priority: .high, project: payments),
@@ -250,7 +250,7 @@ enum SampleData {
             lastUpdated: communityDate,
             isPinned: false
         )
-        community.currentRelease = ProjectRelease(version: "0.3.0", build: "27", project: community)
+        community.currentRelease = ProjectRelease(version: "0.3.0", project: community)
 
         let communityTasks = [
             ProjectTask(title: "Define beta cohort", status: .notStarted, priority: .high, project: community),
@@ -273,7 +273,7 @@ enum SampleData {
             lastUpdated: designSystemDate,
             isPinned: false
         )
-        designSystem.currentRelease = ProjectRelease(version: "0.7.1", build: "64", project: designSystem)
+        designSystem.currentRelease = ProjectRelease(version: "0.7.1", project: designSystem)
 
         let designSystemTasks = [
             ProjectTask(title: "Audit component library", status: .inProgress, priority: .medium, project: designSystem),

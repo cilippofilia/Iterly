@@ -9,10 +9,8 @@ import Foundation
 
 extension ProjectRelease {
     var displayText: String? {
-        if version.isEmpty, build.isEmpty { return nil }
-        if version.isEmpty { return "Build \(build)" }
-        if build.isEmpty { return "v\(version)" }
-        return "v\(version) (\(build))"
+        guard version.isEmpty == false else { return nil }
+        return "v\(version)"
     }
 }
 
