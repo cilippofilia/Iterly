@@ -44,7 +44,7 @@ struct HomeView: View {
             )
             .navigationTitle("Home")
             .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .topBarLeading) {
                     HomeToolbarButtonsView(
                         showEraseDataAlert: $showEraseDataAlert,
                         showAddDataAlert: $showAddDataAlert
