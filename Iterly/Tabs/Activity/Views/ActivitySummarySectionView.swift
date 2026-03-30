@@ -38,7 +38,7 @@ struct ActivitySummarySectionView: View {
                     title: "Busiest",
                     value: busiestValue,
                     metricIcon: "fireworks",
-                    iconColor: .mint,
+                    iconColor: .indigo,
                     detail: busiestDetail
                 )
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -98,7 +98,8 @@ struct ActivitySummarySectionView: View {
 
             HStack(spacing: 4) {
                 Image(systemName: metricIcon)
-                    .foregroundStyle(iconColor.gradient)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(iconColor.gradient, .orange)
                 Text(value)
                     .font(.title2)
                     .bold()
