@@ -29,32 +29,10 @@ struct ActivityView: View {
                 VStack(alignment: .leading) {
                     ActivitySummarySectionView(summary: viewModel.summary)
 
-                    VStack(alignment: .leading) {
-                        Text("Activity Overview")
-                            .font(.headline)
-
-                        Picker("Range", selection: $viewModel.selectedRange) {
-                            ForEach(ActivityRange.allCases) { range in
-                                Text(range.title)
-                                    .tag(range)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-
-                        ActivityHeatmapGridView(
-                            weeks: viewModel.weeks,
-                            monthLabels: viewModel.monthLabels,
-                            selectedDay: viewModel.selectedDay,
-                            onSelectDay: { day in
-                                viewModel.selectDay(day)
-                            }
-                        )
-
-                        ActivityLegendView()
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                    }
-                    .padding()
-                    .background(.thinMaterial, in: .rect(cornerRadius: AppCornerRadius.prominent))
+                    ActivityOverviewSectionView(
+                        viewModel: viewModel,
+                        cornerRadius: AppCornerRadius.prominent
+                    )
 
                     ActivityDayDetailSectionView(
                         selectedDay: viewModel.selectedDay,

@@ -102,7 +102,7 @@ struct ActivityHeatmapGridView: View {
             .fill(color(for: day).gradient)
             .frame(width: layout.cellSize, height: layout.cellSize)
             .overlay {
-                if selectedDay?.date == day.date {
+                if isInteractive, selectedDay?.date == day.date {
                     RoundedRectangle(cornerRadius: layout.cornerRadius, style: .continuous)
                         .strokeBorder(.primary.opacity(0.45), lineWidth: 1.5)
                 }

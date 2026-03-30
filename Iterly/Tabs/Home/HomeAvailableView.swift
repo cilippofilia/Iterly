@@ -33,35 +33,14 @@ struct HomeAvailableView: View {
                 )
                 .padding(.bottom)
 
-                Button {
-                    selectedView = ActivityView.activityTag
-                } label: {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("Activity Overview")
-                                .font(.headline)
-                            Spacer()
-                            Label("Open", systemImage: "arrow.right")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        ActivityHeatmapGridView(
-                            weeks: activityViewModel.weeks,
-                            monthLabels: activityViewModel.monthLabels,
-                            selectedDay: activityViewModel.selectedDay,
-                            onSelectDay: { _ in },
-                            isInteractive: false
-                        )
-
-                        ActivityLegendView()
-                            .frame(maxWidth: .infinity, alignment: .trailing)
+                ActivityOverviewSectionView(
+                    viewModel: activityViewModel,
+                    cornerRadius: AppCornerRadius.regular,
+                    isHeatmapInteractive: false,
+                    trailingAction: {
+                        selectedView = ActivityView.activityTag
                     }
-                    .padding()
-                    .background(.thinMaterial, in: .rect(cornerRadius: AppCornerRadius.regular))
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Open Activity tab")
+                )
                 .padding(.horizontal)
                 .padding(.bottom)
 
@@ -93,7 +72,7 @@ struct HomeAvailableView: View {
             }
             .joined(separator: ",")
 
-        return [projectToken, taskToken].joined(separator: "|")
+        return [activityViewModel.selectedRange.rawValue, projectToken, taskToken].joined(separator: "|")
     }
 }
 
