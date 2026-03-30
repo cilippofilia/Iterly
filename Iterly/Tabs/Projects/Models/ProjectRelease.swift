@@ -41,7 +41,7 @@ final class ProjectRelease: Identifiable {
     }
 
     var hasAppStoreLink: Bool {
-        appStoreSyncDate != nil
+        appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
     }
 
     var extractedAppStoreAppID: String? {

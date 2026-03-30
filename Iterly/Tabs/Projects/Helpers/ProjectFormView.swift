@@ -238,9 +238,6 @@ struct ProjectFormView: View {
 
             dismiss()
         } catch {
-            if let project {
-                viewModel.saveAppStoreSyncError(error, for: project, modelContext: modelContext)
-            }
             syncErrorMessage = error.localizedDescription
         }
     }

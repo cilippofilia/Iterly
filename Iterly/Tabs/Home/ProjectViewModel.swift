@@ -66,6 +66,15 @@ final class ProjectViewModel {
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedAppStoreURL = appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        let previousAppStoreURL = project.currentRelease?.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let previousAppStoreAppID = project.currentRelease?.extractedAppStoreAppID ?? ""
+        let nextAppStoreAppID = trimmedAppStoreURL.isEmpty
+            ? ""
+            : try appStoreLookupService.extractedAppID(from: trimmedAppStoreURL)
+        let needsRelink = trimmedAppStoreURL.isEmpty == false && previousAppStoreAppID != nextAppStoreAppID
+        let lookupResult = needsRelink
+            ? try await appStoreLookupService.lookup(appID: trimmedAppStoreURL)
+            : nil
 
         project.title = trimmedTitle
         project.details = trimmedDetails.isEmpty ? nil : trimmedDetails
@@ -76,32 +85,25 @@ final class ProjectViewModel {
         project.isPinned = isPinned
         project.touch()
 
-        let release = try ensureRelease(
+        let release = ensureRelease(
             for: project,
             version: version,
             appStoreURL: trimmedAppStoreURL,
             modelContext: modelContext
         )
 
-        let previousAppStoreAppID = release.extractedAppStoreAppID ?? ""
-
         if trimmedAppStoreURL.isEmpty {
-            if previousAppStoreAppID.isEmpty == false {
-                try disconnectAppStoreRelease(for: project, modelContext: modelContext)
-            } else {
-                try modelContext.save()
+            if previousAppStoreURL.isEmpty == false {
+                disconnectAppStoreRelease(for: release, preservingVersion: version)
             }
+            try modelContext.save()
             return
         }
 
-        let nextAppStoreAppID = try appStoreLookupService.extractedAppID(from: trimmedAppStoreURL)
-
-        if previousAppStoreAppID != nextAppStoreAppID {
-            try await linkAppStoreRelease(
-                for: project,
-                appStoreURL: trimmedAppStoreURL,
-                modelContext: modelContext
-            )
+        if let lookupResult {
+            applyLookupResult(lookupResult, to: release)
+            project.touch()
+            try modelContext.save()
             return
         }
 
@@ -166,8 +168,7 @@ final class ProjectViewModel {
 
     func disconnectAppStoreRelease(for project: Project, modelContext: ModelContext) throws {
         let release = try release(for: project)
-        release.appStoreSyncDate = nil
-        release.appStoreSyncError = nil
+        disconnectAppStoreRelease(for: release, preservingVersion: release.version)
         project.touch()
         try modelContext.save()
     }
@@ -190,8 +191,7 @@ final class ProjectViewModel {
     func disconnectAllAppStoreLinks(modelContext: ModelContext) throws {
         for project in linkedProjects(modelContext: modelContext) {
             guard let release = project.currentRelease else { continue }
-            release.appStoreSyncDate = nil
-            release.appStoreSyncError = nil
+            disconnectAppStoreRelease(for: release, preservingVersion: release.version)
             project.touch()
         }
 
@@ -236,7 +236,7 @@ final class ProjectViewModel {
         version: String,
         appStoreURL: String,
         modelContext: ModelContext
-    ) throws -> ProjectRelease {
+    ) -> ProjectRelease {
         if let release = project.currentRelease {
             if release.hasAppStoreLink == false {
                 release.version = version
@@ -250,6 +250,14 @@ final class ProjectViewModel {
         project.currentRelease = release
         modelContext.insert(release)
         return release
+    }
+
+    private func disconnectAppStoreRelease(for release: ProjectRelease, preservingVersion version: String) {
+        release.version = version
+        release.build = ""
+        release.appStoreURL = ""
+        release.appStoreSyncDate = nil
+        release.appStoreSyncError = nil
     }
 
     private func applyLookupResult(_ lookupResult: AppStoreLookupResult, to release: ProjectRelease) {
