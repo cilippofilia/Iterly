@@ -8,9 +8,9 @@
 import Foundation
 
 enum ActivityRange: String, CaseIterable, Identifiable {
-    case threeMonths = "3m"
-    case sixMonths = "6m"
-    case twelveMonths = "12m"
+    case threeMonths = "3 months"
+    case sixMonths = "6 months"
+    case twelveMonths = "12 months"
 
     var id: Self { self }
 

@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 @Observable
 final class ActivityOverviewViewModel {
-    var selectedRange: ActivityRange = .twelveMonths
+    var selectedRange: ActivityRange = .threeMonths
     var weeks: [[ActivityDaySummary]] = []
     var monthLabels: [String?] = []
     var summary: ActivityOverviewSummary = .empty

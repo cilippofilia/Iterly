@@ -16,7 +16,7 @@ struct ActivityLegendView: View {
 
             ForEach(0 ..< 5, id: \.self) { level in
                 Rectangle()
-                    .fill(color(for: level))
+                    .fill(color(for: level).gradient)
                     .frame(width: 14, height: 14)
                     .clipShape(.rect(cornerRadius: 4))
             }
@@ -31,11 +31,15 @@ struct ActivityLegendView: View {
 
     private func color(for level: Int) -> Color {
         switch level {
-        case 0: Color.secondary.opacity(0.12)
-        case 1: Color.green.opacity(0.24)
-        case 2: Color.green.opacity(0.45)
-        case 3: Color.green.opacity(0.7)
+        case 0: Color.secondary.opacity(0.2)
+        case 1: Color.green.opacity(0.4)
+        case 2: Color.green.opacity(0.6)
+        case 3: Color.green.opacity(0.8)
         default: Color.green
         }
     }
+}
+
+#Preview {
+    ActivityLegendView()
 }

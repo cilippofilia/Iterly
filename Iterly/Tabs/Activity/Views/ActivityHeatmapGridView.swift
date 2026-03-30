@@ -79,7 +79,7 @@ struct ActivityHeatmapGridView: View {
                             onSelectDay(day)
                         } label: {
                             Rectangle()
-                                .fill(color(for: day))
+                                .fill(color(for: day).gradient)
                                 .frame(width: layout.cellSize, height: layout.cellSize)
                                 .overlay {
                                     if selectedDay?.date == day.date {
@@ -121,10 +121,10 @@ struct ActivityHeatmapGridView: View {
 
     private func color(for day: ActivityDaySummary) -> Color {
         switch day.intensityLevel {
-        case 0: Color.secondary.opacity(0.12)
-        case 1: Color.green.opacity(0.24)
-        case 2: Color.green.opacity(0.45)
-        case 3: Color.green.opacity(0.7)
+        case 0: Color.secondary.opacity(0.2)
+        case 1: Color.green.opacity(0.4)
+        case 2: Color.green.opacity(0.6)
+        case 3: Color.green.opacity(0.8)
         default: Color.green
         }
     }
