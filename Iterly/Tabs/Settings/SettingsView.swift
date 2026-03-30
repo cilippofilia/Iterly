@@ -8,32 +8,22 @@
 import SwiftUI
 import SwiftData
 
+@MainActor
 struct SettingsView: View {
     static let settingsTag: String? = "Settings"
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
 
-    @AppStorage("settings.showCompletedTasks") private var showCompletedTasks: Bool = true
-    @AppStorage("settings.highlightOverdueTasks") private var highlightOverdueTasks: Bool = true
-    @AppStorage("settings.compactProjectCards") private var compactProjectCards: Bool = false
-
-    @State private var projectViewModel = ProjectViewModel()
-    @State private var showContactOptions: Bool = false
-    @State private var showAddSampleDataAlert: Bool = false
-    @State private var showEraseAllDataAlert: Bool = false
-
-    private let supportEmail = "cilia.filippo.dev@gmail.com"
-    private let appShareURLString = "https://apps.apple.com/app/id0000000000"
-    private let appName = "Iterly"
+    @State private var viewModel = SettingsViewModel()
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    Toggle("Show completed tasks", isOn: $showCompletedTasks)
-                    Toggle("Highlight overdue tasks", isOn: $highlightOverdueTasks)
-                    Toggle("Compact project cards", isOn: $compactProjectCards)
+                    Toggle("Show completed tasks", isOn: $viewModel.showCompletedTasks)
+                    Toggle("Highlight overdue tasks", isOn: $viewModel.highlightOverdueTasks)
+                    Toggle("Compact project cards", isOn: $viewModel.compactProjectCards)
                 } header: {
                     Text("Preferences - not yet implemented")
                 }
@@ -74,8 +64,7 @@ struct SettingsView: View {
 
                 Section("Data Management") {
                     Button {
-                        SampleData.insertSample(in: modelContext)
-                        showAddSampleDataAlert = true
+                        viewModel.addSampleData(modelContext: modelContext)
                     } label: {
                         FormRowView(
                             imageName: "wand.and.sparkles",
@@ -87,7 +76,7 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     Button(role: .destructive) {
-                        showEraseAllDataAlert = true
+                        viewModel.promptEraseAllData()
                     } label: {
                         FormRowView(
                             imageName: "trash",
@@ -101,46 +90,7 @@ struct SettingsView: View {
 
                 Section {
                     Button {
-                        showContactOptions = true
-                    } label: {
-                        FormRowView(
-                            imageName: "envelope",
-                            foregroundColor: .white,
-                            backgroundColor: .blue.mix(with: .white, by: 0.1),
-                            text: "Contact the developer"
-                        )
-                    }
-                    .buttonStyle(.plain)
-                    .tint(.red)
-                    .confirmationDialog(
-                        "Select an option",
-                        isPresented: $showContactOptions,
-                        titleVisibility: .visible
-                    ) {
-                        Button("Report a bug") {
-                            openMail(
-                                subject: "Bug Report",
-                                body: "Please provide as many details about the bug you encountered as possible - and include screenshots if possible."
-                            )
-                        }
-
-                        Button("Request a Feature") {
-                            openMail(
-                                subject: "Feature idea",
-                                body: ""
-                            )
-                        }
-
-                        Button("Other Enquiry") {
-                            openMail(
-                                subject: "",
-                                body: ""
-                            )
-                        }
-                    }
-
-                    Button {
-                        if let appStoreReviewURL {
+                        if let appStoreReviewURL = viewModel.appStoreReviewURL {
                             openURL(appStoreReviewURL)
                         }
                     } label: {
@@ -153,7 +103,33 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.plain)
 
-                    if let appShareURL {
+                    Button {
+                        viewModel.showContactOptions = true
+                    } label: {
+                        FormRowView(
+                            imageName: "envelope",
+                            foregroundColor: .white,
+                            backgroundColor: .blue.mix(with: .white, by: 0.1),
+                            text: "Contact the developer"
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .tint(.red)
+                    .confirmationDialog(
+                        "Select an option",
+                        isPresented: $viewModel.showContactOptions,
+                        titleVisibility: .visible
+                    ) {
+                        ForEach(SettingsViewModel.ContactOption.allCases) { option in
+                            Button(option.title) {
+                                if let mailURL = viewModel.mailURL(for: option) {
+                                    openURL(mailURL)
+                                }
+                            }
+                        }
+                    }
+
+                    if let appShareURL = viewModel.appShareURL {
                         ShareLink(item: appShareURL) {
                             FormRowView(
                                 imageName: "square.and.arrow.up",
@@ -164,65 +140,48 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                     } else {
-                        ShareLink(item: "Check out \(appName)") {
-                            HStack {
-                                Image(systemName: "square.and.arrow.up")
-                                    .foregroundStyle(.secondary)
-                                Text("Share the app")
-                            }
+                        ShareLink(item: viewModel.appShareItem) {
+                            FormRowView(
+                                imageName: "square.and.arrow.up",
+                                foregroundColor: .white,
+                                backgroundColor: .secondary,
+                                text: "Share the app"
+                            )
                         }
                         .buttonStyle(.plain)
                     }
                 } header: {
                     Text("Contacts")
                 } footer: {
-                    Text("App Version: \(currentVersion)")
+                    Text("App Version: \(viewModel.currentVersion)")
                         .font(.footnote)
                 }
             }
             .navigationTitle("Settings")
-            .alert("Sample Data Added", isPresented: $showAddSampleDataAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Sample projects and tasks have been added to the app.")
-            }
-            .alert("Erase All Data?", isPresented: $showEraseAllDataAlert) {
-                Button("Erase", role: .destructive) {
-                    projectViewModel.eraseAllData(modelContext: modelContext)
+            .alert(item: $viewModel.activeAlert) { alertKind in
+                switch alertKind {
+                case .sampleDataAdded:
+                    Alert(
+                        title: Text(alertKind.title),
+                        message: Text(alertKind.message),
+                        dismissButton: .cancel(Text("OK")) {
+                            viewModel.activeAlert = nil
+                        }
+                    )
+                case .eraseAllDataConfirmation:
+                    Alert(
+                        title: Text(alertKind.title),
+                        message: Text(alertKind.message),
+                        primaryButton: .destructive(Text("Erase")) {
+                            viewModel.eraseAllData(modelContext: modelContext)
+                        },
+                        secondaryButton: .cancel {
+                            viewModel.activeAlert = nil
+                        }
+                    )
                 }
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("This will permanently remove all projects, tasks, and releases.")
             }
         }
-    }
-
-    private var currentVersion: String {
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
-        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
-        return "\(version) (\(build))"
-    }
-
-    private var appShareURL: URL? {
-        URL(string: appShareURLString)
-    }
-
-    private var appStoreReviewURL: URL? {
-        guard let appShareURL else { return nil }
-        return URL(string: "\(appShareURL.absoluteString)?action=write-review")
-    }
-
-    private func openMail(subject: String, body: String) {
-        var components = URLComponents()
-        components.scheme = "mailto"
-        components.path = supportEmail
-        components.queryItems = [
-            URLQueryItem(name: "subject", value: subject),
-            URLQueryItem(name: "body", value: body)
-        ]
-
-        guard let mailURL = components.url else { return }
-        openURL(mailURL)
     }
 }
 
