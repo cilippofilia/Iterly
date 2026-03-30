@@ -87,7 +87,8 @@ struct ActivityDataProvider: ActivityDataProviding {
             date: calendar.startOfDay(for: task.creationDate),
             kind: .task,
             title: task.title,
-            context: task.parentTask == nil ? task.project.title : "Subtask in \(task.project.title)"
+            context: task.parentTask == nil ? task.project.title : "Subtask in \(task.project.title)",
+            projectType: task.project.type
         )
     }
 
@@ -112,7 +113,8 @@ struct ActivityDataProvider: ActivityDataProviding {
             date: calendar.startOfDay(for: lastUpdated),
             kind: .task,
             title: task.title,
-            context: task.parentTask == nil ? "Updated in \(task.project.title)" : "Updated subtask in \(task.project.title)"
+            context: task.parentTask == nil ? "Updated in \(task.project.title)" : "Updated subtask in \(task.project.title)",
+            projectType: task.project.type
         )
     }
 
@@ -129,7 +131,8 @@ struct ActivityDataProvider: ActivityDataProviding {
             date: calendar.startOfDay(for: project.creationDate),
             kind: .project,
             title: project.title,
-            context: "Created"
+            context: "Created",
+            projectType: project.type
         )
     }
 
@@ -150,7 +153,8 @@ struct ActivityDataProvider: ActivityDataProviding {
             date: calendar.startOfDay(for: project.lastUpdated),
             kind: .project,
             title: project.title,
-            context: project.status.title
+            context: project.status.title,
+            projectType: project.type
         )
     }
 }

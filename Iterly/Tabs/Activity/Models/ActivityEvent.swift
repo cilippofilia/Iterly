@@ -12,13 +12,32 @@ struct ActivityEvent: Identifiable, Hashable {
     let kind: ActivityEventKind
     let title: String
     let context: String
+    let projectType: ProjectType?
 
     var id: String {
         [
             String(date.timeIntervalSinceReferenceDate),
             kind.rawValue,
             title,
-            context
+            context,
+            projectType?.rawValue ?? ""
         ].joined(separator: "|")
+    }
+
+    var categoryTitle: String {
+        projectType?.title ?? kind.title
+    }
+
+    var categorySystemImage: String {
+        projectType?.systemImage ?? fallbackSystemImage
+    }
+
+    private var fallbackSystemImage: String {
+        switch kind {
+        case .project:
+            "folder"
+        case .task:
+            "checklist"
+        }
     }
 }
