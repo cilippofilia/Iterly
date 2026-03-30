@@ -15,7 +15,6 @@ struct HomeView: View {
     @State private var viewModel = ProjectViewModel()
     @State private var homeViewModel = HomeViewModel()
     @State private var showEraseDataAlert: Bool = false
-    @State private var showAddDataAlert: Bool = false
 
     @Query(
         filter: #Predicate<Project> { $0.isPinned == true },
@@ -43,30 +42,6 @@ struct HomeView: View {
                 viewModel: homeViewModel
             )
             .navigationTitle("Home")
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    HomeToolbarButtonsView(
-                        showEraseDataAlert: $showEraseDataAlert,
-                        showAddDataAlert: $showAddDataAlert
-                    )
-                }
-            }
-            .alert("Erase All Data?", isPresented: $showEraseDataAlert) {
-                Button("Erase Data", role: .destructive) {
-                    viewModel.eraseAllData(modelContext: modelContext)
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("This will permanently remove all projects, tasks, and releases.")
-            }
-            .alert("Add Sample Data?", isPresented: $showAddDataAlert) {
-                Button("Add Data") {
-                    viewModel.addSampleData(modelContext: modelContext)
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("Sample data will be added to your current projects.")
-            }
         }
     }
 }

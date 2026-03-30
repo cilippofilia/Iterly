@@ -70,7 +70,11 @@ struct TaskDetailView: View {
             NavigationStack {
                 BrainstormFormView(text: Binding(
                     get: { task.note ?? "" },
-                    set: { task.note = $0.isEmpty ? nil : $0 }
+                    set: {
+                        task.note = $0.isEmpty ? nil : $0
+                        task.touch()
+                        task.project.touch()
+                    }
                 ))
             }
             .presentationDetents([.medium])

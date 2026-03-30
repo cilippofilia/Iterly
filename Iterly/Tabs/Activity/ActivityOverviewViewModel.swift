@@ -23,11 +23,11 @@ final class ActivityOverviewViewModel {
     private var eventsByDay: [Date: [ActivityEvent]] = [:]
 
     init(
-        provider: any ActivityDataProviding = MockActivityDataProvider(),
-        calendar: Calendar = .activityOverviewCalendar,
+        provider: (any ActivityDataProviding)? = nil,
+        calendar: Calendar = ActivityOverviewViewModel.makeActivityOverviewCalendar(),
         nowProvider: @escaping () -> Date = { .now }
     ) {
-        self.provider = provider
+        self.provider = provider ?? ActivityDataProvider()
         self.calendar = calendar
         self.nowProvider = nowProvider
     }
@@ -49,7 +49,11 @@ final class ActivityOverviewViewModel {
         )
 
         let displayStart = calendar.dateInterval(of: .weekOfYear, for: interval.start)?.start ?? interval.start
-        let displayEnd = calendar.dateInterval(of: .weekOfYear, for: interval.end)?.end ?? interval.end
+        let displayEnd = calendar.date(
+            byAdding: .day,
+            value: 1,
+            to: calendar.startOfDay(for: interval.end)
+        ) ?? interval.end
         let daySummaries = makeDaySummaries(from: displayStart, through: displayEnd)
 
         weeks = stride(from: 0, to: daySummaries.count, by: 7).map { index in
@@ -190,10 +194,10 @@ final class ActivityOverviewViewModel {
     }
 }
 
-private extension Calendar {
-    static let activityOverviewCalendar: Calendar = {
+private extension ActivityOverviewViewModel {
+    nonisolated static func makeActivityOverviewCalendar() -> Calendar {
         var calendar = Calendar.autoupdatingCurrent
         calendar.firstWeekday = 2
         return calendar
-    }()
+    }
 }

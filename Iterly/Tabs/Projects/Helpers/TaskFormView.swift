@@ -200,6 +200,7 @@ struct TaskFormView: View {
         task.status = status
         task.priority = priority
         task.dueDate = hasDueDate ? dueDateDraft : nil
+        task.touch()
         task.project.touch()
 
         do {

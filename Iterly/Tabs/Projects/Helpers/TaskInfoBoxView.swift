@@ -25,6 +25,7 @@ struct TaskInfoBoxView: View {
                         get: { task.status },
                         set: {
                             task.status = $0
+                            task.touch()
                             task.project.touch()
                         }
                     )) {
@@ -47,6 +48,7 @@ struct TaskInfoBoxView: View {
                         get: { task.priority },
                         set: {
                             task.priority = $0
+                            task.touch()
                             task.project.touch()
                         }
                     )) {
@@ -70,6 +72,7 @@ struct TaskInfoBoxView: View {
                         get: { task.dueDate ?? .now },
                         set: {
                             task.dueDate = $0
+                            task.touch()
                             task.project.touch()
                         }
                     ),

@@ -26,8 +26,8 @@ enum ActivityRange: String, CaseIterable, Identifiable {
         }
     }
 
-    func dateInterval(relativeTo now: Date, calendar: Calendar) -> DateInterval {
-        let startOfToday = calendar.startOfDay(for: now)
+    func dateInterval(relativeTo anchorDate: Date, calendar: Calendar) -> DateInterval {
+        let startOfToday = calendar.startOfDay(for: anchorDate)
         let monthAnchor = calendar.date(
             byAdding: .month,
             value: -(monthSpan - 1),
@@ -36,6 +36,6 @@ enum ActivityRange: String, CaseIterable, Identifiable {
         let monthComponents = calendar.dateComponents([.year, .month], from: monthAnchor)
         let startOfMonth = calendar.date(from: monthComponents) ?? monthAnchor
 
-        return DateInterval(start: startOfMonth, end: now)
+        return DateInterval(start: startOfMonth, end: anchorDate)
     }
 }

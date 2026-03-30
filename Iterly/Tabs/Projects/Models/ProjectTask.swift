@@ -18,6 +18,7 @@ final class ProjectTask: Identifiable {
     var dueDate: Date? = nil
     var priority: TaskPriority = TaskPriority.default
     var creationDate: Date = Date.now
+    var lastUpdated: Date? = nil
     var project: Project
 
     @Relationship(deleteRule: .cascade)
@@ -35,6 +36,7 @@ final class ProjectTask: Identifiable {
         dueDate: Date? = nil,
         priority: TaskPriority = TaskPriority.default,
         creationDate: Date = Date.now,
+        lastUpdated: Date? = nil,
         project: Project,
         subtasks: [ProjectTask]? = nil,
         parentTask: ProjectTask? = nil
@@ -47,8 +49,13 @@ final class ProjectTask: Identifiable {
         self.dueDate = dueDate
         self.priority = priority
         self.creationDate = creationDate
+        self.lastUpdated = lastUpdated ?? creationDate
         self.project = project
         self.subtasks = subtasks
         self.parentTask = parentTask
+    }
+
+    func touch() {
+        lastUpdated = .now
     }
 }

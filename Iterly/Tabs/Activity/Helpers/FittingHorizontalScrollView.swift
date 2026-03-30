@@ -27,6 +27,7 @@ struct FittingHorizontalScrollView<Content: View>: View {
                 content(contentWidth)
                     .frame(width: contentWidth, alignment: .leading)
             }
+            .defaultScrollAnchor(.trailing)
             .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             .scrollIndicators(.hidden)
         }

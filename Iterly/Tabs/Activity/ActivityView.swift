@@ -8,6 +8,7 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct ActivityView: View {
     static let activityTag: String? = "Activity"
 
@@ -78,7 +79,7 @@ struct ActivityView: View {
             .joined(separator: ",")
         let taskToken = tasks
             .map { task in
-                "\(task.id.uuidString)-\(task.status.rawValue)-\(task.creationDate.timeIntervalSinceReferenceDate)"
+                "\(task.id.uuidString)-\(task.creationDate.timeIntervalSinceReferenceDate)-\(task.lastUpdated?.timeIntervalSinceReferenceDate ?? 0)"
             }
             .joined(separator: ",")
 

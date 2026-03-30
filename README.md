@@ -16,7 +16,13 @@ The app centers on two main areas:
 - Dashboard for pinned projects, active projects, and upcoming tasks.
 - Upcoming-task ordering based on due date and priority.
 - Empty-state handling when the data store is empty.
-- Toolbar actions to insert sample data or erase the current store.
+- Toolbar action to erase the current store.
+
+### Activity
+
+- Activity heatmap backed by persisted project and task timestamps.
+- Range filtering across recent weeks, quarters, and the last year.
+- Day drill-down for project and task events.
 
 ### Projects
 
@@ -37,7 +43,6 @@ The app centers on two main areas:
 
 - In-memory preview containers for SwiftUI previews.
 - Seeded sample projects, releases, tasks, and subtasks.
-- Insertable demo data for trying the app without manual setup.
 
 ## Tech Stack
 

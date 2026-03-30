@@ -47,10 +47,6 @@ final class ProjectViewModel {
         }
     }
 
-    func addSampleData(modelContext: ModelContext) {
-        SampleData.insertSample(in: modelContext)
-    }
-
     func togglePin(project: Project, modelContext: ModelContext) -> Bool {
         do {
             if project.isPinned == false {

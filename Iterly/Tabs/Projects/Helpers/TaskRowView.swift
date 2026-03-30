@@ -51,6 +51,7 @@ struct TaskRowView: View {
                                 get: { task.status },
                                 set: {
                                     task.status = $0
+                                    task.touch()
                                     task.project.touch()
                                 }
                             )) {
@@ -115,6 +116,7 @@ struct TaskRowView: View {
             } else {
                 task.status = .done
             }
+            task.touch()
             task.project.touch()
         }
     }
