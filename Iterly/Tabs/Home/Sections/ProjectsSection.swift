@@ -44,7 +44,7 @@ struct ProjectsSection: View {
                                 doneAmount: project.doneAmount
                             )
                             .background(Color.secondary.gradient.opacity(0.2))
-                            .clipShape(.rect(cornerRadius: 12))
+                            .clipShape(.rect(cornerRadius: AppCornerRadius.compact))
                         }
                         .buttonStyle(.plain)
                     }
@@ -53,7 +53,7 @@ struct ProjectsSection: View {
                             selectedView = ProjectsView.projectsTag
                         })
                         .background(Color.secondary.gradient.opacity(0.2))
-                        .clipShape(.rect(cornerRadius: 12))
+                        .clipShape(.rect(cornerRadius: AppCornerRadius.compact))
                     }
                 }
                 .padding(.horizontal)

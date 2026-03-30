@@ -27,6 +27,7 @@ struct HomeContentView: View {
             HomeAvailableView(
                 pinnedProjects: pinnedProjects,
                 projects: projects,
+                allTasks: tasks,
                 upcomingTasks: upcomingTasks,
                 totalProjectsCount: totalProjectsCount,
                 showMore: showMore

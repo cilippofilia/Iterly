@@ -32,7 +32,7 @@ struct PinnedProjectsSection: View {
                                 doneAmount: project.doneAmount
                             )
                             .background(Color.secondary.gradient.opacity(0.2))
-                            .clipShape(.rect(cornerRadius: 12))
+                            .clipShape(.rect(cornerRadius: AppCornerRadius.compact))
                         }
                         .buttonStyle(.plain)
                     }

@@ -55,7 +55,7 @@ struct ActivitySummarySectionView: View {
             .foregroundStyle(.secondary)
             .padding()
         }
-        .background(.thinMaterial, in: .rect(cornerRadius: 20))
+        .background(.thinMaterial, in: .rect(cornerRadius: AppCornerRadius.regular))
         .alert("Activity Summary", isPresented: $showDefinitionsAlert) {
             Button("OK", role: .cancel) { }
         } message: {

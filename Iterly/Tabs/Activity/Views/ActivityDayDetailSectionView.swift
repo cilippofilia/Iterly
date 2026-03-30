@@ -88,7 +88,7 @@ struct ActivityDayDetailSectionView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.thinMaterial, in: .rect(cornerRadius: 20))
+        .background(.thinMaterial, in: .rect(cornerRadius: AppCornerRadius.regular))
         .onChange(of: selectedDay?.id) { _, _ in
             isExpanded = false
         }

@@ -54,7 +54,7 @@ struct ActivityView: View {
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                     .padding()
-                    .background(.thinMaterial, in: .rect(cornerRadius: 24))
+                    .background(.thinMaterial, in: .rect(cornerRadius: AppCornerRadius.prominent))
 
                     ActivityDayDetailSectionView(
                         selectedDay: viewModel.selectedDay,

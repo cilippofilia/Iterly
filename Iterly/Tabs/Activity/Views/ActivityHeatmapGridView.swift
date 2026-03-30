@@ -12,6 +12,7 @@ struct ActivityHeatmapGridView: View {
     let monthLabels: [String?]
     let selectedDay: ActivityDaySummary?
     let onSelectDay: (ActivityDaySummary) -> Void
+    var isInteractive: Bool = true
 
     private let weekdayLabelWidth: CGFloat = 32
     private let minimumCellSize: CGFloat = 14
@@ -75,26 +76,38 @@ struct ActivityHeatmapGridView: View {
             ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
                 VStack(spacing: gridSpacing) {
                     ForEach(week) { day in
-                        Button {
-                            onSelectDay(day)
-                        } label: {
-                            Rectangle()
-                                .fill(color(for: day).gradient)
-                                .frame(width: layout.cellSize, height: layout.cellSize)
-                                .overlay {
-                                    if selectedDay?.date == day.date {
-                                        RoundedRectangle(cornerRadius: layout.cornerRadius, style: .continuous)
-                                            .strokeBorder(.primary.opacity(0.45), lineWidth: 1.5)
-                                    }
-                                }
-                                .clipShape(.rect(cornerRadius: layout.cornerRadius))
+                        if isInteractive {
+                            Button {
+                                onSelectDay(day)
+                            } label: {
+                                heatmapCell(day: day, layout: layout)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(accessibilityLabel(for: day))
+                        } else {
+                            heatmapCell(day: day, layout: layout)
+                                .accessibilityHidden(true)
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(accessibilityLabel(for: day))
                     }
                 }
             }
         }
+    }
+
+    private func heatmapCell(
+        day: ActivityDaySummary,
+        layout: HeatmapLayoutMetrics
+    ) -> some View {
+        Rectangle()
+            .fill(color(for: day).gradient)
+            .frame(width: layout.cellSize, height: layout.cellSize)
+            .overlay {
+                if selectedDay?.date == day.date {
+                    RoundedRectangle(cornerRadius: layout.cornerRadius, style: .continuous)
+                        .strokeBorder(.primary.opacity(0.45), lineWidth: 1.5)
+                }
+            }
+            .clipShape(.rect(cornerRadius: layout.cornerRadius))
     }
 
     private var weekdayLabels: [String] {

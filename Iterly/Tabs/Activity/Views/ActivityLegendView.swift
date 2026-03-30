@@ -18,7 +18,7 @@ struct ActivityLegendView: View {
                 Rectangle()
                     .fill(color(for: level).gradient)
                     .frame(width: 14, height: 14)
-                    .clipShape(.rect(cornerRadius: 4))
+                    .clipShape(.rect(cornerRadius: AppCornerRadius.tiny))
             }
 
             Text("More")
