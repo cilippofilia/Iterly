@@ -17,6 +17,7 @@ final class ProjectViewModel {
         isPinned: Bool,
         version: String,
         appStoreURL: String,
+        usefulLinks: [ProjectLinkInput],
         modelContext: ModelContext
     ) async throws {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -36,8 +37,13 @@ final class ProjectViewModel {
             isPinned: isPinned
         )
 
-        let release = ProjectRelease(version: version, appStoreURL: trimmedAppStoreURL, project: project)
+        let release = ProjectRelease(
+            version: version,
+            appStoreURL: trimmedAppStoreURL,
+            project: project
+        )
         project.currentRelease = release
+        release.links = makeUsefulLinks(from: usefulLinks, release: release)
 
         if trimmedAppStoreURL.isEmpty == false {
             let lookupResult = try await appStoreLookupService.lookup(appID: trimmedAppStoreURL)
@@ -60,6 +66,7 @@ final class ProjectViewModel {
         isPinned: Bool,
         version: String,
         appStoreURL: String,
+        usefulLinks: [ProjectLinkInput],
         modelContext: ModelContext
     ) async throws {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -91,6 +98,7 @@ final class ProjectViewModel {
             appStoreURL: trimmedAppStoreURL,
             modelContext: modelContext
         )
+        replaceUsefulLinks(on: release, with: usefulLinks, modelContext: modelContext)
 
         if trimmedAppStoreURL.isEmpty {
             if previousAppStoreURL.isEmpty == false {
@@ -188,10 +196,70 @@ final class ProjectViewModel {
         }
     }
 
+    func projectsWithUsefulLinks(modelContext: ModelContext) -> [Project] {
+        let descriptor = FetchDescriptor<Project>(
+            sortBy: [SortDescriptor(\Project.lastUpdated, order: .reverse)]
+        )
+
+        do {
+            return try modelContext.fetch(descriptor).filter {
+                $0.currentRelease?.hasUsefulLinks == true
+            }
+        } catch {
+            assertionFailure("Failed to fetch useful-link projects: \(error)")
+            return []
+        }
+    }
+
     func disconnectAllAppStoreLinks(modelContext: ModelContext) throws {
         for project in linkedProjects(modelContext: modelContext) {
             guard let release = project.currentRelease else { continue }
             disconnectAppStoreRelease(for: release, preservingVersion: release.version)
+            project.touch()
+        }
+
+        try modelContext.save()
+    }
+
+    func disconnectUsefulLink(
+        _ link: ProjectLink,
+        from project: Project,
+        modelContext: ModelContext
+    ) throws {
+        guard let release = project.currentRelease else {
+            throw AppStoreSyncError.invalidResponse
+        }
+
+        release.links = release.usefulLinks.filter { $0.id != link.id }
+        modelContext.delete(link)
+        project.touch()
+        try modelContext.save()
+    }
+
+    func disconnectAllUsefulLinks(modelContext: ModelContext) throws {
+        for project in projectsWithUsefulLinks(modelContext: modelContext) {
+            for link in project.currentRelease?.usefulLinks ?? [] {
+                modelContext.delete(link)
+            }
+            project.currentRelease?.links = []
+            project.touch()
+        }
+
+        try modelContext.save()
+    }
+
+    func disconnectAllLinks(modelContext: ModelContext) throws {
+        for project in linkedProjects(modelContext: modelContext) {
+            guard let release = project.currentRelease else { continue }
+            disconnectAppStoreRelease(for: release, preservingVersion: release.version)
+            project.touch()
+        }
+
+        for project in projectsWithUsefulLinks(modelContext: modelContext) {
+            for link in project.currentRelease?.usefulLinks ?? [] {
+                modelContext.delete(link)
+            }
+            project.currentRelease?.links = []
             project.touch()
         }
 
@@ -246,10 +314,46 @@ final class ProjectViewModel {
             return release
         }
 
-        let release = ProjectRelease(version: version, appStoreURL: appStoreURL, project: project)
+        let release = ProjectRelease(
+            version: version,
+            appStoreURL: appStoreURL,
+            project: project
+        )
         project.currentRelease = release
         modelContext.insert(release)
         return release
+    }
+
+    private func replaceUsefulLinks(
+        on release: ProjectRelease,
+        with inputs: [ProjectLinkInput],
+        modelContext: ModelContext
+    ) {
+        for link in release.usefulLinks {
+            modelContext.delete(link)
+        }
+
+        let newLinks = makeUsefulLinks(from: inputs, release: release)
+        release.links = newLinks
+
+        for link in newLinks {
+            modelContext.insert(link)
+        }
+    }
+
+    private func makeUsefulLinks(
+        from inputs: [ProjectLinkInput],
+        release: ProjectRelease
+    ) -> [ProjectLink] {
+        inputs.map { input in
+            ProjectLink(
+                kind: input.kind,
+                label: input.label,
+                url: input.url,
+                sortOrder: input.sortOrder,
+                projectRelease: release
+            )
+        }
     }
 
     private func disconnectAppStoreRelease(for release: ProjectRelease, preservingVersion version: String) {

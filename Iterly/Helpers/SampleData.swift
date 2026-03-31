@@ -11,7 +11,7 @@ import SwiftData
 enum SampleData {
     @MainActor
     static let previewContainer: ModelContainer = {
-        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self, ProjectLink.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {
@@ -26,7 +26,7 @@ enum SampleData {
 
     @MainActor
     static let emptyPreviewContainer: ModelContainer = {
-        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self, ProjectLink.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {
@@ -38,7 +38,7 @@ enum SampleData {
 
     @MainActor
     static func makePreviewContainer() -> ModelContainer {
-        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self, ProjectLink.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {
@@ -53,7 +53,7 @@ enum SampleData {
 
     @MainActor
     static func makeEmptyPreviewContainer() -> ModelContainer {
-        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self, ProjectLink.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {

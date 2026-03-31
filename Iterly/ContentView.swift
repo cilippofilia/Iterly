@@ -32,6 +32,7 @@ struct ContentView: View {
         }
         .task {
             backfillProjectTypesIfNeeded()
+            backfillUsefulLinksIfNeeded()
         }
     }
 
@@ -51,6 +52,46 @@ struct ContentView: View {
             try modelContext.save()
         } catch {
             assertionFailure("Failed to backfill project types: \(error)")
+        }
+    }
+
+    private func backfillUsefulLinksIfNeeded() {
+        let descriptor = FetchDescriptor<ProjectRelease>()
+
+        do {
+            let releases = try modelContext.fetch(descriptor)
+            var didChange = false
+
+            for release in releases {
+                let trimmedGitHubURL = release.githubURL.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard trimmedGitHubURL.isEmpty == false else { continue }
+
+                let alreadyBackfilled = release.usefulLinks.contains {
+                    $0.kind == .github && $0.url == trimmedGitHubURL
+                }
+
+                if alreadyBackfilled == false {
+                    let nextSortOrder = release.usefulLinks.count
+                    let link = ProjectLink(
+                        kind: .github,
+                        label: ProjectLinkKind.github.title,
+                        url: trimmedGitHubURL,
+                        sortOrder: nextSortOrder,
+                        projectRelease: release
+                    )
+                    modelContext.insert(link)
+                    release.links = release.usefulLinks + [link]
+                    didChange = true
+                }
+
+                release.githubURL = ""
+                didChange = true
+            }
+
+            guard didChange else { return }
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to backfill useful links: \(error)")
         }
     }
 }

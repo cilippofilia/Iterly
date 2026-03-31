@@ -11,7 +11,7 @@ import SwiftUI
 @main
 struct IterlyApp: App {
     private static let modelContainer: ModelContainer = {
-        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self])
+        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self, ProjectLink.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {

@@ -16,17 +16,23 @@ final class ProjectRelease: Identifiable {
     var build: String = ""
     @Attribute(originalName: "appURL")
     var appStoreURL: String = ""
+    // Legacy persisted field kept so existing stores can migrate to ProjectLink.
+    var githubURL: String = ""
     var appStoreSyncDate: Date? = nil
     var appStoreSyncError: String? = nil
 
     @Relationship(inverse: \Project.currentRelease)
     var project: Project
 
+    @Relationship(deleteRule: .cascade, inverse: \ProjectLink.projectRelease)
+    var links: [ProjectLink]?
+
     init(
         id: UUID = UUID(),
         version: String = "",
         build: String = "",
         appStoreURL: String = "",
+        githubURL: String = "",
         appStoreSyncDate: Date? = nil,
         appStoreSyncError: String? = nil,
         project: Project
@@ -35,6 +41,7 @@ final class ProjectRelease: Identifiable {
         self.version = version
         self.build = build
         self.appStoreURL = appStoreURL
+        self.githubURL = githubURL
         self.appStoreSyncDate = appStoreSyncDate
         self.appStoreSyncError = appStoreSyncError
         self.project = project
@@ -42,6 +49,23 @@ final class ProjectRelease: Identifiable {
 
     var hasAppStoreLink: Bool {
         appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+    }
+
+    var hasGitHubLink: Bool {
+        usefulLinks.contains { $0.kind == .github }
+    }
+
+    var usefulLinks: [ProjectLink] {
+        (links ?? []).sorted { lhs, rhs in
+            if lhs.sortOrder == rhs.sortOrder {
+                return lhs.label.localizedStandardCompare(rhs.label) == .orderedAscending
+            }
+            return lhs.sortOrder < rhs.sortOrder
+        }
+    }
+
+    var hasUsefulLinks: Bool {
+        usefulLinks.isEmpty == false
     }
 
     var extractedAppStoreAppID: String? {

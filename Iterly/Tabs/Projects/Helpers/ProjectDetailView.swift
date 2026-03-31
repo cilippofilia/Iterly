@@ -16,10 +16,40 @@ struct ProjectDetailView: View {
     @State private var projectToEdit: Project?
     @State private var showAddTaskSheet: Bool = false
     @State private var showBrainstormSheet: Bool = false
-    @State private var isRefreshingAppStore = false
-    @State private var appStoreSyncErrorMessage: String?
 
     @Bindable var project: Project
+
+    private var externalDestinations: [ExternalDestination] {
+        var destinations: [ExternalDestination] = []
+
+        if let appStoreURL = project.currentRelease?.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines),
+           appStoreURL.isEmpty == false,
+           let destination = URL(string: appStoreURL) {
+            destinations.append(
+                ExternalDestination(
+                    title: "App Store",
+                    systemImage: "apple.logo",
+                    url: destination
+                )
+            )
+        }
+
+        for link in project.currentRelease?.usefulLinks ?? [] {
+            let trimmedURL = link.url.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard trimmedURL.isEmpty == false,
+                  let destination = URL(string: trimmedURL) else { continue }
+
+            destinations.append(
+                ExternalDestination(
+                    title: link.label,
+                    systemImage: link.kind.systemImage,
+                    url: destination
+                )
+            )
+        }
+
+        return destinations
+    }
 
     var body: some View {
         let sections = TaskSectionsBuilder.sections(for: project.topLevelTasks)
@@ -33,8 +63,7 @@ struct ProjectDetailView: View {
                 }
 
                 ProjectInfoBoxView(
-                    project: project,
-                    isSyncingAppStore: isRefreshingAppStore
+                    project: project
                 )
 
                 HStack {
@@ -44,14 +73,18 @@ struct ProjectDetailView: View {
                         action: { showBrainstormSheet = true }
                     )
 
-                    if let appStoreURL = project.currentRelease?.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines),
-                       appStoreURL.isEmpty == false,
-                       let destination = URL(string: appStoreURL) {
-                        SecondaryCapsuleActionButton(
-                            title: "Go to AppStore",
-                            systemImage: "arrow.up.right.square",
-                            action: { openURL(destination) }
-                        )
+                    if externalDestinations.isEmpty == false {
+                        Menu {
+                            ForEach(externalDestinations) { destination in
+                                Button(destination.title, systemImage: destination.systemImage) {
+                                    openURL(destination.url)
+                                }
+                            }
+                        } label: {
+                            Label("Navigate to...", systemImage: "arrow.up.right.square")
+                                .secondaryCapsuleButtonStyle()
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
 
@@ -109,43 +142,14 @@ struct ProjectDetailView: View {
         } message: {
             Text("Only 4 projects can be pinned at the same time.")
         }
-        .alert("App Store Sync Failed", isPresented: Binding(
-            get: { appStoreSyncErrorMessage != nil },
-            set: { newValue in
-                if newValue == false {
-                    appStoreSyncErrorMessage = nil
-                }
-            }
-        )) {
-            Button("OK", role: .cancel) {
-                appStoreSyncErrorMessage = nil
-            }
-        } message: {
-            Text(appStoreSyncErrorMessage ?? "Something went wrong.")
-        }
     }
+}
 
-    private func refreshAppStoreRelease() async {
-        isRefreshingAppStore = true
-        defer { isRefreshingAppStore = false }
-
-        do {
-            try await viewModel.refreshAppStoreRelease(for: project, modelContext: modelContext)
-            appStoreSyncErrorMessage = nil
-        } catch {
-            viewModel.saveAppStoreSyncError(error, for: project, modelContext: modelContext)
-            appStoreSyncErrorMessage = error.localizedDescription
-        }
-    }
-
-    private func disconnectAppStoreRelease() {
-        do {
-            try viewModel.disconnectAppStoreRelease(for: project, modelContext: modelContext)
-            appStoreSyncErrorMessage = nil
-        } catch {
-            appStoreSyncErrorMessage = error.localizedDescription
-        }
-    }
+private struct ExternalDestination: Identifiable {
+    let id = UUID()
+    let title: String
+    let systemImage: String
+    let url: URL
 }
 
 #Preview("Light") {
