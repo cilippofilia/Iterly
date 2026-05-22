@@ -17,7 +17,7 @@ struct ActivityLegendView: View {
             ForEach(0 ..< 5, id: \.self) { level in
                 Rectangle()
                     .fill(color(for: level).gradient)
-                    .frame(width: 14, height: 14)
+                    .frame(width: 10, height: 10)
                     .clipShape(.rect(cornerRadius: AppCornerRadius.tiny))
             }
 

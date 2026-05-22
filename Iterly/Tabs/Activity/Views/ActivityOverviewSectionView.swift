@@ -19,9 +19,13 @@ struct ActivityOverviewSectionView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Activity Overview")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                VStack {
+                    Text("Activity Overview")
+                        .font(.headline)
+
+                    ActivityLegendView()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let trailingAction {
                     Button(action: trailingAction) {
@@ -50,9 +54,6 @@ struct ActivityOverviewSectionView: View {
                 },
                 isInteractive: isHeatmapInteractive
             )
-
-            ActivityLegendView()
-                .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding()
         .background(.thinMaterial, in: .rect(cornerRadius: cornerRadius))
