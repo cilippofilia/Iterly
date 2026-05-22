@@ -12,20 +12,29 @@ import SwiftData
 struct ActivityOverviewSectionView: View {
     @Bindable var viewModel: ActivityOverviewViewModel
 
+    let isHomeView: Bool
     let cornerRadius: CGFloat
     var isHeatmapInteractive: Bool = true
     var trailingAction: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                VStack {
+            HStack(alignment: .firstTextBaseline) {
+                if isHomeView {
+                    VStack {
+                        Text("Activity Overview")
+                            .font(.headline)
+
+                        ActivityLegendView()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                } else {
                     Text("Activity Overview")
                         .font(.headline)
 
                     ActivityLegendView()
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let trailingAction {
                     Button(action: trailingAction) {
@@ -66,6 +75,7 @@ struct ActivityOverviewSectionView: View {
 
     ActivityOverviewSectionView(
         viewModel: viewModel,
+        isHomeView: false,
         cornerRadius: AppCornerRadius.prominent
     )
     .padding()
@@ -81,6 +91,7 @@ struct ActivityOverviewSectionView: View {
 
     ActivityOverviewSectionView(
         viewModel: viewModel,
+        isHomeView: false,
         cornerRadius: AppCornerRadius.regular,
         isHeatmapInteractive: false,
         trailingAction: {}

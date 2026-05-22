@@ -35,6 +35,7 @@ struct HomeAvailableView: View {
 
                 ActivityOverviewSectionView(
                     viewModel: activityViewModel,
+                    isHomeView: true,
                     cornerRadius: AppCornerRadius.regular,
                     isHeatmapInteractive: false,
                     trailingAction: {
