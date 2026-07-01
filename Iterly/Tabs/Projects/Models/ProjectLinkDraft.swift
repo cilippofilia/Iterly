@@ -41,6 +41,13 @@ struct ProjectLinkDraft: Identifiable {
         return kind.title
     }
 
+    /// Switches to a kind recognized from the URL, leaving custom-labeled links untouched.
+    mutating func applyDetectedKind() {
+        guard kind != .custom,
+              let detectedKind = ProjectLinkKind.detected(fromURL: url) else { return }
+        kind = detectedKind
+    }
+
     @MainActor
     static func makeDrafts(from release: ProjectRelease?) -> [ProjectLinkDraft] {
         guard let release else { return [] }

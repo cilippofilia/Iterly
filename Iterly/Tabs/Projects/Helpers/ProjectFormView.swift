@@ -166,6 +166,9 @@ struct ProjectFormView: View {
                                 .keyboardType(.URL)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
+                                .onChange(of: draft.url) { _, _ in
+                                    viewModel.applyDetectedKind(toDraftWithID: draft.id)
+                                }
                         }
                     }
                 }

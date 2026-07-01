@@ -186,6 +186,11 @@ final class ProjectFormViewModel {
         usefulLinkDrafts.removeAll { $0.id == id }
     }
 
+    func applyDetectedKind(toDraftWithID id: UUID) {
+        guard let index = usefulLinkDrafts.firstIndex(where: { $0.id == id }) else { return }
+        usefulLinkDrafts[index].applyDetectedKind()
+    }
+
     func clearSyncError() {
         syncErrorMessage = nil
     }

@@ -15,6 +15,9 @@ struct HomeAvailableView: View {
 
     let pinnedProjects: [Project]
     let projects: [Project]
+    /// Every project, including closed ones, so the activity overview
+    /// matches the Activity tab while the sections above show active only.
+    let allProjects: [Project]
     let allTasks: [ProjectTask]
     let upcomingTasks: [ProjectTask]
     let totalProjectsCount: Int
@@ -57,12 +60,12 @@ struct HomeAvailableView: View {
         }
         .contentMargins(.bottom, 70, for: .scrollContent)
         .onChange(of: activityReloadToken, initial: true) { _, _ in
-            activityViewModel.reload(projects: pinnedProjects + projects, tasks: allTasks)
+            activityViewModel.reload(projects: allProjects, tasks: allTasks)
         }
     }
 
     private var activityReloadToken: String {
-        let projectToken = (pinnedProjects + projects)
+        let projectToken = allProjects
             .map { project in
                 "\(project.id.uuidString)-\(project.lastUpdated.timeIntervalSinceReferenceDate)"
             }
@@ -91,6 +94,7 @@ struct HomeAvailableView: View {
         HomeAvailableView(
             pinnedProjects: pinnedProjects,
             projects: otherProjects,
+            allProjects: projects,
             allTasks: projects.flatMap { $0.tasks ?? [] },
             upcomingTasks: homeViewModel.upcomingTasks(from: projects.flatMap(\.topLevelTasks)),
             totalProjectsCount: totalProjectsCount,

@@ -17,16 +17,19 @@ struct HomeContentView: View {
         if pinnedProjects.isEmpty, projects.isEmpty, tasks.isEmpty {
             UnavailableProjectsView()
         } else {
+            let activePinnedProjects = viewModel.activeProjects(from: pinnedProjects)
+            let activeProjects = viewModel.activeProjects(from: projects)
             let upcomingTasks = viewModel.upcomingTasks(from: tasks)
             let totalProjectsCount = viewModel.totalProjectsCount(
-                pinned: pinnedProjects,
-                projects: projects
+                pinned: activePinnedProjects,
+                projects: activeProjects
             )
             let showMore = totalProjectsCount > 5
 
             HomeAvailableView(
-                pinnedProjects: pinnedProjects,
-                projects: projects,
+                pinnedProjects: activePinnedProjects,
+                projects: activeProjects,
+                allProjects: pinnedProjects + projects,
                 allTasks: tasks,
                 upcomingTasks: upcomingTasks,
                 totalProjectsCount: totalProjectsCount,

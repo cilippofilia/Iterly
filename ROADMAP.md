@@ -51,8 +51,8 @@ For referencing bugs visually (screenshots, screen recordings).
 - `TipCardView` on Home (likely in `HomeAvailableView` near the top): rotates by day-of-year, "dismiss for today" persisted via `@AppStorage`.
 - "See all" pushes a simple list screen of every tip. Re-enable surface in Settings if the user dismisses tips permanently.
 
-### 2.3 TestFlight link type — **S**
-Add `.testflight` to `ProjectLinkKind` (`Iterly/Tabs/Projects/Models/ProjectLink.swift`) with a label ("TestFlight") and SF Symbol (e.g. `airplane` / `paperplane`). It flows automatically into the link picker in `ProjectFormView`, the "Navigate to…" menu in `ProjectDetailView`, and Integrations settings, since those all iterate the enum. Optional nicety: validate/recognize `testflight.apple.com` URLs and suggest the kind automatically.
+### 2.3 TestFlight link type — **S** — ✅ done 2026-07-01
+Add `.testflight` to `ProjectLinkKind` (`Iterly/Tabs/Projects/Models/ProjectLink.swift`) with a label ("TestFlight") and SF Symbol (shipped with `fanblades`, matching TestFlight's propeller logo). It flows automatically into the link picker in `ProjectFormView`, the "Navigate to…" menu in `ProjectDetailView`, and Integrations settings, since those all iterate the enum. Also shipped: `testflight.apple.com` URLs typed into a link draft switch the kind to TestFlight automatically (`ProjectLinkKind.detected(fromURL:)`; custom-labeled links are left alone).
 
 ---
 

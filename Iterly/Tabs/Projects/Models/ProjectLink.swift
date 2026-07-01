@@ -13,6 +13,7 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
     case gitlab
     case website
     case figma
+    case testflight
     case custom
 
     var id: String {
@@ -29,6 +30,8 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
             "Website"
         case .figma:
             "Figma"
+        case .testflight:
+            "TestFlight"
         case .custom:
             "Custom"
         }
@@ -44,9 +47,19 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
             "globe"
         case .figma:
             "scribble.variable"
+        case .testflight:
+            "fanblades"
         case .custom:
             "link"
         }
+    }
+
+    /// The kind that can be inferred from a URL the user entered, if any.
+    static func detected(fromURL url: String) -> ProjectLinkKind? {
+        if url.localizedStandardContains("testflight.apple.com") {
+            return .testflight
+        }
+        return nil
     }
 }
 

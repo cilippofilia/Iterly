@@ -10,6 +10,10 @@ import SwiftUI
 @MainActor
 @Observable
 final class HomeViewModel {
+    func activeProjects(from projects: [Project]) -> [Project] {
+        projects.filter { $0.status != .closed }
+    }
+
     func upcomingTasks(from tasks: [ProjectTask]) -> [ProjectTask] {
         tasks
             .filter { $0.project.status != .closed }
