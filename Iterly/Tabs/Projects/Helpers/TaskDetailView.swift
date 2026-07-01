@@ -34,6 +34,8 @@ struct TaskDetailView: View {
 
                 TaskActionsView(project: task.project, showBrainstormSheet: $showBrainstormSheet)
 
+                TaskAttachmentsSectionView(task: task)
+
                 TaskSubtaskSectionsView(
                     task: task,
                     onAddSubtask: {

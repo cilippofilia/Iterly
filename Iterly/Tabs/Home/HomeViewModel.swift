@@ -18,14 +18,12 @@ final class HomeViewModel {
             .filter { $0.parentTask == nil }
             .filter { $0.dueDate != nil }
             .sorted { lhs, rhs in
-                guard let lhsDueDate = lhs.dueDate, let rhsDueDate = rhs.dueDate else {
-                    return lhs.priority.sortRank < rhs.priority.sortRank
-                }
-
-                if lhsDueDate != rhsDueDate {
+                // Upcoming is due-date-first by design; ties fall back to the
+                // shared display order (priority, then creation date).
+                if let lhsDueDate = lhs.dueDate, let rhsDueDate = rhs.dueDate, lhsDueDate != rhsDueDate {
                     return lhsDueDate < rhsDueDate
                 }
-                return lhs.priority.sortRank < rhs.priority.sortRank
+                return ProjectTask.displayOrder(lhs, rhs)
             }
     }
 

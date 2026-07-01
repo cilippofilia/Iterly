@@ -35,7 +35,9 @@ final class Project: Identifiable, Hashable {
     }
 
     var topLevelTasks: [ProjectTask] {
-        (tasks ?? []).filter { $0.parentTask == nil }
+        (tasks ?? [])
+            .filter { $0.parentTask == nil }
+            .sortedForDisplay()
     }
 
     var inProgressAmount: Double {

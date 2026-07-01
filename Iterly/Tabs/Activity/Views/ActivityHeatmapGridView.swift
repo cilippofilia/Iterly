@@ -14,52 +14,59 @@ struct ActivityHeatmapGridView: View {
     let onSelectDay: (ActivityDaySummary) -> Void
     var isInteractive: Bool = true
 
+    @State private var scrollableWidth: CGFloat?
+
     private let weekdayLabelWidth: CGFloat = 32
     private let minimumCellSize: CGFloat = 14
     private let gridSpacing: CGFloat = 4
-    private let outerPadding: CGFloat = 16
+    private let monthHeaderHeight: CGFloat = 20
 
     var body: some View {
-        FittingHorizontalScrollView(minimumContentWidth: minimumContentWidth) { availableWidth in
-            let layout = HeatmapLayoutMetrics(
-                availableWidth: availableWidth - (outerPadding * 2),
-                weekCount: max(weeks.count, 1),
-                weekdayLabelWidth: weekdayLabelWidth,
-                spacing: gridSpacing
-            )
+        let layout = HeatmapLayoutMetrics(
+            availableWidth: scrollableWidth ?? 0,
+            weekCount: max(weeks.count, 1),
+            spacing: gridSpacing,
+            minimumCellSize: minimumCellSize
+        )
 
-            VStack(alignment: .leading) {
-                monthHeader(layout: layout)
+        HStack(alignment: .top, spacing: gridSpacing) {
+            weekdayMarkers(layout: layout)
 
-                HStack(alignment: .top) {
-                    weekdayMarkers(layout: layout)
+            ScrollView(.horizontal) {
+                VStack(alignment: .leading, spacing: gridSpacing) {
+                    monthHeader(layout: layout)
                     weekColumns(layout: layout)
                 }
             }
-            .padding(outerPadding)
+            .defaultScrollAnchor(.trailing)
+            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
+            .scrollIndicators(.hidden)
+            .onGeometryChange(for: CGFloat.self) { proxy in
+                proxy.size.width
+            } action: { width in
+                scrollableWidth = width
+            }
         }
-        .frame(height: contentHeight)
     }
 
     private func monthHeader(layout: HeatmapLayoutMetrics) -> some View {
-        HStack(alignment: .center, spacing: gridSpacing) {
-            Color.clear
-                .frame(width: weekdayLabelWidth, height: 20)
-
-            ZStack(alignment: .leading) {
-                ForEach(visibleMonthLabels, id: \.index) { item in
-                    Text(item.label)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .offset(x: layout.xOffset(forWeekIndex: item.index))
-                }
+        ZStack(alignment: .leading) {
+            ForEach(visibleMonthLabels, id: \.index) { item in
+                Text(item.label)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .offset(x: layout.xOffset(forWeekIndex: item.index))
             }
-            .frame(width: layout.gridWidth, height: 20, alignment: .leading)
         }
+        .frame(height: monthHeaderHeight, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func weekdayMarkers(layout: HeatmapLayoutMetrics) -> some View {
         VStack(alignment: .trailing, spacing: gridSpacing) {
+            Color.clear
+                .frame(width: weekdayLabelWidth, height: monthHeaderHeight)
+
             ForEach(Array(weekdayLabels.enumerated()), id: \.offset) { index, label in
                 Text(label)
                     .font(.caption)
@@ -68,7 +75,6 @@ struct ActivityHeatmapGridView: View {
                     .opacity(index.isMultiple(of: 2) ? 1 : 0)
             }
         }
-        .padding(.top, 2)
     }
 
     private func weekColumns(layout: HeatmapLayoutMetrics) -> some View {
@@ -121,17 +127,6 @@ struct ActivityHeatmapGridView: View {
         }
     }
 
-    private var minimumContentWidth: CGFloat {
-        let gridWidth = (CGFloat(max(weeks.count, 1)) * minimumCellSize)
-            + (CGFloat(max(weeks.count - 1, 0)) * gridSpacing)
-        return weekdayLabelWidth + gridSpacing + gridWidth + (outerPadding * 2)
-    }
-
-    private var contentHeight: CGFloat {
-        let rowsHeight = (minimumCellSize * 7) + (gridSpacing * 6)
-        return rowsHeight + 20 + (outerPadding * 2) + 8
-    }
-
     private func color(for day: ActivityDaySummary) -> Color {
         switch day.intensityLevel {
         case 0: Color.secondary.opacity(0.2)
@@ -162,17 +157,13 @@ private struct VisibleMonthLabel {
 private struct HeatmapLayoutMetrics {
     let availableWidth: CGFloat
     let weekCount: Int
-    let weekdayLabelWidth: CGFloat
     let spacing: CGFloat
-
-    var gridWidth: CGFloat {
-        availableWidth - weekdayLabelWidth - spacing
-    }
+    let minimumCellSize: CGFloat
 
     var cellSize: CGFloat {
         let totalSpacing = CGFloat(max(weekCount - 1, 0)) * spacing
-        let width = max(gridWidth - totalSpacing, 0)
-        return floor(width / CGFloat(weekCount))
+        let fittedSize = floor((availableWidth - totalSpacing) / CGFloat(max(weekCount, 1)))
+        return max(fittedSize, minimumCellSize)
     }
 
     var cornerRadius: CGFloat {

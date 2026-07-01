@@ -206,7 +206,7 @@ private struct IntegrationsSettingsPreview: View {
 private enum IntegrationsSettingsPreviewData {
     @MainActor
     static func makeContainer() -> ModelContainer {
-        let schema = Schema([Project.self, ProjectTask.self, ProjectRelease.self, ProjectLink.self])
+        let schema = Schema([Project.self, ProjectTask.self, TaskAttachment.self, ProjectRelease.self, ProjectLink.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
 
         do {

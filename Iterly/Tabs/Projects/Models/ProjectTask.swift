@@ -27,6 +27,9 @@ final class ProjectTask: Identifiable {
     @Relationship(inverse: \ProjectTask.subtasks)
     var parentTask: ProjectTask?
 
+    @Relationship(deleteRule: .cascade, inverse: \TaskAttachment.task)
+    var attachments: [TaskAttachment]?
+
     init(
         id: UUID = UUID(),
         title: String = "Task",
@@ -39,7 +42,8 @@ final class ProjectTask: Identifiable {
         lastUpdated: Date? = nil,
         project: Project,
         subtasks: [ProjectTask]? = nil,
-        parentTask: ProjectTask? = nil
+        parentTask: ProjectTask? = nil,
+        attachments: [TaskAttachment]? = nil
     ) {
         self.id = id
         self.title = title
@@ -53,6 +57,7 @@ final class ProjectTask: Identifiable {
         self.project = project
         self.subtasks = subtasks
         self.parentTask = parentTask
+        self.attachments = attachments
     }
 
     func touch() {

@@ -15,10 +15,12 @@ struct TaskSectionsBuilder {
     }
 
     static func sections(for tasks: [ProjectTask]) -> Sections {
-        Sections(
-            active: tasks.filter { $0.status != .done && $0.status != .closed },
-            completed: tasks.filter { $0.status == .done },
-            closed: tasks.filter { $0.status == .closed }
+        let sortedTasks = tasks.sortedForDisplay()
+
+        return Sections(
+            active: sortedTasks.filter { $0.status != .done && $0.status != .closed },
+            completed: sortedTasks.filter { $0.status == .done },
+            closed: sortedTasks.filter { $0.status == .closed }
         )
     }
 }

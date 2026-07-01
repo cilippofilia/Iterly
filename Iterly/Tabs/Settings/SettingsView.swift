@@ -31,20 +31,6 @@ struct SettingsView: View {
                             text: "Integrations"
                         )
                     }
-                }
-
-                Section("Test Data") {
-                    Button {
-                        viewModel.addSampleData(modelContext: modelContext)
-                    } label: {
-                        FormRowView(
-                            imageName: "wand.and.sparkles",
-                            foregroundColor: .white,
-                            backgroundColor: .indigo.mix(with: .purple, by: 0.5),
-                            text: "Add Sample Data"
-                        )
-                    }
-                    .buttonStyle(.plain)
 
                     Button(role: .destructive) {
                         viewModel.promptEraseAllData()
@@ -58,6 +44,22 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.plain)
                 }
+
+                #if DEBUG
+                Section("Test Data") {
+                    Button {
+                        viewModel.addSampleData(modelContext: modelContext)
+                    } label: {
+                        FormRowView(
+                            imageName: "wand.and.sparkles",
+                            foregroundColor: .white,
+                            backgroundColor: .indigo.mix(with: .purple, by: 0.5),
+                            text: "Add Sample Data"
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+                #endif
 
                 Section {
                     Button {
