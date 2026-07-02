@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct TaskActionsView: View {
     let project: Project

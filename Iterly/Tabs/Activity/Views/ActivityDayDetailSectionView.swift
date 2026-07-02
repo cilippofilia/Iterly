@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct ActivityDayDetailSectionView: View {
     let selectedDay: ActivityDaySummary?

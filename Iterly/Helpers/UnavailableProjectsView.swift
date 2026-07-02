@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct UnavailableProjectsView: View {
     @State private var showAddProjectSheet = false

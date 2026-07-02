@@ -1,6 +1,6 @@
 //
 //  ProjectTask+DisplayOrder.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 01/07/2026.
 //
@@ -11,7 +11,7 @@ extension ProjectTask {
     /// The shared ordering for every task and subtask list in the app:
     /// priority first (high before low), then earliest due date with undated
     /// tasks last, then creation date as a stable tiebreaker.
-    static func displayOrder(_ lhs: ProjectTask, _ rhs: ProjectTask) -> Bool {
+    public static func displayOrder(_ lhs: ProjectTask, _ rhs: ProjectTask) -> Bool {
         if lhs.priority.sortRank != rhs.priority.sortRank {
             return lhs.priority.sortRank < rhs.priority.sortRank
         }
@@ -31,7 +31,7 @@ extension ProjectTask {
 
 extension [ProjectTask] {
     /// The tasks sorted by the shared display order; see `ProjectTask.displayOrder(_:_:)`.
-    func sortedForDisplay() -> [ProjectTask] {
+    public func sortedForDisplay() -> [ProjectTask] {
         sorted(by: ProjectTask.displayOrder)
     }
 }

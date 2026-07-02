@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct IntegrationRowView: View {
     let title: String

@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct TaskFormView: View {
     @Environment(\.dismiss) private var dismiss
@@ -181,7 +182,7 @@ struct TaskFormView: View {
         project.touch()
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to create task: \(error)")
         }
@@ -204,7 +205,7 @@ struct TaskFormView: View {
         task.project.touch()
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to update task: \(error)")
         }
@@ -230,7 +231,7 @@ struct TaskFormView: View {
         project.touch()
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to delete task: \(error)")
         }

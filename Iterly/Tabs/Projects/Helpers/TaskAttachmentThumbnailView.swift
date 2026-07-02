@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct TaskAttachmentThumbnailView: View {
     let attachment: TaskAttachment

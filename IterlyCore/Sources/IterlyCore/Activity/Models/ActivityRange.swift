@@ -1,24 +1,24 @@
 //
 //  ActivityRange.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 30/03/2026.
 //
 
 import Foundation
 
-enum ActivityRange: String, CaseIterable, Identifiable {
+public enum ActivityRange: String, CaseIterable, Identifiable, Sendable {
     case threeMonths = "3 months"
     case sixMonths = "6 months"
     case twelveMonths = "12 months"
 
-    var id: Self { self }
+    public var id: Self { self }
 
-    var title: String {
+    public var title: String {
         rawValue
     }
 
-    var monthSpan: Int {
+    public var monthSpan: Int {
         switch self {
         case .threeMonths: 3
         case .sixMonths: 6
@@ -26,7 +26,7 @@ enum ActivityRange: String, CaseIterable, Identifiable {
         }
     }
 
-    func dateInterval(relativeTo anchorDate: Date, calendar: Calendar) -> DateInterval {
+    public func dateInterval(relativeTo anchorDate: Date, calendar: Calendar) -> DateInterval {
         let startOfToday = calendar.startOfDay(for: anchorDate)
         let monthAnchor = calendar.date(
             byAdding: .month,

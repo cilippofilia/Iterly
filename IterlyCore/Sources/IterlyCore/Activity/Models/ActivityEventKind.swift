@@ -1,17 +1,17 @@
 //
 //  ActivityEventKind.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 30/03/2026.
 //
 
 import Foundation
 
-enum ActivityEventKind: String, Hashable {
+public enum ActivityEventKind: String, Hashable, Sendable {
     case project
     case task
 
-    var title: String {
+    public var title: String {
         switch self {
         case .project: "Project"
         case .task: "Task"

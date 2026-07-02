@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3022D9FA60DB64932D047E67 /* IterlyWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = ADA609611B28A052135F8D99 /* IterlyWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3A3C373361E4CC2FD170F886 /* IterlyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 06DDFBE4D6E4DA90C79C40D5 /* IterlyCore */; };
+		B2EB3F9541DB61DDEBA0E21E /* IterlyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2680F3D4283540A519329505 /* IterlyCore */; };
+		BCF36A2AFD22045763E26AEB /* IterlyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 58FACA32FD4DFF2149BDC26C /* IterlyCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		1891F4092FF5B9EF001F748D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -14,11 +21,33 @@
 			remoteGlobalIDString = 18EAF1F02F4F72660007C73B;
 			remoteInfo = Iterly;
 		};
+		BE484073417533AC9CFCC8FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18EAF1E92F4F72660007C73B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D2CEE99845187454E3DBBBD;
+			remoteInfo = IterlyWidgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CE6235BC6333BB474846B6AE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3022D9FA60DB64932D047E67 /* IterlyWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		18AB00022F4F72660007C73B /* IterlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IterlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EAF1F12F4F72660007C73B /* Iterly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iterly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADA609611B28A052135F8D99 /* IterlyWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IterlyWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -28,6 +57,13 @@
 				Info.plist,
 			);
 			target = 18EAF1F02F4F72660007C73B /* Iterly */;
+		};
+		F07BA36EB9AC6244B14C5827 /* Exceptions for "IterlyWidgets" folder in "IterlyWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5D2CEE99845187454E3DBBBD /* IterlyWidgets */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -45,13 +81,30 @@
 			path = Iterly;
 			sourceTree = "<group>";
 		};
+		1A37B5045684B374773FC9DE /* IterlyWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F07BA36EB9AC6244B14C5827 /* Exceptions for "IterlyWidgets" folder in "IterlyWidgets" target */,
+			);
+			path = IterlyWidgets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0044ACE53DD5AE0F31783B3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCF36A2AFD22045763E26AEB /* IterlyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		18AB00052F4F72660007C73B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2EB3F9541DB61DDEBA0E21E /* IterlyCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A3C373361E4CC2FD170F886 /* IterlyCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +124,7 @@
 			children = (
 				18EAF1F32F4F72660007C73B /* Iterly */,
 				18AB00032F4F72660007C73B /* IterlyTests */,
+				1A37B5045684B374773FC9DE /* IterlyWidgets */,
 				18EAF1F22F4F72660007C73B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -79,6 +134,7 @@
 			children = (
 				18EAF1F12F4F72660007C73B /* Iterly.app */,
 				18AB00022F4F72660007C73B /* IterlyTests.xctest */,
+				ADA609611B28A052135F8D99 /* IterlyWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,6 +160,7 @@
 			);
 			name = IterlyTests;
 			packageProductDependencies = (
+				2680F3D4283540A519329505 /* IterlyCore */,
 			);
 			productName = IterlyTests;
 			productReference = 18AB00022F4F72660007C73B /* IterlyTests.xctest */;
@@ -116,20 +173,46 @@
 				18EAF1ED2F4F72660007C73B /* Sources */,
 				18EAF1EE2F4F72660007C73B /* Frameworks */,
 				18EAF1EF2F4F72660007C73B /* Resources */,
+				CE6235BC6333BB474846B6AE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				25EF9DD4F52E913AFB72451E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				18EAF1F32F4F72660007C73B /* Iterly */,
 			);
 			name = Iterly;
 			packageProductDependencies = (
+				06DDFBE4D6E4DA90C79C40D5 /* IterlyCore */,
 			);
 			productName = Itero;
 			productReference = 18EAF1F12F4F72660007C73B /* Iterly.app */;
 			productType = "com.apple.product-type.application";
+		};
+		5D2CEE99845187454E3DBBBD /* IterlyWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CDDA94F5C2107D92897BA3B /* Build configuration list for PBXNativeTarget "IterlyWidgets" */;
+			buildPhases = (
+				A8EB40079151752BB6102BA0 /* Sources */,
+				0044ACE53DD5AE0F31783B3A /* Frameworks */,
+				A4E01CA394CF5E6DD80683B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1A37B5045684B374773FC9DE /* IterlyWidgets */,
+			);
+			name = IterlyWidgets;
+			packageProductDependencies = (
+				58FACA32FD4DFF2149BDC26C /* IterlyCore */,
+			);
+			productName = IterlyWidgets;
+			productReference = ADA609611B28A052135F8D99 /* IterlyWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -148,6 +231,9 @@
 					18EAF1F02F4F72660007C73B = {
 						CreatedOnToolsVersion = 26.3;
 					};
+					5D2CEE99845187454E3DBBBD = {
+						CreatedOnToolsVersion = 26.3;
+					};
 				};
 			};
 			buildConfigurationList = 18EAF1EC2F4F72660007C73B /* Build configuration list for PBXProject "Iterly" */;
@@ -159,6 +245,9 @@
 			);
 			mainGroup = 18EAF1E82F4F72660007C73B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 18EAF1F22F4F72660007C73B /* Products */;
 			projectDirPath = "";
@@ -166,6 +255,7 @@
 			targets = (
 				18EAF1F02F4F72660007C73B /* Iterly */,
 				18AB00012F4F72660007C73B /* IterlyTests */,
+				5D2CEE99845187454E3DBBBD /* IterlyWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -179,6 +269,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		18EAF1EF2F4F72660007C73B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4E01CA394CF5E6DD80683B4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -202,6 +299,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A8EB40079151752BB6102BA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -209,6 +313,11 @@
 			isa = PBXTargetDependency;
 			target = 18EAF1F02F4F72660007C73B /* Iterly */;
 			targetProxy = 1891F4092FF5B9EF001F748D /* PBXContainerItemProxy */;
+		};
+		25EF9DD4F52E913AFB72451E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5D2CEE99845187454E3DBBBD /* IterlyWidgets */;
+			targetProxy = BE484073417533AC9CFCC8FA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -385,6 +494,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = iterlyIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Iterly/Iterly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3K3GFX53DY;
@@ -426,6 +536,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = iterlyIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Iterly/Iterly.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3K3GFX53DY;
@@ -453,6 +564,66 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1FE77CBC3B0558DDB4789982 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IterlyWidgets/IterlyWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3K3GFX53DY;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IterlyWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Iterly Widgets";
+				IPHONEOS_DEPLOYMENT_TARGET = 18;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cilia.filippo.Iterly.IterlyWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ECFB97932A5AF9BC68C589DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = IterlyWidgets/IterlyWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3K3GFX53DY;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = IterlyWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Iterly Widgets";
+				IPHONEOS_DEPLOYMENT_TARGET = 18;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cilia.filippo.Iterly.IterlyWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -492,7 +663,41 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		9CDDA94F5C2107D92897BA3B /* Build configuration list for PBXNativeTarget "IterlyWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FE77CBC3B0558DDB4789982 /* Debug */,
+				ECFB97932A5AF9BC68C589DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = IterlyCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		06DDFBE4D6E4DA90C79C40D5 /* IterlyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */;
+			productName = IterlyCore;
+		};
+		2680F3D4283540A519329505 /* IterlyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */;
+			productName = IterlyCore;
+		};
+		58FACA32FD4DFF2149BDC26C /* IterlyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */;
+			productName = IterlyCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 18EAF1E92F4F72660007C73B /* Project object */;
 }

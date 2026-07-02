@@ -1,6 +1,6 @@
 //
 //  ProjectRelease.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 04/03/2026.
 //
@@ -9,25 +9,25 @@ import Foundation
 import SwiftData
 
 @Model
-final class ProjectRelease: Identifiable {
-    var id: UUID = UUID()
-    var version: String = ""
+public final class ProjectRelease: Identifiable {
+    public var id: UUID = UUID()
+    public var version: String = ""
     // Legacy persisted field kept so existing stores continue to open cleanly.
-    var build: String = ""
+    public var build: String = ""
     @Attribute(originalName: "appURL")
-    var appStoreURL: String = ""
+    public var appStoreURL: String = ""
     // Legacy persisted field kept so existing stores can migrate to ProjectLink.
-    var githubURL: String = ""
-    var appStoreSyncDate: Date? = nil
-    var appStoreSyncError: String? = nil
+    public var githubURL: String = ""
+    public var appStoreSyncDate: Date? = nil
+    public var appStoreSyncError: String? = nil
 
     @Relationship(inverse: \Project.currentRelease)
-    var project: Project
+    public var project: Project
 
     @Relationship(deleteRule: .cascade, inverse: \ProjectLink.projectRelease)
-    var links: [ProjectLink]?
+    public var links: [ProjectLink]?
 
-    init(
+    public init(
         id: UUID = UUID(),
         version: String = "",
         build: String = "",
@@ -47,15 +47,15 @@ final class ProjectRelease: Identifiable {
         self.project = project
     }
 
-    var hasAppStoreLink: Bool {
+    public var hasAppStoreLink: Bool {
         appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
     }
 
-    var hasGitHubLink: Bool {
+    public var hasGitHubLink: Bool {
         usefulLinks.contains { $0.kind == .github }
     }
 
-    var usefulLinks: [ProjectLink] {
+    public var usefulLinks: [ProjectLink] {
         (links ?? []).sorted { lhs, rhs in
             if lhs.sortOrder == rhs.sortOrder {
                 return lhs.label.localizedStandardCompare(rhs.label) == .orderedAscending
@@ -64,11 +64,11 @@ final class ProjectRelease: Identifiable {
         }
     }
 
-    var hasUsefulLinks: Bool {
+    public var hasUsefulLinks: Bool {
         usefulLinks.isEmpty == false
     }
 
-    var extractedAppStoreAppID: String? {
+    public var extractedAppStoreAppID: String? {
         let trimmedURL = appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmedURL.isEmpty == false else { return nil }
         guard let expression = try? NSRegularExpression(pattern: #"(?i)id(\d+)"#) else { return nil }
@@ -81,7 +81,7 @@ final class ProjectRelease: Identifiable {
         return String(trimmedURL[captureRange])
     }
 
-    var appStoreSyncDateText: String? {
+    public var appStoreSyncDateText: String? {
         guard let appStoreSyncDate else { return nil }
         return appStoreSyncDate.formatted(date: .abbreviated, time: .shortened)
     }

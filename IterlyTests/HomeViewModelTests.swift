@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 import Testing
+import IterlyCore
 @testable import Iterly
 
 @MainActor

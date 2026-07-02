@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct ProjectRowLinkView: View {
     let project: Project

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import IterlyCore
 @testable import Iterly
 
 /// An in-memory SwiftData stack with a single project, used to build tasks for sorting tests.

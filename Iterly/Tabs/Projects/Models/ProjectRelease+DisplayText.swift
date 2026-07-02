@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IterlyCore
 
 extension ProjectRelease {
     var displayText: String? {

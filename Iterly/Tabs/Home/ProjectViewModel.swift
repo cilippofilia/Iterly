@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import IterlyCore
 
 @MainActor
 @Observable
@@ -52,7 +53,7 @@ final class ProjectViewModel {
 
         modelContext.insert(project)
 
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func updateProject(
@@ -104,18 +105,18 @@ final class ProjectViewModel {
             if previousAppStoreURL.isEmpty == false {
                 disconnectAppStoreRelease(for: release, preservingVersion: version)
             }
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
             return
         }
 
         if let lookupResult {
             applyLookupResult(lookupResult, to: release)
             project.touch()
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
             return
         }
 
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func togglePin(project: Project, modelContext: ModelContext) -> Bool {
@@ -133,7 +134,7 @@ final class ProjectViewModel {
             project.isPinned.toggle()
             project.touch()
 
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
             return true
         } catch {
             assertionFailure("Failed to toggle pin: \(error)")
@@ -148,7 +149,7 @@ final class ProjectViewModel {
         modelContext.delete(project)
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to delete project: \(error)")
         }
@@ -159,7 +160,7 @@ final class ProjectViewModel {
         let lookupResult = try await appStoreLookupService.lookup(appID: release.appStoreURL)
         applyLookupResult(lookupResult, to: release)
         project.touch()
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func linkAppStoreRelease(
@@ -171,14 +172,14 @@ final class ProjectViewModel {
         let lookupResult = try await appStoreLookupService.lookup(appID: appStoreURL)
         applyLookupResult(lookupResult, to: release)
         project.touch()
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func disconnectAppStoreRelease(for project: Project, modelContext: ModelContext) throws {
         let release = try release(for: project)
         disconnectAppStoreRelease(for: release, preservingVersion: release.version)
         project.touch()
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func linkedProjects(modelContext: ModelContext) -> [Project] {
@@ -218,7 +219,7 @@ final class ProjectViewModel {
             project.touch()
         }
 
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func disconnectUsefulLink(
@@ -233,7 +234,7 @@ final class ProjectViewModel {
         release.links = release.usefulLinks.filter { $0.id != link.id }
         modelContext.delete(link)
         project.touch()
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func disconnectAllUsefulLinks(modelContext: ModelContext) throws {
@@ -245,7 +246,7 @@ final class ProjectViewModel {
             project.touch()
         }
 
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func disconnectAllLinks(modelContext: ModelContext) throws {
@@ -263,7 +264,7 @@ final class ProjectViewModel {
             project.touch()
         }
 
-        try modelContext.save()
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func eraseAllData(modelContext: ModelContext) {
@@ -272,7 +273,7 @@ final class ProjectViewModel {
             try modelContext.delete(model: ProjectRelease.self)
             try modelContext.delete(model: Project.self)
 
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to erase data: \(error)")
         }
@@ -286,7 +287,7 @@ final class ProjectViewModel {
         project.currentRelease?.appStoreSyncError = error.localizedDescription
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to save App Store sync error: \(error)")
         }

@@ -1,6 +1,6 @@
 //
 //  ProjectTask.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 01/03/2026.
 //
@@ -9,28 +9,28 @@ import Foundation
 import SwiftData
 
 @Model
-final class ProjectTask: Identifiable {
-    var id: UUID = UUID()
-    var title: String = "Task"
-    var details: String? = nil
-    var note: String? = nil
-    var status: TaskStatus = TaskStatus.default
-    var dueDate: Date? = nil
-    var priority: TaskPriority = TaskPriority.default
-    var creationDate: Date = Date.now
-    var lastUpdated: Date? = nil
-    var project: Project
+public final class ProjectTask: Identifiable {
+    public var id: UUID = UUID()
+    public var title: String = "Task"
+    public var details: String? = nil
+    public var note: String? = nil
+    public var status: TaskStatus = TaskStatus.default
+    public var dueDate: Date? = nil
+    public var priority: TaskPriority = TaskPriority.default
+    public var creationDate: Date = Date.now
+    public var lastUpdated: Date? = nil
+    public var project: Project
 
     @Relationship(deleteRule: .cascade)
-    var subtasks: [ProjectTask]?
+    public var subtasks: [ProjectTask]?
 
     @Relationship(inverse: \ProjectTask.subtasks)
-    var parentTask: ProjectTask?
+    public var parentTask: ProjectTask?
 
     @Relationship(deleteRule: .cascade, inverse: \TaskAttachment.task)
-    var attachments: [TaskAttachment]?
+    public var attachments: [TaskAttachment]?
 
-    init(
+    public init(
         id: UUID = UUID(),
         title: String = "Task",
         details: String? = nil,
@@ -60,7 +60,7 @@ final class ProjectTask: Identifiable {
         self.attachments = attachments
     }
 
-    func touch() {
+    public func touch() {
         lastUpdated = .now
     }
 }

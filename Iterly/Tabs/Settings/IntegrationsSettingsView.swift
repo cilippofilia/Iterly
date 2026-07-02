@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct IntegrationsSettingsView: View {
     @Environment(\.modelContext) private var modelContext

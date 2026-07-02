@@ -7,6 +7,7 @@
 
 import Foundation
 import Testing
+import IterlyCore
 @testable import Iterly
 
 struct ProjectLinkKindDetectionTests {

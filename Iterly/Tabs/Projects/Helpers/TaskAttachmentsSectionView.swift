@@ -8,6 +8,7 @@
 import PhotosUI
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct TaskAttachmentsSectionView: View {
     @Environment(\.modelContext) private var modelContext
@@ -179,7 +180,7 @@ struct TaskAttachmentsSectionView: View {
         }
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to save attachments: \(error)")
         }
@@ -194,7 +195,7 @@ struct TaskAttachmentsSectionView: View {
         task.project.touch()
 
         do {
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to delete attachment: \(error)")
         }

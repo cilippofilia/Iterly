@@ -1,6 +1,6 @@
 //
 //  ProjectLink.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 31/03/2026.
 //
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
+public enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable, Sendable {
     case github
     case gitlab
     case website
@@ -16,11 +16,11 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
     case testflight
     case custom
 
-    var id: String {
+    public var id: String {
         rawValue
     }
 
-    var title: String {
+    public var title: String {
         switch self {
         case .github:
             "GitHub"
@@ -37,7 +37,7 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
         }
     }
 
-    var systemImage: String {
+    public var systemImage: String {
         switch self {
         case .github:
             "chevron.left.forwardslash.chevron.right"
@@ -55,7 +55,7 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
     }
 
     /// The kind that can be inferred from a URL the user entered, if any.
-    static func detected(fromURL url: String) -> ProjectLinkKind? {
+    public static func detected(fromURL url: String) -> ProjectLinkKind? {
         if url.localizedStandardContains("testflight.apple.com") {
             return .testflight
         }
@@ -63,29 +63,36 @@ enum ProjectLinkKind: String, CaseIterable, Codable, Identifiable {
     }
 }
 
-struct ProjectLinkInput: Sendable {
-    let kind: ProjectLinkKind
-    let label: String
-    let url: String
-    let sortOrder: Int
+public struct ProjectLinkInput: Sendable {
+    public let kind: ProjectLinkKind
+    public let label: String
+    public let url: String
+    public let sortOrder: Int
+
+    public init(kind: ProjectLinkKind, label: String, url: String, sortOrder: Int) {
+        self.kind = kind
+        self.label = label
+        self.url = url
+        self.sortOrder = sortOrder
+    }
 }
 
 @Model
-final class ProjectLink: Identifiable {
-    var id: UUID = UUID()
-    var label: String = ""
-    var url: String = ""
-    var sortOrder: Int = 0
+public final class ProjectLink: Identifiable {
+    public var id: UUID = UUID()
+    public var label: String = ""
+    public var url: String = ""
+    public var sortOrder: Int = 0
     private var kindRawValue: String = ProjectLinkKind.website.rawValue
 
-    var projectRelease: ProjectRelease?
+    public var projectRelease: ProjectRelease?
 
-    var kind: ProjectLinkKind {
+    public var kind: ProjectLinkKind {
         get { ProjectLinkKind(rawValue: kindRawValue) ?? .website }
         set { kindRawValue = newValue.rawValue }
     }
 
-    init(
+    public init(
         id: UUID = UUID(),
         kind: ProjectLinkKind,
         label: String,

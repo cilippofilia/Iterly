@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct TaskListView: View {
     let title: String

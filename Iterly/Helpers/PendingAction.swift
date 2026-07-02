@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 enum PendingAction: Identifiable {
     case appStore(Project)

@@ -1,14 +1,16 @@
 //
 //  ActivityDataProvider.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 30/03/2026.
 //
 
 import Foundation
 
-struct ActivityDataProvider: ActivityDataProviding {
-    func events(
+public struct ActivityDataProvider: ActivityDataProviding {
+    public init() {}
+
+    public func events(
         for range: ActivityRange,
         now: Date,
         projects: [Project],

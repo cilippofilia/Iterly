@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IterlyCore
 
 struct ProjectLinkDraft: Identifiable {
     var id: UUID = UUID()

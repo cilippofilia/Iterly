@@ -1,6 +1,6 @@
 //
 //  TaskAttachment.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 01/07/2026.
 //
@@ -9,21 +9,21 @@ import Foundation
 import SwiftData
 
 @Model
-final class TaskAttachment: Identifiable {
-    var id: UUID = UUID()
-    var kind: TaskAttachmentKind = TaskAttachmentKind.default
+public final class TaskAttachment: Identifiable {
+    public var id: UUID = UUID()
+    public var kind: TaskAttachmentKind = TaskAttachmentKind.default
 
     @Attribute(.externalStorage)
-    var data: Data? = nil
+    public var data: Data? = nil
 
     @Attribute(.externalStorage)
-    var thumbnailData: Data? = nil
+    public var thumbnailData: Data? = nil
 
-    var fileExtension: String? = nil
-    var creationDate: Date = Date.now
-    var task: ProjectTask?
+    public var fileExtension: String? = nil
+    public var creationDate: Date = Date.now
+    public var task: ProjectTask?
 
-    init(
+    public init(
         id: UUID = UUID(),
         kind: TaskAttachmentKind = .default,
         data: Data? = nil,

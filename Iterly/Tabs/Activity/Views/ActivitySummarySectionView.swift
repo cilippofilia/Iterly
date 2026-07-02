@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct ActivitySummarySectionView: View {
     let summary: ActivityOverviewSummary

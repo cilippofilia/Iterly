@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct ProjectDetailView: View {
     @Environment(\.modelContext) private var modelContext

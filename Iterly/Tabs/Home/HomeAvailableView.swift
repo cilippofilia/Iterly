@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 @MainActor
 struct HomeAvailableView: View {

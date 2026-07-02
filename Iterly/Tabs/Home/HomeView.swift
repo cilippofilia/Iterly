@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct HomeView: View {
     static let homeTag: String? = "Home"

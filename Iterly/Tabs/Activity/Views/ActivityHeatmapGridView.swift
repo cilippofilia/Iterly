@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct ActivityHeatmapGridView: View {
     let weeks: [[ActivityDaySummary]]

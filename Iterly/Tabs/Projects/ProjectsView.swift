@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct ProjectsView: View {
     static let projectsTag: String? = "Projects"

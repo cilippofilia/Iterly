@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct ProjectsSection: View {
     @AppStorage("selectedView") private var selectedView: String?

@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import IterlyCore
 
 struct ContentView: View {
     @AppStorage("selectedView") var selectedView: String?
@@ -49,7 +50,7 @@ struct ContentView: View {
                 project.backfillTypeIfNeeded()
             }
 
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to backfill project types: \(error)")
         }
@@ -89,7 +90,7 @@ struct ContentView: View {
             }
 
             guard didChange else { return }
-            try modelContext.save()
+            try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to backfill useful links: \(error)")
         }

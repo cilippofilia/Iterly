@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct ProjectsLegendView: View {
     let orderedStatuses: [TaskStatus]

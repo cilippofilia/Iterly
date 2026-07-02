@@ -1,14 +1,14 @@
 //
 //  ProjectType.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 29/03/2026.
 //
 
 import Foundation
 
-enum ProjectType: String, CaseIterable, Codable {
-    static let `default` = Self.app
+public enum ProjectType: String, CaseIterable, Codable, Sendable {
+    public static let `default` = Self.app
 
     case app
     case package
@@ -18,7 +18,7 @@ enum ProjectType: String, CaseIterable, Codable {
     case library
     case other
 
-    var title: String {
+    public var title: String {
         switch self {
         case .app: "App"
         case .package: "Package"
@@ -30,7 +30,7 @@ enum ProjectType: String, CaseIterable, Codable {
         }
     }
 
-    var systemImage: String {
+    public var systemImage: String {
         switch self {
         case .app: "app.grid"
         case .package: "shippingbox"

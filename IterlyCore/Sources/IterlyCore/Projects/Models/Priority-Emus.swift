@@ -1,21 +1,21 @@
 //
 //  Priority-Enums.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 01/03/2026.
 //
 
 import SwiftUI
 
-enum ProjectPriority: String, CaseIterable, Codable {
-    static let `default` = Self.notSet
+public enum ProjectPriority: String, CaseIterable, Codable, Sendable {
+    public static let `default` = Self.notSet
 
     case notSet
     case low
     case medium
     case high
 
-    var title: String {
+    public var title: String {
         switch self {
         case .notSet: "Not Set"
         case .low: "Low"
@@ -24,7 +24,7 @@ enum ProjectPriority: String, CaseIterable, Codable {
         }
     }
 
-    var backgroundColor: Color {
+    public var backgroundColor: Color {
         switch self {
         case .notSet: .gray
         case .low: .blue
@@ -34,15 +34,15 @@ enum ProjectPriority: String, CaseIterable, Codable {
     }
 }
 
-enum TaskPriority: String, CaseIterable, Codable {
-    static let `default` = Self.notSet
+public enum TaskPriority: String, CaseIterable, Codable, Sendable {
+    public static let `default` = Self.notSet
 
     case notSet
     case low
     case medium
     case high
 
-    var title: String {
+    public var title: String {
         switch self {
         case .notSet: "Not Set"
         case .low: "Low"
@@ -50,7 +50,7 @@ enum TaskPriority: String, CaseIterable, Codable {
         case .high: "High"
         }
     }
-    var badgeTitle: String {
+    public var badgeTitle: String {
         switch self {
         case .notSet: "P3"
         case .low: "P2"
@@ -59,7 +59,7 @@ enum TaskPriority: String, CaseIterable, Codable {
         }
     }
 
-    var backgroundColor: Color {
+    public var backgroundColor: Color {
         switch self {
         case .notSet: .gray
         case .low: .blue
@@ -68,7 +68,7 @@ enum TaskPriority: String, CaseIterable, Codable {
         }
     }
 
-    var sortRank: Int {
+    public var sortRank: Int {
         switch self {
         case .high: 0
         case .medium: 1

@@ -1,6 +1,6 @@
 //
 //  Project.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 01/03/2026.
 //
@@ -9,52 +9,52 @@ import Foundation
 import SwiftData
 
 @Model
-final class Project: Identifiable, Hashable {
-    var id: UUID = UUID()
-    var title: String = "Project"
-    var details: String? = nil
-    var note: String? = nil
+public final class Project: Identifiable, Hashable {
+    public var id: UUID = UUID()
+    public var title: String = "Project"
+    public var details: String? = nil
+    public var note: String? = nil
     private var typeRawValue: String? = nil
-    var priority: ProjectPriority = ProjectPriority.default
-    var status: ProjectStatus = ProjectStatus.default
-    var creationDate: Date = Date.now
-    var lastUpdated: Date = Date.now
-    var isPinned: Bool = false
-    var currentRelease: ProjectRelease?
+    public var priority: ProjectPriority = ProjectPriority.default
+    public var status: ProjectStatus = ProjectStatus.default
+    public var creationDate: Date = Date.now
+    public var lastUpdated: Date = Date.now
+    public var isPinned: Bool = false
+    public var currentRelease: ProjectRelease?
 
     @Relationship(deleteRule: .cascade, inverse: \ProjectTask.project)
-    var tasks: [ProjectTask]?
+    public var tasks: [ProjectTask]?
 
-    var type: ProjectType {
+    public var type: ProjectType {
         get { ProjectType(rawValue: typeRawValue ?? "") ?? .default }
         set { typeRawValue = newValue.rawValue }
     }
 
-    var needsTypeBackfill: Bool {
+    public var needsTypeBackfill: Bool {
         typeRawValue == nil
     }
 
-    var topLevelTasks: [ProjectTask] {
+    public var topLevelTasks: [ProjectTask] {
         (tasks ?? [])
             .filter { $0.parentTask == nil }
             .sortedForDisplay()
     }
 
-    var inProgressAmount: Double {
+    public var inProgressAmount: Double {
         let originalTasks = topLevelTasks
         guard originalTasks.isEmpty == false else { return 0 }
 
         let inProgressTasks = originalTasks.filter { $0.status == .inProgress }
         return Double(inProgressTasks.count) / Double(originalTasks.count)
     }
-    var blockedAmount: Double {
+    public var blockedAmount: Double {
         let originalTasks = topLevelTasks
         guard originalTasks.isEmpty == false else { return 0 }
 
         let blockedTasks = originalTasks.filter { $0.status == .blocked }
         return Double(blockedTasks.count) / Double(originalTasks.count)
     }
-    var doneAmount: Double {
+    public var doneAmount: Double {
         let originalTasks = topLevelTasks
         guard originalTasks.isEmpty == false else { return 0 }
 
@@ -62,7 +62,7 @@ final class Project: Identifiable, Hashable {
         return Double(completedTasks.count) / Double(originalTasks.count)
     }
 
-    init(
+    public init(
         id: UUID = UUID(),
         title: String = "Project",
         details: String? = nil,
@@ -91,21 +91,21 @@ final class Project: Identifiable, Hashable {
         self.currentRelease?.project = self
     }
 
-    func touch() {
+    public func touch() {
         lastUpdated = .now
     }
 
-    func backfillTypeIfNeeded() {
+    public func backfillTypeIfNeeded() {
         guard needsTypeBackfill else { return }
         typeRawValue = ProjectType.default.rawValue
     }
 
     // MARK: HASHABLE CONFORMANCE METHODS
-    static func == (lhs: Project, rhs: Project) -> Bool {
+    public static func == (lhs: Project, rhs: Project) -> Bool {
         lhs.id == rhs.id
     }
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }

@@ -7,6 +7,7 @@
 
 import AVKit
 import SwiftUI
+import IterlyCore
 
 struct TaskAttachmentViewerView: View {
     @Environment(\.dismiss) private var dismiss

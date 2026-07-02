@@ -1,6 +1,6 @@
 //
 //  Status-Enums.swift
-//  Iterly
+//  IterlyCore
 //
 //  Created by Filippo Cilia on 01/03/2026.
 //
@@ -8,8 +8,8 @@
 import Foundation
 import SwiftUI
 
-enum ProjectStatus: String, CaseIterable, Codable {
-    static let `default` = Self.plan
+public enum ProjectStatus: String, CaseIterable, Codable, Sendable {
+    public static let `default` = Self.plan
 
     case plan
     case dev
@@ -18,7 +18,7 @@ enum ProjectStatus: String, CaseIterable, Codable {
     case blocked
     case closed
 
-    var title: String {
+    public var title: String {
         switch self {
         case .plan: "Planning"
         case .dev: "Development"
@@ -29,7 +29,7 @@ enum ProjectStatus: String, CaseIterable, Codable {
         }
     }
 
-    var backgroundColor: Color {
+    public var backgroundColor: Color {
         switch self {
         case .plan: .blue
         case .dev: .orange
@@ -41,8 +41,8 @@ enum ProjectStatus: String, CaseIterable, Codable {
     }
 }
 
-enum TaskStatus: String, CaseIterable, Codable {
-    static let `default` = Self.notStarted
+public enum TaskStatus: String, CaseIterable, Codable, Sendable {
+    public static let `default` = Self.notStarted
 
     case blocked
     case notStarted
@@ -50,7 +50,7 @@ enum TaskStatus: String, CaseIterable, Codable {
     case done
     case closed
 
-    var title: String {
+    public var title: String {
         switch self {
         case .blocked: "Blocked"
         case .notStarted: "Not Started"
@@ -60,7 +60,7 @@ enum TaskStatus: String, CaseIterable, Codable {
         }
     }
 
-    var backgroundColor: Color {
+    public var backgroundColor: Color {
         switch self {
         case .blocked: .red
         case .notStarted: .gray

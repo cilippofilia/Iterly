@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import IterlyCore
 
 struct TaskSectionsBuilder {
     struct Sections {

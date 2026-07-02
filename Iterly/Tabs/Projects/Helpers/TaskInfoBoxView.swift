@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IterlyCore
 
 struct TaskInfoBoxView: View {
     @Bindable var task: ProjectTask
