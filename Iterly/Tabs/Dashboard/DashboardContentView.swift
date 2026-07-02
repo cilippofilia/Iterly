@@ -1,5 +1,5 @@
 //
-//  HomeContentView.swift
+//  DashboardContentView.swift
 //  Iterly
 //
 //  Created by Filippo Cilia on 10/03/2026.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct HomeContentView: View {
+struct DashboardContentView: View {
     let pinnedProjects: [Project]
     let projects: [Project]
     let tasks: [ProjectTask]
-    let viewModel: HomeViewModel
+    let viewModel: DashboardViewModel
 
     var body: some View {
         if pinnedProjects.isEmpty, projects.isEmpty, tasks.isEmpty {
@@ -26,7 +26,7 @@ struct HomeContentView: View {
             )
             let showMore = totalProjectsCount > 5
 
-            HomeAvailableView(
+            DashboardAvailableView(
                 pinnedProjects: activePinnedProjects,
                 projects: activeProjects,
                 allProjects: pinnedProjects + projects,
