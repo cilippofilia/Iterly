@@ -13,7 +13,6 @@ struct IterlyActivityWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: ActivityWidgetKind.identifier, provider: ActivityWidgetProvider()) { entry in
             ActivityWidgetView(entry: entry)
-                .containerBackground(.background, for: .widget)
         }
         .configurationDisplayName("Activity")
         .description("Track your project activity streak and see the heatmap at a glance.")

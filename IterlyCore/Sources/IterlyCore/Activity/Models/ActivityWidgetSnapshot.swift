@@ -14,13 +14,22 @@ public struct ActivityWidgetSnapshot: Sendable {
     public let streak: Int
     public let totalCount: Int
     public let busiestDay: ActivityDaySummary?
+    public let recentProjects: [ActivityWidgetProjectSummary]
     public let generatedAt: Date
 
-    public init(weeks: [[ActivityDaySummary]], streak: Int, totalCount: Int, busiestDay: ActivityDaySummary?, generatedAt: Date) {
+    public init(
+        weeks: [[ActivityDaySummary]],
+        streak: Int,
+        totalCount: Int,
+        busiestDay: ActivityDaySummary?,
+        recentProjects: [ActivityWidgetProjectSummary] = [],
+        generatedAt: Date
+    ) {
         self.weeks = weeks
         self.streak = streak
         self.totalCount = totalCount
         self.busiestDay = busiestDay
+        self.recentProjects = recentProjects
         self.generatedAt = generatedAt
     }
 
@@ -52,7 +61,21 @@ public struct ActivityWidgetSnapshot: Sendable {
             streak: 4,
             totalCount: sampleCounts.reduce(0, +),
             busiestDay: days.max { $0.count < $1.count },
+            recentProjects: sampleProjects(today: today, calendar: calendar),
             generatedAt: .now
         )
+    }
+
+    private static func sampleProjects(today: Date, calendar: Calendar) -> [ActivityWidgetProjectSummary] {
+        func daysAgo(_ value: Int) -> Date {
+            calendar.date(byAdding: .day, value: -value, to: today) ?? today
+        }
+
+        return [
+            ActivityWidgetProjectSummary(id: UUID(), title: "Iterly", type: .app, status: .dev, progress: 0.7, lastUpdated: daysAgo(0)),
+            ActivityWidgetProjectSummary(id: UUID(), title: "Asc CLI", type: .package, status: .beta, progress: 0.4, lastUpdated: daysAgo(1)),
+            ActivityWidgetProjectSummary(id: UUID(), title: "Portfolio", type: .website, status: .live, progress: 1.0, lastUpdated: daysAgo(3)),
+            ActivityWidgetProjectSummary(id: UUID(), title: "Review Skill", type: .agentSkill, status: .plan, progress: 0.15, lastUpdated: daysAgo(5)),
+        ]
     }
 }

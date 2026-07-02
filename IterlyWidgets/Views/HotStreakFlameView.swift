@@ -10,7 +10,7 @@ import WidgetKit
 import IterlyCore
 
 /// The escalating flame glyph on its own, styled by the streak's `HotStreakTier`.
-/// Shared by the vertical `HotStreakFlameView` and the compact `HotStreakChip`.
+/// Used by the compact `HotStreakChip` in the medium and large widget headers.
 struct HotStreakFlameGlyph: View {
     let streak: Int
     var font: Font = .system(.title, design: .rounded, weight: .bold)
@@ -43,25 +43,6 @@ struct HotStreakFlameGlyph: View {
             AnyShapeStyle(LinearGradient(colors: [.orange, .red], startPoint: .bottom, endPoint: .top))
         case .inferno:
             AnyShapeStyle(LinearGradient(colors: [.yellow, .orange, .red], startPoint: .bottom, endPoint: .top))
-        }
-    }
-}
-
-/// Stacked flame, count, and caption — the hero visual for the small widget.
-struct HotStreakFlameView: View {
-    let streak: Int
-    var flameFont: Font = .system(.title, design: .rounded, weight: .bold)
-    var countFont: Font = .system(.title2, design: .rounded, weight: .bold)
-
-    var body: some View {
-        VStack(spacing: 2) {
-            HotStreakFlameGlyph(streak: streak, font: flameFont)
-            Text(streak, format: .number)
-                .font(countFont)
-                .monospacedDigit()
-            Text("day streak")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
         }
     }
 }

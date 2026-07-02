@@ -19,6 +19,9 @@ import IterlyCore
 struct ActivityHeatmapMiniView: View {
     let weeks: [[ActivityDaySummary]]
     var cellSpacing: CGFloat = 3
+    /// Upper bound on cell size so a tall container (the large widget) renders at the same
+    /// density as the medium widget instead of stretching into a few oversized squares.
+    var maxCellSize: CGFloat = .infinity
 
     private let rowCount = 7
 
@@ -44,10 +47,12 @@ struct ActivityHeatmapMiniView: View {
         .accessibilityLabel("Activity heatmap")
     }
 
-    /// Cell edge that makes seven rows (plus spacing) fill the available height exactly.
+    /// Cell edge that makes seven rows (plus spacing) fill the available height exactly,
+    /// capped by `maxCellSize`.
     private func cellSize(forHeight height: CGFloat) -> CGFloat {
         let totalSpacing = CGFloat(rowCount - 1) * cellSpacing
-        return max((height - totalSpacing) / CGFloat(rowCount), 0)
+        let fitted = (height - totalSpacing) / CGFloat(rowCount)
+        return min(max(fitted, 0), maxCellSize)
     }
 
     /// How many trailing week-columns fit the width at the given square cell size.

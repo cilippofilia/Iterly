@@ -59,11 +59,27 @@ public enum ActivityWidgetSnapshotBuilder {
             return lhs.date < rhs.date
         }
 
+        let recentProjects = projects
+            .filter { $0.status != .closed }
+            .sorted { $0.lastUpdated > $1.lastUpdated }
+            .prefix(4)
+            .map { project in
+                ActivityWidgetProjectSummary(
+                    id: project.id,
+                    title: project.title,
+                    type: project.type,
+                    status: project.status,
+                    progress: project.doneAmount,
+                    lastUpdated: project.lastUpdated
+                )
+            }
+
         return ActivityWidgetSnapshot(
             weeks: weeks,
             streak: streak,
             totalCount: totalCount,
             busiestDay: busiestDay,
+            recentProjects: Array(recentProjects),
             generatedAt: now
         )
     }

@@ -29,9 +29,54 @@ private struct ActivityWidgetSmallView: View {
     let snapshot: ActivityWidgetSnapshot
 
     var body: some View {
-        HotStreakFlameView(streak: snapshot.streak)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .widgetURL(URL(string: "iterly://activity"))
+        VStack(spacing: 6) {
+            Image(systemName: "flame.fill")
+                .font(.system(.largeTitle, design: .rounded, weight: .heavy))
+                .foregroundStyle(.white)
+                .shadow(color: .white.opacity(0.5), radius: 9)
+                .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+
+            Text(snapshot.streak, format: .number)
+                .font(.system(.largeTitle, design: .monospaced, weight: .black))
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.3), radius: 4, y: 1)
+
+            Text("day streak")
+                .font(.system(.caption2, design: .monospaced, weight: .semibold))
+                .textCase(.uppercase)
+                .tracking(1.5)
+                .foregroundStyle(.white.opacity(0.95))
+                .shadow(color: .black.opacity(0.25), radius: 3, y: 1)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .containerBackground(for: .widget) {
+            ActivityWidgetSmallBackground()
+        }
+        .widgetURL(URL(string: "iterly://activity"))
+    }
+}
+
+/// A rich amber-to-deep-orange fire gradient with a soft highlight behind the flame —
+/// the small widget's backdrop.
+private struct ActivityWidgetSmallBackground: View {
+    var body: some View {
+        LinearGradient(
+            colors: [
+                Color(red: 1.0, green: 0.80, blue: 0.30),
+                Color(red: 1.0, green: 0.55, blue: 0.15),
+                Color(red: 0.96, green: 0.37, blue: 0.09),
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .overlay {
+            RadialGradient(
+                colors: [.white.opacity(0.35), .clear],
+                center: UnitPoint(x: 0.5, y: 0.28),
+                startRadius: 2,
+                endRadius: 100
+            )
+        }
     }
 }
 
@@ -44,6 +89,7 @@ private struct ActivityWidgetMediumView: View {
             ActivityHeatmapMiniView(weeks: snapshot.weeks)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .containerBackground(.background, for: .widget)
         .widgetURL(URL(string: "iterly://activity"))
     }
 }
@@ -51,20 +97,42 @@ private struct ActivityWidgetMediumView: View {
 private struct ActivityWidgetLargeView: View {
     let snapshot: ActivityWidgetSnapshot
 
+    /// Matches the medium widget's cell density; also fixes the heatmap band height.
+    private let heatmapCellSize: CGFloat = 13
+    private let heatmapCellSpacing: CGFloat = 3
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             ActivityWidgetHeaderView(streak: snapshot.streak)
 
-            ActivityHeatmapMiniView(weeks: snapshot.weeks)
+            ActivityHeatmapMiniView(
+                weeks: snapshot.weeks,
+                cellSpacing: heatmapCellSpacing,
+                maxCellSize: heatmapCellSize
+            )
+            .frame(maxHeight: heatmapBandHeight)
 
             ActivityWidgetStatsRowView(
                 total: snapshot.totalCount,
                 activeDays: activeDays,
                 busiest: snapshot.busiestDay?.count ?? 0
             )
+
+            if snapshot.recentProjects.isEmpty {
+                Spacer(minLength: 0)
+            } else {
+                Divider()
+                ActivityWidgetProjectsSectionView(projects: snapshot.recentProjects)
+                Spacer(minLength: 0)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .containerBackground(.background, for: .widget)
         .widgetURL(URL(string: "iterly://activity"))
+    }
+
+    private var heatmapBandHeight: CGFloat {
+        heatmapCellSize * 7 + heatmapCellSpacing * 6
     }
 
     private var activeDays: Int {
@@ -109,13 +177,66 @@ private struct ActivityWidgetStatView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 1) {
             Text(value, format: .number)
-                .font(.system(.title3, design: .rounded, weight: .bold))
+                .font(.system(.headline, design: .rounded, weight: .bold))
                 .monospacedDigit()
             Text(title)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+private struct ActivityWidgetProjectsSectionView: View {
+    let projects: [ActivityWidgetProjectSummary]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Recently worked on")
+                .font(.caption)
+                .bold()
+                .foregroundStyle(.secondary)
+
+            ForEach(projects) { project in
+                ActivityWidgetProjectRowView(project: project)
+            }
+        }
+    }
+}
+
+private struct ActivityWidgetProjectRowView: View {
+    let project: ActivityWidgetProjectSummary
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: project.type.systemImage)
+                .font(.footnote)
+                .foregroundStyle(project.status.backgroundColor)
+                .frame(width: 18)
+
+            Text(project.title)
+                .font(.subheadline)
+                .lineLimit(1)
+
+            Spacer(minLength: 8)
+
+            ProgressView(value: clampedProgress)
+                .progressViewStyle(.linear)
+                .tint(project.status.backgroundColor)
+                .frame(width: 44)
+
+            Text(clampedProgress, format: .percent.precision(.fractionLength(0)))
+                .font(.caption2)
+                .monospacedDigit()
+                .foregroundStyle(.secondary)
+                .frame(width: 34, alignment: .trailing)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(project.title), \(project.status.title), \(Int(clampedProgress * 100)) percent done")
+    }
+
+    private var clampedProgress: Double {
+        min(max(project.progress, 0), 1)
     }
 }
 
