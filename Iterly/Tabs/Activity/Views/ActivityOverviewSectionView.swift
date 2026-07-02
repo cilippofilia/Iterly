@@ -13,7 +13,7 @@ import IterlyCore
 struct ActivityOverviewSectionView: View {
     @Bindable var viewModel: ActivityOverviewViewModel
 
-    let isHomeView: Bool
+    let isDashboardView: Bool
     let cornerRadius: CGFloat
     var isHeatmapInteractive: Bool = true
     var trailingAction: (() -> Void)? = nil
@@ -21,7 +21,7 @@ struct ActivityOverviewSectionView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .firstTextBaseline) {
-                if isHomeView {
+                if isDashboardView {
                     VStack {
                         Text("Activity Overview")
                             .font(.headline)
@@ -76,7 +76,7 @@ struct ActivityOverviewSectionView: View {
 
     ActivityOverviewSectionView(
         viewModel: viewModel,
-        isHomeView: false,
+        isDashboardView: false,
         cornerRadius: AppCornerRadius.prominent
     )
     .padding()
@@ -86,13 +86,13 @@ struct ActivityOverviewSectionView: View {
     .modelContainer(SampleData.makePreviewContainer())
 }
 
-#Preview("Home Style") {
+#Preview("Dashboard Style") {
     @Previewable @State var viewModel = ActivityOverviewViewModel()
     let projects = SampleData.makeProjects()
 
     ActivityOverviewSectionView(
         viewModel: viewModel,
-        isHomeView: false,
+        isDashboardView: false,
         cornerRadius: AppCornerRadius.regular,
         isHeatmapInteractive: false,
         trailingAction: {}

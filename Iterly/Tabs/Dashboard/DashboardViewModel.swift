@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  DashboardViewModel.swift
 //  Iterly
 //
 //  Created by Filippo Cilia on 10/03/2026.
@@ -10,7 +10,7 @@ import IterlyCore
 
 @MainActor
 @Observable
-final class HomeViewModel {
+final class DashboardViewModel {
     func activeProjects(from projects: [Project]) -> [Project] {
         projects.filter { $0.status != .closed }
     }

@@ -1,5 +1,5 @@
 //
-//  HomeViewModelTests.swift
+//  DashboardViewModelTests.swift
 //  IterlyTests
 //
 //  Created by Filippo Cilia on 01/07/2026.
@@ -12,9 +12,9 @@ import IterlyCore
 @testable import Iterly
 
 @MainActor
-struct HomeViewModelTests {
+struct DashboardViewModelTests {
     private let context: ModelContext
-    private let viewModel = HomeViewModel()
+    private let viewModel = DashboardViewModel()
     private let baseDate = Date(timeIntervalSinceReferenceDate: 800_000_000)
 
     init() throws {

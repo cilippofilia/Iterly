@@ -1,5 +1,5 @@
 //
-//  HomeAvailableView.swift
+//  DashboardAvailableView.swift
 //  Iterly
 //
 //  Created by Filippo Cilia on 10/03/2026.
@@ -10,7 +10,7 @@ import SwiftUI
 import IterlyCore
 
 @MainActor
-struct HomeAvailableView: View {
+struct DashboardAvailableView: View {
     @AppStorage("selectedView") private var selectedView: String?
     @State private var activityViewModel = ActivityOverviewViewModel()
 
@@ -39,7 +39,7 @@ struct HomeAvailableView: View {
 
                 ActivityOverviewSectionView(
                     viewModel: activityViewModel,
-                    isHomeView: true,
+                    isDashboardView: true,
                     cornerRadius: AppCornerRadius.regular,
                     isHeatmapInteractive: false,
                     trailingAction: {
@@ -85,23 +85,23 @@ struct HomeAvailableView: View {
     let projects = SampleData.makeProjects()
     let pinnedProjects = projects.filter(\.isPinned)
     let otherProjects = projects.filter { $0.isPinned == false }
-    let homeViewModel = HomeViewModel()
-    let totalProjectsCount = homeViewModel.totalProjectsCount(
+    let dashboardViewModel = DashboardViewModel()
+    let totalProjectsCount = dashboardViewModel.totalProjectsCount(
         pinned: pinnedProjects,
         projects: otherProjects
     )
 
     NavigationStack {
-        HomeAvailableView(
+        DashboardAvailableView(
             pinnedProjects: pinnedProjects,
             projects: otherProjects,
             allProjects: projects,
             allTasks: projects.flatMap { $0.tasks ?? [] },
-            upcomingTasks: homeViewModel.upcomingTasks(from: projects.flatMap(\.topLevelTasks)),
+            upcomingTasks: dashboardViewModel.upcomingTasks(from: projects.flatMap(\.topLevelTasks)),
             totalProjectsCount: totalProjectsCount,
             showMore: totalProjectsCount > 5
         )
-        .navigationTitle("Home")
+        .navigationTitle("Dashboard")
     }
     .modelContainer(SampleData.makePreviewContainer())
 }
