@@ -31,7 +31,7 @@ struct ActivityView: View {
 
                     ActivityOverviewSectionView(
                         viewModel: viewModel,
-                        isHomeView: false,
+                        isDashboardView: false,
                         cornerRadius: AppCornerRadius.prominent
                     )
 

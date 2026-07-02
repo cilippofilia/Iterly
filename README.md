@@ -6,12 +6,12 @@ Iterly is a native SwiftUI project tracker for iPhone. It is built for solo buil
 
 The app centers on two main areas:
 
-- a Home tab for pinned projects and upcoming work
+- a Dashboard tab for pinned projects and upcoming work
 - a Projects tab for editing projects, releases, tasks, subtasks, and brainstorm notes
 
 ## Features
 
-### Home
+### Dashboard
 
 - Dashboard for pinned projects, active projects, and upcoming tasks.
 - Upcoming-task ordering based on due date and priority.
@@ -61,7 +61,7 @@ Iterly/
 │   ├── Helpers/
 │   ├── Localization/
 │   ├── Tabs/
-│   │   ├── Home/
+│   │   ├── Dashboard/
 │   │   │   ├── Helpers/
 │   │   │   └── Sections/
 │   │   └── Projects/
@@ -72,7 +72,7 @@ Iterly/
 └── Iterly.xcodeproj
 ```
 
-The app boots a shared SwiftData container in [`Iterly/IterlyApp.swift`](Iterly/IterlyApp.swift) and exposes two tabs from [`Iterly/ContentView.swift`](Iterly/ContentView.swift): `Home` and `Projects`.
+The app boots a shared SwiftData container in [`Iterly/IterlyApp.swift`](Iterly/IterlyApp.swift) and exposes two tabs from [`Iterly/ContentView.swift`](Iterly/ContentView.swift): `Dashboard` and `Projects`.
 
 ## Data Model
 
@@ -109,7 +109,7 @@ open Iterly.xcodeproj
 ## Development Notes
 
 - Shared UI helpers and progress/task utilities live in `Iterly/Helpers`.
-- Home-specific view logic lives in `Iterly/Tabs/Home`.
+- Dashboard-specific view logic lives in `Iterly/Tabs/Dashboard`.
 - Project, release, and task models live in `Iterly/Tabs/Projects/Models`.
 - Forms and detail screens for project editing live in `Iterly/Tabs/Projects/Helpers`.
 - Preview and demo data are defined in `Iterly/Helpers/SampleData.swift`.
