@@ -24,7 +24,9 @@ struct FormRowView: View {
                 .background(backgroundColor.gradient)
                 .clipShape(.rect(cornerRadius: AppCornerRadius.small))
             Text(text)
+            Spacer()
         }
+        .contentShape(Rectangle())
     }
 }
 
