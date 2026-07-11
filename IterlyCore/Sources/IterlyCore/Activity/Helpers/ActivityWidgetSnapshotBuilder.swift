@@ -51,6 +51,7 @@ public enum ActivityWidgetSnapshotBuilder {
         }
 
         let streak = ActivityStreakCalculator.latestStreak(in: summaries, calendar: calendar)
+        let hasLoggedToday = summaries.last.map { calendar.isDate($0.date, inSameDayAs: now) && $0.count > 0 } ?? false
         let totalCount = summaries.reduce(0) { $0 + $1.count }
         let busiestDay = summaries.max { lhs, rhs in
             if lhs.count != rhs.count {
@@ -77,6 +78,7 @@ public enum ActivityWidgetSnapshotBuilder {
         return ActivityWidgetSnapshot(
             weeks: weeks,
             streak: streak,
+            hasLoggedToday: hasLoggedToday,
             totalCount: totalCount,
             busiestDay: busiestDay,
             recentProjects: Array(recentProjects),

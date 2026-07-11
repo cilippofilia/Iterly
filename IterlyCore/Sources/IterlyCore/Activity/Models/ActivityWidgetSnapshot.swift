@@ -12,6 +12,7 @@ import Foundation
 public struct ActivityWidgetSnapshot: Sendable {
     public let weeks: [[ActivityDaySummary]]
     public let streak: Int
+    public let hasLoggedToday: Bool
     public let totalCount: Int
     public let busiestDay: ActivityDaySummary?
     public let recentProjects: [ActivityWidgetProjectSummary]
@@ -20,6 +21,7 @@ public struct ActivityWidgetSnapshot: Sendable {
     public init(
         weeks: [[ActivityDaySummary]],
         streak: Int,
+        hasLoggedToday: Bool = false,
         totalCount: Int,
         busiestDay: ActivityDaySummary?,
         recentProjects: [ActivityWidgetProjectSummary] = [],
@@ -27,6 +29,7 @@ public struct ActivityWidgetSnapshot: Sendable {
     ) {
         self.weeks = weeks
         self.streak = streak
+        self.hasLoggedToday = hasLoggedToday
         self.totalCount = totalCount
         self.busiestDay = busiestDay
         self.recentProjects = recentProjects
@@ -59,6 +62,7 @@ public struct ActivityWidgetSnapshot: Sendable {
         return ActivityWidgetSnapshot(
             weeks: weeks,
             streak: 4,
+            hasLoggedToday: true,
             totalCount: sampleCounts.reduce(0, +),
             busiestDay: days.max { $0.count < $1.count },
             recentProjects: sampleProjects(today: today, calendar: calendar),

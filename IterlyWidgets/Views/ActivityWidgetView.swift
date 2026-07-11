@@ -20,22 +20,36 @@ struct ActivityWidgetView: View {
         case .systemLarge:
             ActivityWidgetLargeView(snapshot: entry.snapshot)
         default:
-            ActivityWidgetSmallView(snapshot: entry.snapshot)
+            ActivityWidgetSmallView(date: entry.date, snapshot: entry.snapshot)
         }
     }
 }
 
 private struct ActivityWidgetSmallView: View {
+    let date: Date
     let snapshot: ActivityWidgetSnapshot
 
     private var isActiveStreak: Bool { snapshot.streak > 0 }
+
+    /// 0 when the streak is fully lit (already logged today, or freshly carried over
+    /// from yesterday), ramping up to 1 by the end of the day if nothing's logged yet —
+    /// the flame "burning out" in four six-hourly steps. Pinned to 1 once the streak
+    /// itself has lapsed.
+    private var coldness: Double {
+        guard isActiveStreak else { return 1 }
+        guard !snapshot.hasLoggedToday else { return 0 }
+
+        let hour = Calendar.autoupdatingCurrent.component(.hour, from: date)
+        let sixHourStep = hour / 6
+        return Double(sixHourStep) / 3
+    }
 
     var body: some View {
         VStack(spacing: 6) {
             Image(systemName: isActiveStreak ? "flame.fill" : "flame")
                 .font(.system(.largeTitle, design: .rounded, weight: .heavy))
                 .foregroundStyle(.white)
-                .shadow(color: .white.opacity(isActiveStreak ? 0.5 : 0), radius: 9)
+                .shadow(color: .white.opacity(0.5 * (1 - coldness)), radius: 9)
                 .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
 
             Text(snapshot.streak, format: .number)
@@ -52,48 +66,54 @@ private struct ActivityWidgetSmallView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .containerBackground(for: .widget) {
-            ActivityWidgetSmallBackground(isActiveStreak: isActiveStreak)
+            ActivityWidgetSmallBackground(coldness: coldness)
         }
         .widgetURL(URL(string: "iterly://activity"))
     }
 }
 
-/// The small widget's backdrop: a rich amber-to-deep-orange fire gradient with a soft
-/// highlight behind the flame while the streak is active, or a muted slate gradient
-/// once it's lapsed.
+/// The small widget's backdrop: a rich amber-to-deep-orange fire gradient that cools
+/// towards a muted slate gray as `coldness` climbs from 0 (fully lit) to 1 (lapsed, or
+/// simply unattended for the whole day).
 private struct ActivityWidgetSmallBackground: View {
-    let isActiveStreak: Bool
+    let coldness: Double
+
+    private static let hotStops: [(Double, Double, Double)] = [
+        (1.0, 0.80, 0.30),
+        (1.0, 0.55, 0.15),
+        (0.96, 0.37, 0.09),
+    ]
+
+    private static let coldStops: [(Double, Double, Double)] = [
+        (0.55, 0.55, 0.55),
+        (0.4, 0.4, 0.4),
+        (0.28, 0.28, 0.28),
+    ]
+
+    private var gradientColors: [Color] {
+        zip(Self.hotStops, Self.coldStops).map { hot, cold in
+            Color(
+                red: lerp(hot.0, cold.0, coldness),
+                green: lerp(hot.1, cold.1, coldness),
+                blue: lerp(hot.2, cold.2, coldness)
+            )
+        }
+    }
+
+    private func lerp(_ from: Double, _ to: Double, _ fraction: Double) -> Double {
+        from + (to - from) * fraction
+    }
 
     var body: some View {
-        if isActiveStreak {
-            LinearGradient(
-                colors: [
-                    Color(red: 1.0, green: 0.80, blue: 0.30),
-                    Color(red: 1.0, green: 0.55, blue: 0.15),
-                    Color(red: 0.96, green: 0.37, blue: 0.09),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+        LinearGradient(colors: gradientColors, startPoint: .topLeading, endPoint: .bottomTrailing)
             .overlay {
                 RadialGradient(
-                    colors: [.white.opacity(0.35), .clear],
+                    colors: [.white.opacity(0.35 * (1 - coldness)), .clear],
                     center: UnitPoint(x: 0.5, y: 0.28),
                     startRadius: 2,
                     endRadius: 100
                 )
             }
-        } else {
-            LinearGradient(
-                colors: [
-                    Color(white: 0.55),
-                    Color(white: 0.4),
-                    Color(white: 0.28),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
     }
 }
 
@@ -267,4 +287,33 @@ private struct ActivityWidgetProjectRowView: View {
     IterlyActivityWidget()
 } timeline: {
     ActivityWidgetEntry(date: .now, snapshot: .samplePlaceholder)
+}
+
+#Preview("Small – Logged Today", as: .systemSmall) {
+    IterlyActivityWidget()
+} timeline: {
+    ActivityWidgetEntry(
+        date: .now,
+        snapshot: ActivityWidgetSnapshot(
+            weeks: [], streak: 6, hasLoggedToday: true, totalCount: 30, busiestDay: nil, generatedAt: .now
+        )
+    )
+}
+
+/// Same streak, nothing logged yet today — scrub the canvas timeline bar to watch the
+/// flame cool from full blaze to nearly out across the four six-hourly steps.
+#Preview("Small – Cooling Through the Day", as: .systemSmall) {
+    IterlyActivityWidget()
+} timeline: {
+    let calendar = Calendar.current
+    let unloggedSnapshot = ActivityWidgetSnapshot(
+        weeks: [], streak: 6, hasLoggedToday: false, totalCount: 30, busiestDay: nil, generatedAt: .now
+    )
+
+    for hour in [1, 7, 13, 19] {
+        ActivityWidgetEntry(
+            date: calendar.date(bySettingHour: hour, minute: 0, second: 0, of: .now) ?? .now,
+            snapshot: unloggedSnapshot
+        )
+    }
 }
