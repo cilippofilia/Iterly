@@ -28,12 +28,14 @@ struct ActivityWidgetView: View {
 private struct ActivityWidgetSmallView: View {
     let snapshot: ActivityWidgetSnapshot
 
+    private var isActiveStreak: Bool { snapshot.streak > 0 }
+
     var body: some View {
         VStack(spacing: 6) {
-            Image(systemName: "flame.fill")
+            Image(systemName: isActiveStreak ? "flame.fill" : "flame")
                 .font(.system(.largeTitle, design: .rounded, weight: .heavy))
                 .foregroundStyle(.white)
-                .shadow(color: .white.opacity(0.5), radius: 9)
+                .shadow(color: .white.opacity(isActiveStreak ? 0.5 : 0), radius: 9)
                 .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
 
             Text(snapshot.streak, format: .number)
@@ -50,31 +52,46 @@ private struct ActivityWidgetSmallView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .containerBackground(for: .widget) {
-            ActivityWidgetSmallBackground()
+            ActivityWidgetSmallBackground(isActiveStreak: isActiveStreak)
         }
         .widgetURL(URL(string: "iterly://activity"))
     }
 }
 
-/// A rich amber-to-deep-orange fire gradient with a soft highlight behind the flame —
-/// the small widget's backdrop.
+/// The small widget's backdrop: a rich amber-to-deep-orange fire gradient with a soft
+/// highlight behind the flame while the streak is active, or a muted slate gradient
+/// once it's lapsed.
 private struct ActivityWidgetSmallBackground: View {
+    let isActiveStreak: Bool
+
     var body: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 1.0, green: 0.80, blue: 0.30),
-                Color(red: 1.0, green: 0.55, blue: 0.15),
-                Color(red: 0.96, green: 0.37, blue: 0.09),
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .overlay {
-            RadialGradient(
-                colors: [.white.opacity(0.35), .clear],
-                center: UnitPoint(x: 0.5, y: 0.28),
-                startRadius: 2,
-                endRadius: 100
+        if isActiveStreak {
+            LinearGradient(
+                colors: [
+                    Color(red: 1.0, green: 0.80, blue: 0.30),
+                    Color(red: 1.0, green: 0.55, blue: 0.15),
+                    Color(red: 0.96, green: 0.37, blue: 0.09),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .overlay {
+                RadialGradient(
+                    colors: [.white.opacity(0.35), .clear],
+                    center: UnitPoint(x: 0.5, y: 0.28),
+                    startRadius: 2,
+                    endRadius: 100
+                )
+            }
+        } else {
+            LinearGradient(
+                colors: [
+                    Color(white: 0.55),
+                    Color(white: 0.4),
+                    Color(white: 0.28),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
             )
         }
     }
