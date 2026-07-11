@@ -32,16 +32,17 @@ private struct ActivityWidgetSmallView: View {
     private var isActiveStreak: Bool { snapshot.streak > 0 }
 
     /// 0 when the streak is fully lit (already logged today, or freshly carried over
-    /// from yesterday), ramping up to 1 by the end of the day if nothing's logged yet —
-    /// the flame "burning out" in four six-hourly steps. Pinned to 1 once the streak
-    /// itself has lapsed.
+    /// from yesterday), ramping up in four six-hourly steps if nothing's logged yet —
+    /// the flame "burning down" through the day. Caps below full cold so an active-but-
+    /// unlogged streak always reads as still-alive; only a truly lapsed streak (1) goes
+    /// fully gray.
     private var coldness: Double {
         guard isActiveStreak else { return 1 }
         guard !snapshot.hasLoggedToday else { return 0 }
 
         let hour = Calendar.autoupdatingCurrent.component(.hour, from: date)
         let sixHourStep = hour / 6
-        return Double(sixHourStep) / 3
+        return Double(sixHourStep) / 4
     }
 
     var body: some View {
