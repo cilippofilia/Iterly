@@ -11,6 +11,8 @@ import IterlyCore
 struct ProjectInfoBoxView: View {
     @Bindable var project: Project
 
+    @Environment(CrossPromoSignal.self) private var crossPromoSignal
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("Info")
@@ -27,9 +29,13 @@ struct ProjectInfoBoxView: View {
                 Menu {
                     Picker("Status", selection: Binding(
                         get: { project.status },
-                        set: {
-                            project.status = $0
+                        set: { newStatus in
+                            let didChange = project.status != newStatus
+                            project.status = newStatus
                             project.touch()
+                            if didChange {
+                                crossPromoSignal.bump()
+                            }
                         }
                     )) {
                         ForEach(ProjectStatus.allCases, id: \.self) { status in
@@ -87,4 +93,5 @@ struct ProjectInfoBoxView: View {
 
 #Preview {
     ProjectInfoBoxView(project: SampleData.makeProjects()[0])
+        .environment(CrossPromoSignal())
 }

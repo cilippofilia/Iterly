@@ -12,6 +12,8 @@ import IterlyCore
 struct TaskRowView: View {
     let task: ProjectTask
 
+    @Environment(CrossPromoSignal.self) private var crossPromoSignal
+
     var body: some View {
         let isDone = task.status == .done
         let isClosed = task.status == .closed
@@ -50,10 +52,14 @@ struct TaskRowView: View {
                         Menu {
                             Picker("Status", selection: Binding(
                                 get: { task.status },
-                                set: {
-                                    task.status = $0
+                                set: { newStatus in
+                                    let didChange = task.status != newStatus
+                                    task.status = newStatus
                                     task.touch()
                                     task.project?.touch()
+                                    if didChange {
+                                        crossPromoSignal.bump()
+                                    }
                                 }
                             )) {
                                 ForEach(TaskStatus.allCases, id: \.self) { status in
@@ -119,6 +125,7 @@ struct TaskRowView: View {
             }
             task.touch()
             task.project?.touch()
+            crossPromoSignal.bump()
         }
     }
 }
@@ -129,4 +136,5 @@ struct TaskRowView: View {
     )
     .frame(height: 55)
     .modelContainer(SampleData.makePreviewContainer())
+    .environment(CrossPromoSignal())
 }

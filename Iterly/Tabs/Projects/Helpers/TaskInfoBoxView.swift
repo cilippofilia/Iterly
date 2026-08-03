@@ -11,6 +11,8 @@ import IterlyCore
 struct TaskInfoBoxView: View {
     @Bindable var task: ProjectTask
 
+    @Environment(CrossPromoSignal.self) private var crossPromoSignal
+
     var body: some View {
         let overdueDays = TaskOverdueCalculator.overdueDays(dueDate: task.dueDate)
 
@@ -24,10 +26,14 @@ struct TaskInfoBoxView: View {
                 Menu {
                     Picker("Status", selection: Binding(
                         get: { task.status },
-                        set: {
-                            task.status = $0
+                        set: { newStatus in
+                            let didChange = task.status != newStatus
+                            task.status = newStatus
                             task.touch()
                             task.project?.touch()
+                            if didChange {
+                                crossPromoSignal.bump()
+                            }
                         }
                     )) {
                         ForEach(TaskStatus.allCases, id: \.self) { status in

@@ -144,6 +144,9 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .safeAreaInset(edge: .bottom) {
+                CrossPromoBannerView()
+            }
             .alert(item: $viewModel.activeAlert) { alertKind in
                 switch alertKind {
                 case .sampleDataAdded:

@@ -24,6 +24,5 @@ struct ProjectsLegendView: View {
         .padding(8)
         .background(.ultraThinMaterial)
         .clipShape(.rect(cornerRadius: 12, style: .continuous))
-        .padding(.bottom, 8)
     }
 }

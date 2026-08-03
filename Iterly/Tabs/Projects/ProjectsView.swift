@@ -80,7 +80,7 @@ struct ProjectsView: View {
                         }
                     }
                     .listStyle(.insetGrouped)
-                    .contentMargins(.bottom, 70, for: .scrollContent)
+                    .contentMargins(.bottom, 50, for: .scrollContent)
                 }
             }
             .listRowSpacing(8)
@@ -120,6 +120,9 @@ struct ProjectsView: View {
                 if !projects.isEmpty {
                     ProjectsLegendView(orderedStatuses: orderedStatuses)
                 }
+            }
+            .safeAreaInset(edge: .bottom) {                    CrossPromoBannerView()
+                    .padding(.top, -8)
             }
         }
     }

@@ -12,6 +12,7 @@ import IterlyCore
 struct ProjectFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(CrossPromoSignal.self) private var crossPromoSignal
 
     @State private var viewModel: ProjectFormViewModel
     @State private var showDeleteConfirmation: Bool = false
@@ -186,11 +187,7 @@ struct ProjectFormView: View {
             if viewModel.isEditing {
                 Section {
                     Button(action: {
-                        Task {
-                            if await viewModel.close(modelContext: modelContext) {
-                                dismiss()
-                            }
-                        }
+                        Task { await saveAndBumpSignalIfNeeded(closing: true) }
                     }) {
                         Text("Close Project")
                     }
@@ -217,11 +214,7 @@ struct ProjectFormView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button {
-                    Task {
-                        if await viewModel.save(modelContext: modelContext) {
-                            dismiss()
-                        }
-                    }
+                    Task { await saveAndBumpSignalIfNeeded() }
                 } label: {
                     Text("Save")
                         .foregroundStyle(.white)
@@ -256,6 +249,22 @@ struct ProjectFormView: View {
         }
 }
 
+    private func saveAndBumpSignalIfNeeded(closing: Bool = false) async {
+        let wasEditing = viewModel.isEditing
+        let previousStatus = viewModel.project?.status
+
+        let didSave = closing
+            ? await viewModel.close(modelContext: modelContext)
+            : await viewModel.save(modelContext: modelContext)
+
+        guard didSave else { return }
+
+        if wasEditing == false || previousStatus != viewModel.status {
+            crossPromoSignal.bump()
+        }
+        dismiss()
+    }
+
 }
 
 #Preview {
@@ -263,4 +272,5 @@ struct ProjectFormView: View {
         ProjectFormView()
     }
     .modelContainer(SampleData.makePreviewContainer())
+    .environment(CrossPromoSignal())
 }

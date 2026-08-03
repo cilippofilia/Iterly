@@ -13,10 +13,13 @@ import IterlyCore
 struct IterlyApp: App {
     private static let modelContainer: ModelContainer = SharedModelContainer.make()
 
+    @State private var crossPromoSignal = CrossPromoSignal()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .modelContainer(Self.modelContainer)
+                .environment(crossPromoSignal)
         }
     }
 }

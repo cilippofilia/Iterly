@@ -12,6 +12,7 @@ import IterlyCore
 struct TaskFormView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(CrossPromoSignal.self) private var crossPromoSignal
 
     let project: Project
     private let task: ProjectTask?
@@ -191,6 +192,7 @@ struct TaskFormView: View {
             assertionFailure("Failed to create task: \(error)")
         }
 
+        crossPromoSignal.bump()
         dismiss()
     }
 
@@ -198,6 +200,7 @@ struct TaskFormView: View {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
+        let previousStatus = task.status
 
         task.title = trimmedTitle
         task.details = trimmedDetails.isEmpty ? nil : trimmedDetails
@@ -212,6 +215,10 @@ struct TaskFormView: View {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
             assertionFailure("Failed to update task: \(error)")
+        }
+
+        if previousStatus != status {
+            crossPromoSignal.bump()
         }
     }
 
@@ -254,4 +261,5 @@ struct TaskFormView: View {
         TaskFormView(project: SampleData.makeProjects()[0])
     }
     .modelContainer(SampleData.makePreviewContainer())
+    .environment(CrossPromoSignal())
 }

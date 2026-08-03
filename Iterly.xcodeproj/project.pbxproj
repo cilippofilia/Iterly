@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3022D9FA60DB64932D047E67 /* IterlyWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = ADA609611B28A052135F8D99 /* IterlyWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3A3C373361E4CC2FD170F886 /* IterlyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 06DDFBE4D6E4DA90C79C40D5 /* IterlyCore */; };
+		96FBF7C5EEF942F7B657C82C /* Billboard in Frameworks */ = {isa = PBXBuildFile; productRef = 88256AB1801047578784F287 /* Billboard */; };
 		B2EB3F9541DB61DDEBA0E21E /* IterlyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2680F3D4283540A519329505 /* IterlyCore */; };
 		BCF36A2AFD22045763E26AEB /* IterlyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 58FACA32FD4DFF2149BDC26C /* IterlyCore */; };
 /* End PBXBuildFile section */
@@ -113,6 +114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A3C373361E4CC2FD170F886 /* IterlyCore in Frameworks */,
+				96FBF7C5EEF942F7B657C82C /* Billboard in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +188,7 @@
 			name = Iterly;
 			packageProductDependencies = (
 				06DDFBE4D6E4DA90C79C40D5 /* IterlyCore */,
+				88256AB1801047578784F287 /* Billboard */,
 			);
 			productName = Itero;
 			productReference = 18EAF1F12F4F72660007C73B /* Iterly.app */;
@@ -247,6 +250,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */,
+				F11C9CD672AF40CE810A3AC8 /* XCRemoteSwiftPackageReference "Billboard" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 18EAF1F22F4F72660007C73B /* Products */;
@@ -681,6 +685,17 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		F11C9CD672AF40CE810A3AC8 /* XCRemoteSwiftPackageReference "Billboard" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hiddevdploeg/Billboard";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		06DDFBE4D6E4DA90C79C40D5 /* IterlyCore */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -696,6 +711,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 69B5B80D0C1C370C0D3FB073 /* XCLocalSwiftPackageReference "IterlyCore" */;
 			productName = IterlyCore;
+		};
+		88256AB1801047578784F287 /* Billboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F11C9CD672AF40CE810A3AC8 /* XCRemoteSwiftPackageReference "Billboard" */;
+			productName = Billboard;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

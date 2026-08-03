@@ -5,6 +5,7 @@
 //  Created by Filippo Cilia on 25/02/2026.
 //
 
+import Billboard
 import SwiftData
 import SwiftUI
 import IterlyCore
@@ -12,6 +13,9 @@ import IterlyCore
 struct ContentView: View {
     @AppStorage("selectedView") var selectedView: String?
     @Environment(\.modelContext) private var modelContext
+    @Environment(CrossPromoSignal.self) private var crossPromoSignal
+
+    @State private var interstitialAd: BillboardAd?
 
     var body: some View {
         TabView(selection: $selectedView) {
@@ -35,6 +39,29 @@ struct ContentView: View {
             backfillProjectTypesIfNeeded()
             backfillUsefulLinksIfNeeded()
         }
+        // A Billboard cross-promo ad every 3rd interaction bump (new task, new subtask, new
+        // project, or a status change — see `CrossPromoSignal`). Lives here rather than on any
+        // one tab since the triggering action can happen from Dashboard, Projects, or Activity;
+        // `.fullScreenCover` presents over the whole window regardless of which tab is active.
+        // Fetched directly (rather than via Billboard's own `.showBillboard(when:)`) so a failed
+        // fetch can't get the trigger stuck — see NineTilesPuzzle's MenuView for the same pattern.
+        .fullScreenCover(item: $interstitialAd) { ad in
+            BillboardView(advert: ad, config: .crossPromo) {
+                CrossPromoRemoveAdsInfoView()
+            }
+        }
+        .onChange(of: crossPromoSignal.count) { _, newValue in
+            guard newValue > 0, newValue.isMultiple(of: 3) else { return }
+            Task { await refreshInterstitialAd() }
+        }
+    }
+
+    private func refreshInterstitialAd() async {
+        guard let url = BillboardConfiguration.crossPromo.adsJSONURL else { return }
+        interstitialAd = try? await BillboardViewModel.fetchRandomAd(
+            from: url,
+            excludedIDs: BillboardConfiguration.crossPromo.excludedIDs
+        )
     }
 
     private func backfillProjectTypesIfNeeded() {
@@ -100,4 +127,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .modelContainer(SampleData.makePreviewContainer())
+        .environment(CrossPromoSignal())
 }

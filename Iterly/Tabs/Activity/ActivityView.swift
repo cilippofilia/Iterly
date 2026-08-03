@@ -48,6 +48,9 @@ struct ActivityView: View {
             .onChange(of: reloadToken, initial: true) { _, _ in
                 viewModel.reload(projects: projects, tasks: tasks)
             }
+            .safeAreaInset(edge: .bottom) {
+                CrossPromoBannerView()
+            }
         }
     }
 

@@ -43,6 +43,9 @@ struct DashboardView: View {
                 viewModel: dashboardViewModel
             )
             .navigationTitle("Dashboard")
+            .safeAreaInset(edge: .bottom) {
+                CrossPromoBannerView()
+            }
         }
     }
 }
@@ -50,4 +53,5 @@ struct DashboardView: View {
 #Preview {
     DashboardView()
         .modelContainer(SampleData.makePreviewContainer())
+        .environment(CrossPromoSignal())
 }
