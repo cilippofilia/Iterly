@@ -16,6 +16,9 @@ public struct ActivityWidgetSnapshot: Sendable {
     public let totalCount: Int
     public let busiestDay: ActivityDaySummary?
     public let recentProjects: [ActivityWidgetProjectSummary]
+    /// Whether `recentProjects` reflects a person's explicit widget configuration choice
+    /// rather than the automatic "latest 4 updated" default.
+    public let isCustomProjectSelection: Bool
     public let generatedAt: Date
 
     public init(
@@ -25,6 +28,7 @@ public struct ActivityWidgetSnapshot: Sendable {
         totalCount: Int,
         busiestDay: ActivityDaySummary?,
         recentProjects: [ActivityWidgetProjectSummary] = [],
+        isCustomProjectSelection: Bool = false,
         generatedAt: Date
     ) {
         self.weeks = weeks
@@ -33,6 +37,7 @@ public struct ActivityWidgetSnapshot: Sendable {
         self.totalCount = totalCount
         self.busiestDay = busiestDay
         self.recentProjects = recentProjects
+        self.isCustomProjectSelection = isCustomProjectSelection
         self.generatedAt = generatedAt
     }
 

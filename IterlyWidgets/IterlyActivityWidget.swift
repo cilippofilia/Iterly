@@ -5,13 +5,18 @@
 //  Created by Filippo Cilia on 02/07/2026.
 //
 
+import AppIntents
 import SwiftUI
 import WidgetKit
 import IterlyCore
 
 struct IterlyActivityWidget: Widget {
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: ActivityWidgetKind.identifier, provider: ActivityWidgetProvider()) { entry in
+        AppIntentConfiguration(
+            kind: ActivityWidgetKind.identifier,
+            intent: SelectProjectsIntent.self,
+            provider: ActivityWidgetProvider()
+        ) { entry in
             ActivityWidgetView(entry: entry)
         }
         .configurationDisplayName("Activity")

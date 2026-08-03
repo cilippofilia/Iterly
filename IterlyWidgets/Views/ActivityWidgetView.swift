@@ -160,7 +160,10 @@ private struct ActivityWidgetLargeView: View {
                 Spacer(minLength: 0)
             } else {
                 Divider()
-                ActivityWidgetProjectsSectionView(projects: snapshot.recentProjects)
+                ActivityWidgetProjectsSectionView(
+                    title: snapshot.isCustomProjectSelection ? "Your projects" : "Recently worked on",
+                    projects: snapshot.recentProjects
+                )
                 Spacer(minLength: 0)
             }
         }
@@ -226,11 +229,12 @@ private struct ActivityWidgetStatView: View {
 }
 
 private struct ActivityWidgetProjectsSectionView: View {
+    let title: LocalizedStringKey
     let projects: [ActivityWidgetProjectSummary]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Recently worked on")
+            Text(title)
                 .font(.caption)
                 .bold()
                 .foregroundStyle(.secondary)

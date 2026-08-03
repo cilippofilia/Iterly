@@ -15,7 +15,11 @@ public enum ActivityWidgetSnapshotBuilder {
     public static let windowDays = 371
 
     @MainActor
-    public static func makeSnapshot(modelContext: ModelContext, now: Date = .now) throws -> ActivityWidgetSnapshot {
+    public static func makeSnapshot(
+        modelContext: ModelContext,
+        now: Date = .now,
+        selectedProjectIDs: [UUID] = []
+    ) throws -> ActivityWidgetSnapshot {
         let projects = try modelContext.fetch(FetchDescriptor<Project>())
         let tasks = try modelContext.fetch(FetchDescriptor<ProjectTask>())
         let calendar = ActivityStreakCalculator.makeActivityCalendar()
@@ -60,20 +64,7 @@ public enum ActivityWidgetSnapshotBuilder {
             return lhs.date < rhs.date
         }
 
-        let recentProjects = projects
-            .filter { $0.status != .closed }
-            .sorted { $0.lastUpdated > $1.lastUpdated }
-            .prefix(4)
-            .map { project in
-                ActivityWidgetProjectSummary(
-                    id: project.id,
-                    title: project.title,
-                    type: project.type,
-                    status: project.status,
-                    progress: project.doneAmount,
-                    lastUpdated: project.lastUpdated
-                )
-            }
+        let recentProjects = projectSummaries(from: projects, selectedProjectIDs: selectedProjectIDs)
 
         return ActivityWidgetSnapshot(
             weeks: weeks,
@@ -81,8 +72,37 @@ public enum ActivityWidgetSnapshotBuilder {
             hasLoggedToday: hasLoggedToday,
             totalCount: totalCount,
             busiestDay: busiestDay,
-            recentProjects: Array(recentProjects),
+            recentProjects: recentProjects,
+            isCustomProjectSelection: !selectedProjectIDs.isEmpty,
             generatedAt: now
         )
+    }
+
+    /// With no explicit selection, falls back to the 4 most recently updated, non-closed
+    /// projects. With a selection, shows exactly those projects (up to 4) in the order chosen.
+    private static func projectSummaries(
+        from projects: [Project],
+        selectedProjectIDs: [UUID]
+    ) -> [ActivityWidgetProjectSummary] {
+        let source: [Project]
+        if selectedProjectIDs.isEmpty {
+            source = projects
+                .filter { $0.status != .closed }
+                .sorted { $0.lastUpdated > $1.lastUpdated }
+        } else {
+            let projectsByID = Dictionary(uniqueKeysWithValues: projects.map { ($0.id, $0) })
+            source = selectedProjectIDs.compactMap { projectsByID[$0] }
+        }
+
+        return source.prefix(4).map { project in
+            ActivityWidgetProjectSummary(
+                id: project.id,
+                title: project.title,
+                type: project.type,
+                status: project.status,
+                progress: project.doneAmount,
+                lastUpdated: project.lastUpdated
+            )
+        }
     }
 }
