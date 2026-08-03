@@ -213,13 +213,17 @@ struct ProjectFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button {
                     Task {
                         if await viewModel.save(modelContext: modelContext) {
                             dismiss()
                         }
                     }
+                } label: {
+                    Text("Save")
+                        .foregroundStyle(.white)
                 }
+                .buttonStyle(.borderedProminent)
                 .disabled(!viewModel.canSave)
             }
         }

@@ -28,9 +28,13 @@ struct BrainstormFormView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Done") {
+                Button {
                     dismiss()
+                } label: {
+                    Text("Done")
+                        .foregroundStyle(.white)
                 }
+                .buttonStyle(.borderedProminent)
             }
         }
         .onAppear {
