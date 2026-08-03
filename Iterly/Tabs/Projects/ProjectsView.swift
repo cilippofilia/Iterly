@@ -20,6 +20,7 @@ struct ProjectsView: View {
     @State private var showDeletionAlert: Bool = false
     @State private var showPinLimitAlert: Bool = false
     @State private var showAddProjectSheet: Bool = false
+    @State private var path = NavigationPath()
 
     @Query(sort: [
         SortDescriptor(\Project.lastUpdated, order: .reverse),
@@ -30,7 +31,7 @@ struct ProjectsView: View {
     private let orderedStatuses: [TaskStatus] = [.blocked, .inProgress, .done, .notStarted]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if projects.isEmpty {
                     UnavailableProjectsView()
@@ -85,7 +86,9 @@ struct ProjectsView: View {
             .listRowSpacing(8)
             .navigationTitle("Projects")
             .navigationDestination(for: Project.self) { project in
-                ProjectDetailView(project: project)
+                ProjectDetailView(project: project, onDelete: {
+                    path = NavigationPath()
+                })
             }
             .alert("Delete Project?", isPresented: $showDeletionAlert, actions: {
                 Button("Delete", role: .destructive) {

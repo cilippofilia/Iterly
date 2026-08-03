@@ -20,6 +20,7 @@ struct ProjectDetailView: View {
     @State private var externalLinkErrorMessage: String?
 
     @Bindable var project: Project
+    var onDelete: () -> Void = {}
 
     private var externalDestinations: [ExternalDestination] {
         var destinations: [ExternalDestination] = []
@@ -118,7 +119,7 @@ struct ProjectDetailView: View {
         }
         .sheet(item: $projectToEdit) { project in
             NavigationStack {
-                ProjectFormView(project: project)
+                ProjectFormView(project: project, onDelete: onDelete)
             }
         }
         .sheet(isPresented: $showAddTaskSheet) {

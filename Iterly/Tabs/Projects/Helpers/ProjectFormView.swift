@@ -14,10 +14,13 @@ struct ProjectFormView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var viewModel: ProjectFormViewModel
+    @State private var showDeleteConfirmation: Bool = false
+    private let onDelete: () -> Void
 
     init(
         project: Project? = nil,
-        presetStore: CustomLinkLabelPresetStore = CustomLinkLabelPresetStore()
+        presetStore: CustomLinkLabelPresetStore = CustomLinkLabelPresetStore(),
+        onDelete: @escaping () -> Void = {}
     ) {
         _viewModel = State(
             initialValue: ProjectFormViewModel(
@@ -25,6 +28,7 @@ struct ProjectFormView: View {
                 presetStore: presetStore
             )
         )
+        self.onDelete = onDelete
     }
 
     var body: some View {
@@ -192,8 +196,7 @@ struct ProjectFormView: View {
                     }
 
                     Button(role: .destructive, action: {
-                        viewModel.deleteProject(modelContext: modelContext)
-                        dismiss()
+                        showDeleteConfirmation = true
                     }) {
                         Label("Delete Project", systemImage: "trash")
                     }
@@ -240,6 +243,16 @@ struct ProjectFormView: View {
             }
         } message: {
             Text(viewModel.syncErrorMessage ?? "Something went wrong.")
+        }
+        .alert("Delete Project?", isPresented: $showDeleteConfirmation) {
+            Button("Delete", role: .destructive) {
+                viewModel.deleteProject(modelContext: modelContext)
+                dismiss()
+                onDelete()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This will permanently remove the project and its tasks.")
         }
 }
 
