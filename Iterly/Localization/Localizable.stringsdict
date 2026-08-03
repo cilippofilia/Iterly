@@ -18,6 +18,22 @@
       <string>%d tasks</string>
     </dict>
   </dict>
+  <key>available_tasks_count</key>
+  <dict>
+    <key>NSStringLocalizedFormatKey</key>
+    <string>%#@tasks@</string>
+    <key>tasks</key>
+    <dict>
+      <key>NSStringFormatSpecTypeKey</key>
+      <string>NSStringPluralRuleType</string>
+      <key>NSStringFormatValueTypeKey</key>
+      <string>d</string>
+      <key>one</key>
+      <string>%d available</string>
+      <key>other</key>
+      <string>%d available</string>
+    </dict>
+  </dict>
   <key>subtasks_count</key>
   <dict>
     <key>NSStringLocalizedFormatKey</key>

@@ -17,6 +17,13 @@ enum LocalizedText {
         )
     }
 
+    static func availableTasksCount(_ count: Int) -> String {
+        String.localizedStringWithFormat(
+            NSLocalizedString("available_tasks_count", comment: "Available (workable) tasks count"),
+            count
+        )
+    }
+
     static func subtasksCount(_ count: Int) -> String {
         String.localizedStringWithFormat(
             NSLocalizedString("subtasks_count", comment: "Subtasks count"),

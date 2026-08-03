@@ -30,7 +30,7 @@ struct ProjectCell: View {
                     .minimumScaleFactor(0.8)
             }
 
-            Text(LocalizedText.tasksCount(tasks.count))
+            Text(LocalizedText.availableTasksCount(availableTasksCount))
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -43,6 +43,10 @@ struct ProjectCell: View {
         }
         .padding()
         .frame(maxWidth: .infinity, minHeight: 70, alignment: .leading)
+    }
+
+    private var availableTasksCount: Int {
+        tasks.filter { $0.status == .notStarted || $0.status == .inProgress }.count
     }
 }
 
