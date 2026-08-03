@@ -19,7 +19,7 @@ public final class ProjectTask: Identifiable {
     public var priority: TaskPriority = TaskPriority.default
     public var creationDate: Date = Date.now
     public var lastUpdated: Date? = nil
-    public var project: Project
+    public var project: Project?
 
     @Relationship(deleteRule: .cascade)
     public var subtasks: [ProjectTask]?

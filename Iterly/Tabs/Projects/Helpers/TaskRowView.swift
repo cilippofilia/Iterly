@@ -53,7 +53,7 @@ struct TaskRowView: View {
                                 set: {
                                     task.status = $0
                                     task.touch()
-                                    task.project.touch()
+                                    task.project?.touch()
                                 }
                             )) {
                                 ForEach(TaskStatus.allCases, id: \.self) { status in
@@ -118,7 +118,7 @@ struct TaskRowView: View {
                 task.status = .done
             }
             task.touch()
-            task.project.touch()
+            task.project?.touch()
         }
     }
 }

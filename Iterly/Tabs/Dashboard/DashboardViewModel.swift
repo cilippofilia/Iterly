@@ -17,7 +17,7 @@ final class DashboardViewModel {
 
     func upcomingTasks(from tasks: [ProjectTask]) -> [ProjectTask] {
         tasks
-            .filter { $0.project.status != .closed }
+            .filter { $0.project?.status != .closed }
             .filter { $0.status != .done }
             .filter { $0.status != .closed }
             .filter { $0.parentTask == nil }

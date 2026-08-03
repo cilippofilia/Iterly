@@ -73,6 +73,7 @@ struct ProjectsView: View {
                                             showDeletionAlert = true
                                         }
                                     )
+                                    .opacity(0.6)
                                 }
                             }
                         }

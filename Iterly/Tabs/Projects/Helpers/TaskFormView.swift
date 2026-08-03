@@ -202,7 +202,7 @@ struct TaskFormView: View {
         task.priority = priority
         task.dueDate = hasDueDate ? dueDateDraft : nil
         task.touch()
-        task.project.touch()
+        project.touch()
 
         do {
             try modelContext.saveAndReloadActivityWidget()

@@ -45,6 +45,19 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
                 }
 
+                Section("Widgets") {
+                    NavigationLink {
+                        WidgetTutorialView()
+                    } label: {
+                        FormRowView(
+                            imageName: "widget.small.badge.plus",
+                            foregroundColor: .white,
+                            backgroundColor: .blue,
+                            text: "How to Add a Widget"
+                        )
+                    }
+                }
+
                 #if DEBUG
                 Section("Test Data") {
                     Button {

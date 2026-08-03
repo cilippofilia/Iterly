@@ -10,12 +10,29 @@ import SwiftUI
 import IterlyCore
 
 struct TaskDetailView: View {
+    @Bindable var task: ProjectTask
+
+    var body: some View {
+        if let project = task.project {
+            TaskDetailContentView(task: task, project: project)
+        } else {
+            ContentUnavailableView(
+                "Task Unavailable",
+                systemImage: "exclamationmark.triangle",
+                description: Text("This task is no longer linked to a project.")
+            )
+        }
+    }
+}
+
+private struct TaskDetailContentView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var taskToEdit: ProjectTask?
     @State private var showAddSubtaskSheet: Bool = false
     @State private var showBrainstormSheet: Bool = false
 
     @Bindable var task: ProjectTask
+    let project: Project
 
     var body: some View {
         ScrollView {
@@ -33,7 +50,7 @@ struct TaskDetailView: View {
 
                 TaskInfoBoxView(task: task)
 
-                TaskActionsView(project: task.project, showBrainstormSheet: $showBrainstormSheet)
+                TaskActionsView(project: project, showBrainstormSheet: $showBrainstormSheet)
 
                 TaskAttachmentsSectionView(task: task)
 
@@ -47,7 +64,7 @@ struct TaskDetailView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding([.horizontal, .bottom])
         }
-        .navigationTitle(task.project.title)
+        .navigationTitle(project.title)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Edit", systemImage: "pencil.line") {
@@ -57,7 +74,7 @@ struct TaskDetailView: View {
         }
         .sheet(item: $taskToEdit) { task in
             NavigationStack {
-                TaskFormView(project: task.project, task: task) {
+                TaskFormView(project: project, task: task) {
                     dismiss()
                 }
             }
@@ -65,7 +82,7 @@ struct TaskDetailView: View {
         .sheet(isPresented: $showAddSubtaskSheet) {
             if task.parentTask == nil {
                 NavigationStack {
-                    TaskFormView(project: task.project, parentTask: task)
+                    TaskFormView(project: project, parentTask: task)
                 }
             }
         }
@@ -76,7 +93,7 @@ struct TaskDetailView: View {
                     set: {
                         task.note = $0.isEmpty ? nil : $0
                         task.touch()
-                        task.project.touch()
+                        project.touch()
                     }
                 ))
             }

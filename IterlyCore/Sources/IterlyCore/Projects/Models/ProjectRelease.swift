@@ -22,7 +22,7 @@ public final class ProjectRelease: Identifiable {
     public var appStoreSyncError: String? = nil
 
     @Relationship(inverse: \Project.currentRelease)
-    public var project: Project
+    public var project: Project?
 
     @Relationship(deleteRule: .cascade, inverse: \ProjectLink.projectRelease)
     public var links: [ProjectLink]?

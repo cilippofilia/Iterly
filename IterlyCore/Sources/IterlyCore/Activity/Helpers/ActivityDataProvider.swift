@@ -85,12 +85,16 @@ public struct ActivityDataProvider: ActivityDataProviding {
             return nil
         }
 
+        guard let project = task.project else {
+            return nil
+        }
+
         return ActivityEvent(
             date: calendar.startOfDay(for: task.creationDate),
             kind: .task,
             title: task.title,
-            context: task.parentTask == nil ? task.project.title : "Subtask in \(task.project.title)",
-            projectType: task.project.type
+            context: task.parentTask == nil ? project.title : "Subtask in \(project.title)",
+            projectType: project.type
         )
     }
 
@@ -111,12 +115,16 @@ public struct ActivityDataProvider: ActivityDataProviding {
             return nil
         }
 
+        guard let project = task.project else {
+            return nil
+        }
+
         return ActivityEvent(
             date: calendar.startOfDay(for: lastUpdated),
             kind: .task,
             title: task.title,
-            context: task.parentTask == nil ? "Updated in \(task.project.title)" : "Updated subtask in \(task.project.title)",
-            projectType: task.project.type
+            context: task.parentTask == nil ? "Updated in \(project.title)" : "Updated subtask in \(project.title)",
+            projectType: project.type
         )
     }
 

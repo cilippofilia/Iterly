@@ -51,7 +51,8 @@ struct ProjectTaskSectionsView: View {
             TaskListSectionView(
                 title: "Closed Tasks",
                 tasks: sections.closed,
-                shouldNavigate: true
+                shouldNavigate: true,
+                isToned: true
             )
         }
     }

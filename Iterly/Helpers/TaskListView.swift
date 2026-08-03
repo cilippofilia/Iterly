@@ -12,12 +12,14 @@ import IterlyCore
 struct TaskListView: View {
     let title: String
     let tasks: [ProjectTask]
+    var isToned: Bool = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 ForEach(tasks) { task in
                     TaskRowView(task: task)
+                        .opacity(isToned ? 0.6 : 1)
                 }
             }
             .padding([.horizontal, .bottom])

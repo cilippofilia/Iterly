@@ -12,6 +12,7 @@ struct TaskListSectionView: View {
     let title: String
     let tasks: [ProjectTask]
     let shouldNavigate: Bool
+    var isToned: Bool = false
     private let previewLimit: Int = 5
 
     private var displayedTasks: [ProjectTask] {
@@ -29,7 +30,7 @@ struct TaskListSectionView: View {
     var body: some View {
         if showsNavigationLink {
             NavigationLink {
-                TaskListView(title: title, tasks: tasks)
+                TaskListView(title: title, tasks: tasks, isToned: isToned)
             } label: {
                 HStack {
                     HStack(spacing: 4) {
@@ -62,6 +63,7 @@ struct TaskListSectionView: View {
 
         ForEach(displayedTasks) { task in
             TaskRowView(task: task)
+                .opacity(isToned ? 0.6 : 1)
         }
     }
 }

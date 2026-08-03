@@ -172,7 +172,7 @@ struct TaskAttachmentsSectionView: View {
 
         selectedItems = []
         task.touch()
-        task.project.touch()
+        task.project?.touch()
 
         if skippedVideos > 0 {
             oversizedVideoCount = skippedVideos
@@ -192,7 +192,7 @@ struct TaskAttachmentsSectionView: View {
         }
         modelContext.delete(attachment)
         task.touch()
-        task.project.touch()
+        task.project?.touch()
 
         do {
             try modelContext.saveAndReloadActivityWidget()

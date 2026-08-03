@@ -27,7 +27,7 @@ struct TaskInfoBoxView: View {
                         set: {
                             task.status = $0
                             task.touch()
-                            task.project.touch()
+                            task.project?.touch()
                         }
                     )) {
                         ForEach(TaskStatus.allCases, id: \.self) { status in
@@ -50,7 +50,7 @@ struct TaskInfoBoxView: View {
                         set: {
                             task.priority = $0
                             task.touch()
-                            task.project.touch()
+                            task.project?.touch()
                         }
                     )) {
                         ForEach(TaskPriority.allCases, id: \.self) { priority in
@@ -74,7 +74,7 @@ struct TaskInfoBoxView: View {
                         set: {
                             task.dueDate = $0
                             task.touch()
-                            task.project.touch()
+                            task.project?.touch()
                         }
                     ),
                     displayedComponents: .date
