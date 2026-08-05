@@ -14,6 +14,7 @@ struct ContentView: View {
     @AppStorage("selectedView") var selectedView: String?
     @Environment(\.modelContext) private var modelContext
     @Environment(CrossPromoSignal.self) private var crossPromoSignal
+    @Environment(RemoveAdsStore.self) private var removeAdsStore
 
     @State private var interstitialAd: BillboardAd?
 
@@ -51,12 +52,18 @@ struct ContentView: View {
             }
         }
         .onChange(of: crossPromoSignal.count) { _, newValue in
-            guard newValue > 0, newValue.isMultiple(of: 3) else { return }
+            guard removeAdsStore.isAdsRemoved == false, newValue > 0, newValue.isMultiple(of: 3) else { return }
             Task { await refreshInterstitialAd() }
+        }
+        // Dismiss an ad the user is mid-way through if they buy "Remove Ads" from its own paywall.
+        .onChange(of: removeAdsStore.isAdsRemoved) { _, isAdsRemoved in
+            guard isAdsRemoved else { return }
+            interstitialAd = nil
         }
     }
 
     private func refreshInterstitialAd() async {
+        guard removeAdsStore.isAdsRemoved == false else { return }
         guard let url = BillboardConfiguration.crossPromo.adsJSONURL else { return }
         interstitialAd = try? await BillboardViewModel.fetchRandomAd(
             from: url,
@@ -128,4 +135,5 @@ struct ContentView: View {
     ContentView()
         .modelContainer(SampleData.makePreviewContainer())
         .environment(CrossPromoSignal())
+        .environment(RemoveAdsStore())
 }

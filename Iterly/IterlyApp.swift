@@ -14,12 +14,14 @@ struct IterlyApp: App {
     private static let modelContainer: ModelContainer = SharedModelContainer.make()
 
     @State private var crossPromoSignal = CrossPromoSignal()
+    @State private var removeAdsStore = RemoveAdsStore()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .modelContainer(Self.modelContainer)
                 .environment(crossPromoSignal)
+                .environment(removeAdsStore)
         }
     }
 }

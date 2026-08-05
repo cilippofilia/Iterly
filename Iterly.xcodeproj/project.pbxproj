@@ -46,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		184A74F83023C56B001E730A /* Iterly.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Iterly.storekit; sourceTree = "<group>"; };
 		18AB00022F4F72660007C73B /* IterlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IterlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18EAF1F12F4F72660007C73B /* Iterly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iterly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADA609611B28A052135F8D99 /* IterlyWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = IterlyWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,6 +125,7 @@
 		18EAF1E82F4F72660007C73B = {
 			isa = PBXGroup;
 			children = (
+				184A74F83023C56B001E730A /* Iterly.storekit */,
 				18EAF1F32F4F72660007C73B /* Iterly */,
 				18AB00032F4F72660007C73B /* IterlyTests */,
 				1A37B5045684B374773FC9DE /* IterlyWidgets */,

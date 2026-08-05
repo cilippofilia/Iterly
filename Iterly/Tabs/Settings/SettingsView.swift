@@ -14,12 +14,28 @@ struct SettingsView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
+    @Environment(RemoveAdsStore.self) private var removeAdsStore
 
     @State private var viewModel = SettingsViewModel()
+    @State private var showRemoveAdsPaywall = false
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Button {
+                        showRemoveAdsPaywall = true
+                    } label: {
+                        FormRowView(
+                            imageName: removeAdsStore.isAdsRemoved ? "checkmark.seal.fill" : "nosign",
+                            foregroundColor: .red,
+                            backgroundColor: .white,
+                            text: removeAdsStore.isAdsRemoved ? "Ads Removed" : "Remove Ads"
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 Section("Data Management") {
                     NavigationLink {
                         IntegrationsSettingsView()
@@ -147,6 +163,10 @@ struct SettingsView: View {
             .safeAreaInset(edge: .bottom) {
                 CrossPromoBannerView()
             }
+            .sheet(isPresented: $showRemoveAdsPaywall) {
+                CrossPromoRemoveAdsInfoView()
+                    .presentationDetents([.medium])
+            }
             .alert(item: $viewModel.activeAlert) { alertKind in
                 switch alertKind {
                 case .sampleDataAdded:
@@ -176,4 +196,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environment(RemoveAdsStore())
 }

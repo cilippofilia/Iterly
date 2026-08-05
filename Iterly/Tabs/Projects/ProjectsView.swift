@@ -144,12 +144,7 @@ struct ProjectsView: View {
     }
 }
 
-#Preview("Light") {
+#Preview {
     ProjectsView()
         .modelContainer(SampleData.makePreviewContainer())
-}
-#Preview("Dark") {
-    ProjectsView()
-        .modelContainer(SampleData.makePreviewContainer())
-        .preferredColorScheme(.dark)
 }
