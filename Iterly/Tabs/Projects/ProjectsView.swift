@@ -79,11 +79,11 @@ struct ProjectsView: View {
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
+                    .platformInsetGroupedListStyle()
                     .contentMargins(.bottom, 50, for: .scrollContent)
                 }
             }
-            .listRowSpacing(8)
+            .platformListRowSpacing(8)
             .navigationTitle("Projects")
             .navigationDestination(for: Project.self) { project in
                 ProjectDetailView(project: project, onDelete: {
@@ -107,7 +107,7 @@ struct ProjectsView: View {
                 Text("Only 4 projects can be pinned at the same time.")
             }
             .toolbar {
-                ToolbarItemGroup(placement: .topBarTrailing) {
+                ToolbarItemGroup(placement: .platformTopBarTrailing) {
                     createProjectButton
                 }
             }
@@ -135,6 +135,7 @@ struct ProjectsView: View {
                 showAddProjectSheet = true
             }
         )
+        .keyboardShortcut("n", modifiers: .command)
     }
 
     private func deleteProject(_ project: Project) {

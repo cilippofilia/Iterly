@@ -159,6 +159,7 @@ struct SettingsView: View {
                         .font(.footnote)
                 }
             }
+            .formStyle(.grouped)
             .navigationTitle("Settings")
             .safeAreaInset(edge: .bottom) {
                 CrossPromoBannerView()

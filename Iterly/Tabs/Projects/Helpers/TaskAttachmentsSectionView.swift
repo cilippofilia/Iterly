@@ -95,10 +95,11 @@ struct TaskAttachmentsSectionView: View {
                 await importMedia(items)
             }
         }
-        .fullScreenCover(item: $attachmentToView) { attachment in
+        .platformFullScreenCover(item: $attachmentToView) { attachment in
             TaskAttachmentViewerView(attachment: attachment) {
                 delete(attachment)
             }
+            .macSheetMinimumSize()
         }
         .alert("Video Too Large", isPresented: $showOversizedVideoAlert) {
             Button("OK", role: .cancel) {}

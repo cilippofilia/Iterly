@@ -43,6 +43,7 @@ struct ActivityView: View {
                 }
                 .padding()
                 .padding(.bottom, 24)
+                .readableContentWidth()
             }
             .navigationTitle("Activity")
             .onChange(of: reloadToken, initial: true) { _, _ in

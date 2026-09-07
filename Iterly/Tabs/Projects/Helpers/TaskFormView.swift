@@ -111,8 +111,9 @@ struct TaskFormView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(isEditing ? "Edit Task" : "New Task")
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {

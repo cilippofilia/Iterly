@@ -100,7 +100,7 @@ struct ProjectDetailView: View {
         .navigationTitle(project.title)
         .contentMargins(.bottom, 70, for: .scrollContent)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .platformTopBarTrailing) {
                 Button(action: {
                     if viewModel.togglePin(project: project, modelContext: modelContext) == false {
                         showPinLimitAlert = true
@@ -111,7 +111,7 @@ struct ProjectDetailView: View {
                         .symbolVariant(project.isPinned ? .fill : .none)
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .platformTopBarTrailing) {
                 Button("Edit", systemImage: "pencil.line") {
                     projectToEdit = project
                 }

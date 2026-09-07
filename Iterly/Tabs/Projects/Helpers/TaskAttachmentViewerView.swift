@@ -55,15 +55,15 @@ struct TaskAttachmentViewerView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.black)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationBarTitle()
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .platformTopBarLeading) {
                     Button("Done") {
                         dismiss()
                     }
                 }
 
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .platformTopBarTrailing) {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         showDeleteAlert = true
                     }

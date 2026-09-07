@@ -8,6 +8,31 @@
 import SwiftUI
 
 struct WidgetTutorialView: View {
+    #if os(macOS)
+    private let steps: [WidgetTutorialStep] = [
+        WidgetTutorialStep(
+            number: 1,
+            title: "Open the widget gallery",
+            description: "Control-click the desktop and choose Edit Widgets, or click the date in the menu bar "
+                + "and scroll to the bottom of Notification Center."
+        ),
+        WidgetTutorialStep(
+            number: 2,
+            title: "Search for Iterly",
+            description: "Type \"Iterly\" in the gallery's search field, or browse the app list to find it."
+        ),
+        WidgetTutorialStep(
+            number: 3,
+            title: "Choose a size",
+            description: "Pick Small, Medium, or Large to preview the Activity widget."
+        ),
+        WidgetTutorialStep(
+            number: 4,
+            title: "Place it and click Done",
+            description: "Drag the widget onto the desktop or Notification Center, then click Done to finish."
+        )
+    ]
+    #else
     private let steps: [WidgetTutorialStep] = [
         WidgetTutorialStep(
             number: 1,
@@ -35,6 +60,7 @@ struct WidgetTutorialView: View {
             description: "Drag the widget wherever you'd like on your Home Screen, then tap Done to finish."
         )
     ]
+    #endif
 
     var body: some View {
         Form {
@@ -52,9 +78,10 @@ struct WidgetTutorialView: View {
                 Text("Widgets update automatically as you log project activity.")
             }
         }
+        .formStyle(.grouped)
         .safeAreaPadding(.bottom, 60)
         .navigationTitle("Add a Widget")
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
     }
 }
 
@@ -63,14 +90,22 @@ private struct WidgetTutorialHeaderView: View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Activity", systemImage: "widget.small.badge.plus")
                 .font(.headline)
-            Text(
-                "Track your project activity streak and see the heatmap at a glance, right from your Home Screen. "
-                + "Available in Small, Medium, and Large sizes."
-            )
+            Text(description)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 4)
+    }
+
+    private var description: String {
+        #if os(macOS)
+        "Track your project activity streak and see the heatmap at a glance, "
+        + "right from your desktop or Notification Center. "
+        + "Available in Small, Medium, and Large sizes."
+        #else
+        "Track your project activity streak and see the heatmap at a glance, right from your Home Screen. "
+        + "Available in Small, Medium, and Large sizes."
+        #endif
     }
 }
 

@@ -55,6 +55,7 @@ struct DashboardAvailableView: View {
                 )
                 .padding(.bottom)
             }
+            .readableContentWidth()
         }
         .navigationDestination(for: Project.self) { project in
             ProjectDetailView(project: project)

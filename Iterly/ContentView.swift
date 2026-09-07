@@ -36,6 +36,8 @@ struct ContentView: View {
                 SettingsView()
             }
         }
+        // Tab bar on iPhone; a sidebar on iPad and macOS.
+        .tabViewStyle(.sidebarAdaptable)
         .task {
             backfillProjectTypesIfNeeded()
             backfillUsefulLinksIfNeeded()
@@ -43,13 +45,15 @@ struct ContentView: View {
         // A PrivateAds cross-promo ad every 3rd interaction bump (new task, new subtask, new
         // project, or a status change — see `CrossPromoSignal`). Lives here rather than on any
         // one tab since the triggering action can happen from Dashboard, Projects, or Activity;
-        // `.fullScreenCover` presents over the whole window regardless of which tab is active.
+        // The cover presents over the whole window regardless of which tab is active
+        // (full-screen on iOS, a sheet on macOS — see `platformFullScreenCover`).
         // Fetched directly (rather than via PrivateAds's own `.showAd(when:)`) so a failed
         // fetch can't get the trigger stuck — see NineTilesPuzzle's MenuView for the same pattern.
-        .fullScreenCover(item: $interstitialAd) { ad in
+        .platformFullScreenCover(item: $interstitialAd) { ad in
             AdView(advert: ad, config: .crossPromo) {
                 CrossPromoRemoveAdsInfoView()
             }
+            .macSheetMinimumSize()
         }
         .onChange(of: crossPromoSignal.count) { _, newValue in
             guard removeAdsStore.isAdsRemoved == false, newValue > 0, newValue.isMultiple(of: 3) else { return }

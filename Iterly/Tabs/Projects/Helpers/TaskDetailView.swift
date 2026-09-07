@@ -66,7 +66,7 @@ private struct TaskDetailContentView: View {
         }
         .navigationTitle(project.title)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .platformTopBarTrailing) {
                 Button("Edit", systemImage: "pencil.line") {
                     taskToEdit = task
                 }

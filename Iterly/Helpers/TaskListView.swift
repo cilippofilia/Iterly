@@ -25,7 +25,7 @@ struct TaskListView: View {
             .padding([.horizontal, .bottom])
         }
         .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
     }
 }
 

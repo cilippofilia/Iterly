@@ -84,8 +84,7 @@ struct ProjectFormView: View {
                     }
                 } else {
                     TextField("App Store URL", text: $viewModel.appStoreURL)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
+                        .urlTextFieldConfiguration()
                         .autocorrectionDisabled()
                 }
 
@@ -123,7 +122,7 @@ struct ProjectFormView: View {
                                 Label(ProjectLinkKind.custom.title, systemImage: draft.kind.systemImage)
                                     .foregroundStyle(.secondary)
                                 TextField("Custom label", text: $draft.customLabel)
-                                    .textInputAutocapitalization(.words)
+                                    .wordsTextInputAutocapitalization()
                             } else {
                                 Menu {
                                     ForEach(ProjectLinkKind.allCases.filter { $0 != .custom }) { kind in
@@ -169,8 +168,7 @@ struct ProjectFormView: View {
 
                         HStack {
                             TextField("URL", text: $draft.url)
-                                .keyboardType(.URL)
-                                .textInputAutocapitalization(.never)
+                                .urlTextFieldConfiguration()
                                 .autocorrectionDisabled()
                                 .onChange(of: draft.url) { _, _ in
                                     viewModel.applyDetectedKind(toDraftWithID: draft.id)
@@ -204,8 +202,9 @@ struct ProjectFormView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(viewModel.navigationTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {

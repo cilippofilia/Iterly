@@ -24,8 +24,9 @@ struct BrainstormFormView: View {
                 .focused($isFieldFocused)
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Brainstorm")
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button {

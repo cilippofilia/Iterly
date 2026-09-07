@@ -5,7 +5,8 @@ import PackageDescription
 let package = Package(
     name: "IterlyCore",
     platforms: [
-        .iOS(.v18)
+        .iOS(.v18),
+        .macOS(.v26)
     ],
     products: [
         .library(

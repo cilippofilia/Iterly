@@ -19,9 +19,27 @@ struct IterlyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                #if os(macOS)
+                .frame(minWidth: 900, minHeight: 600)
+                #endif
                 .modelContainer(Self.modelContainer)
                 .environment(crossPromoSignal)
                 .environment(removeAdsStore)
         }
+        #if os(macOS)
+        .defaultSize(width: 1100, height: 750)
+        #endif
+
+        #if os(macOS)
+        // Standard Cmd+, window. The Settings tab stays in the sidebar too, for
+        // parity with iOS and discoverability.
+        Settings {
+            SettingsView()
+                .frame(minWidth: 500, minHeight: 500)
+                .modelContainer(Self.modelContainer)
+                .environment(crossPromoSignal)
+                .environment(removeAdsStore)
+        }
+        #endif
     }
 }

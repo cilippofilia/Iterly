@@ -35,6 +35,7 @@ struct IntegrationsSettingsView: View {
             customLinkLabelsSection()
             disconnectAllSection()
         }
+        .formStyle(.grouped)
         .navigationTitle("Integrations")
         .onChange(of: projects, initial: true) { _, newProjects in
             viewModel.updateProjects(newProjects)
