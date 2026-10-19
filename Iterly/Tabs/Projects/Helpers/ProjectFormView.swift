@@ -236,6 +236,11 @@ struct ProjectFormView: View {
         } message: {
             Text(viewModel.syncErrorMessage ?? "Something went wrong.")
         }
+        .alert("Couldn't Delete Project", item: $viewModel.deleteErrorMessage) { _ in
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text($0)
+        }
         .alert("Delete Project?", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
                 if viewModel.deleteProject(modelContext: modelContext) {

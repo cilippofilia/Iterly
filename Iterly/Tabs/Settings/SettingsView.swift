@@ -171,7 +171,8 @@ struct SettingsView: View {
                     EmptyView()
                 case .eraseAllDataConfirmation:
                     Button("Erase", role: .destructive) {
-                        viewModel.eraseAllData(modelContext: modelContext)
+                        // Deferred so the error alert is set after this confirmation alert dismisses.
+                        Task { viewModel.eraseAllData(modelContext: modelContext) }
                     }
                     Button("Cancel", role: .cancel) {}
                 }

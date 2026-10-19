@@ -130,7 +130,6 @@ final class SettingsViewModel {
     }
 
     func eraseAllData(modelContext: ModelContext) {
-        activeAlert = nil
         do {
             try projectViewModel.eraseAllData(modelContext: modelContext)
         } catch {

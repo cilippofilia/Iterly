@@ -27,6 +27,7 @@ final class ProjectFormViewModel {
     var isPinned: Bool
     var isSaving = false
     var syncErrorMessage: String?
+    var deleteErrorMessage: String?
     var customLinkLabelPresets: [String]
 
     private let projectViewModel: ProjectViewModel
@@ -146,14 +147,14 @@ final class ProjectFormViewModel {
     }
 
     /// Deletes the project being edited.
-    /// - Returns: `true` if the deletion was saved; on failure `syncErrorMessage` is set.
+    /// - Returns: `true` if the deletion was saved; on failure `deleteErrorMessage` is set.
     func deleteProject(modelContext: ModelContext) -> Bool {
         guard let project else { return false }
         do {
             try projectViewModel.deleteProject(project, modelContext: modelContext)
             return true
         } catch {
-            syncErrorMessage = error.localizedDescription
+            deleteErrorMessage = error.localizedDescription
             return false
         }
     }

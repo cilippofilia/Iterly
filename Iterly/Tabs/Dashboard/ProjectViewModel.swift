@@ -133,7 +133,13 @@ final class ProjectViewModel {
         project.isPinned.toggle()
         project.touch()
 
-        try modelContext.saveAndReloadActivityWidget()
+        do {
+            try modelContext.saveAndReloadActivityWidget()
+        } catch {
+            // rollback() discards all unsaved changes in the context, not just this one.
+            modelContext.rollback()
+            throw error
+        }
         return .toggled
     }
 
@@ -143,7 +149,13 @@ final class ProjectViewModel {
         }
         modelContext.delete(project)
 
-        try modelContext.saveAndReloadActivityWidget()
+        do {
+            try modelContext.saveAndReloadActivityWidget()
+        } catch {
+            // rollback() discards all unsaved changes in the context, not just this one.
+            modelContext.rollback()
+            throw error
+        }
     }
 
     func refreshAppStoreRelease(for project: Project, modelContext: ModelContext) async throws {
@@ -263,7 +275,13 @@ final class ProjectViewModel {
         try modelContext.delete(model: ProjectRelease.self)
         try modelContext.delete(model: Project.self)
 
-        try modelContext.saveAndReloadActivityWidget()
+        do {
+            try modelContext.saveAndReloadActivityWidget()
+        } catch {
+            // rollback() discards all unsaved changes in the context, not just this one.
+            modelContext.rollback()
+            throw error
+        }
     }
 
     func saveAppStoreSyncError(
