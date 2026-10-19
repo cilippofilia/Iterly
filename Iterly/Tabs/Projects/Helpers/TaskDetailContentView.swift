@@ -45,6 +45,7 @@ struct TaskDetailContentView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding([.horizontal, .bottom])
+            .readableContentWidth()
         }
         .navigationTitle(project.title)
         .toolbar {

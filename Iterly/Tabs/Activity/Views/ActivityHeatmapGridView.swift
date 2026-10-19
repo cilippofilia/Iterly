@@ -20,6 +20,7 @@ struct ActivityHeatmapGridView: View {
 
     private let weekdayLabelWidth: CGFloat = 32
     private let minimumCellSize: CGFloat = 14
+    private let maximumCellSize: CGFloat = 28
     private let gridSpacing: CGFloat = 4
     private let monthHeaderHeight: CGFloat = 20
 
@@ -28,7 +29,8 @@ struct ActivityHeatmapGridView: View {
             availableWidth: scrollableWidth ?? 0,
             weekCount: max(weeks.count, 1),
             spacing: gridSpacing,
-            minimumCellSize: minimumCellSize
+            minimumCellSize: minimumCellSize,
+            maximumCellSize: maximumCellSize
         )
 
         HStack(alignment: .top, spacing: gridSpacing) {
@@ -156,25 +158,4 @@ struct ActivityHeatmapGridView: View {
 private struct VisibleMonthLabel {
     let index: Int
     let label: String
-}
-
-private struct HeatmapLayoutMetrics {
-    let availableWidth: CGFloat
-    let weekCount: Int
-    let spacing: CGFloat
-    let minimumCellSize: CGFloat
-
-    var cellSize: CGFloat {
-        let totalSpacing = CGFloat(max(weekCount - 1, 0)) * spacing
-        let fittedSize = floor((availableWidth - totalSpacing) / CGFloat(max(weekCount, 1)))
-        return max(fittedSize, minimumCellSize)
-    }
-
-    var cornerRadius: CGFloat {
-        min(max(cellSize / 3, 4), 6)
-    }
-
-    func xOffset(forWeekIndex index: Int) -> CGFloat {
-        CGFloat(index) * (cellSize + spacing)
-    }
 }

@@ -41,6 +41,7 @@ struct ContentView: View {
         }
         // Tab bar on iPhone; a sidebar on iPad and macOS.
         .tabViewStyle(.sidebarAdaptable)
+        .adaptiveTabBarPlacement()
         .environment(tabSelection)
         .onAppear { tabSelection.selected = storedTab }
         .onChange(of: tabSelection.selected) { _, newTab in storedTab = newTab }

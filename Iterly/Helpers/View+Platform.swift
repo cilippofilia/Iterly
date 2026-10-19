@@ -89,6 +89,23 @@ extension View {
     }
 }
 
+extension View {
+    /// Prefers the sidebar presentation for tabs on iOS 27+ (wide iPhone layouts such as
+    /// the Duo inner display); no-op on earlier versions and on macOS.
+    @ViewBuilder
+    func adaptiveTabBarPlacement() -> some View {
+        #if os(iOS)
+        if #available(iOS 27, *) {
+            defaultTabBarPlacement(.sidebar)
+        } else {
+            self
+        }
+        #else
+        self
+        #endif
+    }
+}
+
 extension ToolbarItemPlacement {
     /// `.topBarTrailing` on iOS; `.primaryAction` on macOS, where there is no navigation bar.
     static var platformTopBarTrailing: ToolbarItemPlacement {

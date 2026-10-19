@@ -39,36 +39,36 @@ struct CrossPromoRemoveAdsInfoView: View {
                 Text("Thanks for your support — you won't see these cross-promo ads again.")
             }
         } else {
-            VStack(spacing: 24) {
-                VStack(spacing: 12) {
-                    RemoveAdsBadge()
-                        .clipShape(.circle)
+            ScrollView {
+                VStack(spacing: 24) {
+                    VStack(spacing: 12) {
+                        RemoveAdsBadge()
+                            .clipShape(.circle)
                     
-                    Text("Remove Ads")
-                        .font(.title2)
-                        .bold()
+                        Text("Remove Ads")
+                            .font(.title2)
+                            .bold()
 
-                    Text("These occasional promos are for my other apps. Remove them for good with a small one-time purchase.")
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.secondary)
-                }
-                .padding(.horizontal)
-
-                ProductView(id: RemoveAdsStore.removeAdsProductID)
-                    .productViewStyle(.compact)
+                        Text("These occasional promos are for my other apps. Remove them for good with a small one-time purchase.")
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
+                    }
                     .padding(.horizontal)
 
-                if let restoreError = removeAdsStore.restoreError {
-                    Text(restoreError)
-                        .font(.footnote)
-                        .foregroundStyle(.red)
-                        .multilineTextAlignment(.center)
+                    ProductView(id: RemoveAdsStore.removeAdsProductID)
+                        .productViewStyle(.compact)
                         .padding(.horizontal)
-                }
 
-                Spacer()
+                    if let restoreError = removeAdsStore.restoreError {
+                        Text(restoreError)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                }
+                .padding(.top, 32)
             }
-            .padding(.top, 32)
             .safeAreaInset(edge: .bottom) {
                 RemoveAdsLegalFooterView(isRestoring: isRestoring, onRestore: restore)
                     .padding()
