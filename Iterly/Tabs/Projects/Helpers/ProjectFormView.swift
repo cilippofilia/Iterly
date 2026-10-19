@@ -243,9 +243,12 @@ struct ProjectFormView: View {
         }
         .alert("Delete Project?", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
-                if viewModel.deleteProject(modelContext: modelContext) {
-                    dismiss()
-                    onDelete()
+                // Deferred so a failure alert is set after this confirmation alert dismisses.
+                Task {
+                    if viewModel.deleteProject(modelContext: modelContext) {
+                        dismiss()
+                        onDelete()
+                    }
                 }
             }
             Button("Cancel", role: .cancel) {}

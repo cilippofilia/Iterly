@@ -261,7 +261,7 @@ struct TaskFormView: View {
         do {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
-        // rollback() discards all unsaved changes in the context, not just this one.
+            // rollback() discards all unsaved changes in the context, not just this one.
             // Restore the task so the form isn't left editing a deleted model.
             modelContext.rollback()
             errorMessage = error.localizedDescription
