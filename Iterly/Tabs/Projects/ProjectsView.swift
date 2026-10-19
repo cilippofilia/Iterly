@@ -32,6 +32,7 @@ struct ProjectsView: View {
                     }
                 }
                 .appNavigationDestinations(onProjectDelete: clearSelection)
+                .id(selectedProject?.id)
             }
         }
         .onChange(of: projects.map(\.id)) {

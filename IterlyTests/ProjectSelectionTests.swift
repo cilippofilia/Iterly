@@ -41,4 +41,16 @@ struct ProjectSelectionTests {
         let first = makeProject("A")
         #expect(ProjectSelection.validated(nil, in: [first]) == nil)
     }
+
+    @Test func clearsSelectionAfterRealDeletion() throws {
+        let first = makeProject("A")
+        let second = makeProject("B")
+        try context.save()
+        context.delete(first)
+        try context.save()
+        let remaining = try context.fetch(FetchDescriptor<Project>())
+        #expect(remaining.count == 1)
+        #expect(ProjectSelection.validated(first, in: remaining) == nil)
+        #expect(ProjectSelection.validated(second, in: remaining) === second)
+    }
 }

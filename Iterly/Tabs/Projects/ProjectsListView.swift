@@ -64,7 +64,8 @@ struct ProjectsListView: View {
         .alert("Delete Project?", isPresented: $showDeletionAlert, actions: {
             Button("Delete", role: .destructive) {
                 guard let project = projectPendingDeletion else { return }
-                deleteProject(project)
+                // Deferred so a failure alert is set after this confirmation alert dismisses.
+                Task { deleteProject(project) }
             }
             Button("Cancel", role: .cancel) {
                 projectPendingDeletion = nil
@@ -109,6 +110,10 @@ struct ProjectsListView: View {
     }
 
     private func deleteProject(_ project: Project) {
+        // Clear the split-view selection before the model is deleted.
+        if selection?.id == project.id {
+            selection = nil
+        }
         do {
             try viewModel.deleteProject(project, modelContext: modelContext)
         } catch {

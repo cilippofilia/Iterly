@@ -245,9 +245,10 @@ struct ProjectFormView: View {
             Button("Delete", role: .destructive) {
                 // Deferred so a failure alert is set after this confirmation alert dismisses.
                 Task {
+                    // Notify first so a split-view detail stops rendering the model before it is deleted.
+                    onDelete()
                     if viewModel.deleteProject(modelContext: modelContext) {
                         dismiss()
-                        onDelete()
                     }
                 }
             }
