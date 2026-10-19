@@ -119,40 +119,31 @@ final class ProjectViewModel {
         try modelContext.saveAndReloadActivityWidget()
     }
 
-    func togglePin(project: Project, modelContext: ModelContext) -> Bool {
-        do {
-            if project.isPinned == false {
-                let descriptor = FetchDescriptor<Project>(
-                    predicate: #Predicate<Project> { $0.isPinned == true }
-                )
-                let pinnedCount = try modelContext.fetchCount(descriptor)
-                if pinnedCount >= maxPinnedProjects {
-                    return false
-                }
+    func togglePin(project: Project, modelContext: ModelContext) throws -> PinToggleResult {
+        if project.isPinned == false {
+            let descriptor = FetchDescriptor<Project>(
+                predicate: #Predicate<Project> { $0.isPinned == true }
+            )
+            let pinnedCount = try modelContext.fetchCount(descriptor)
+            if pinnedCount >= maxPinnedProjects {
+                return .limitReached
             }
-
-            project.isPinned.toggle()
-            project.touch()
-
-            try modelContext.saveAndReloadActivityWidget()
-            return true
-        } catch {
-            assertionFailure("Failed to toggle pin: \(error)")
-            return false
         }
+
+        project.isPinned.toggle()
+        project.touch()
+
+        try modelContext.saveAndReloadActivityWidget()
+        return .toggled
     }
 
-    func deleteProject(_ project: Project, modelContext: ModelContext) {
+    func deleteProject(_ project: Project, modelContext: ModelContext) throws {
         if let release = project.currentRelease {
             modelContext.delete(release)
         }
         modelContext.delete(project)
 
-        do {
-            try modelContext.saveAndReloadActivityWidget()
-        } catch {
-            assertionFailure("Failed to delete project: \(error)")
-        }
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func refreshAppStoreRelease(for project: Project, modelContext: ModelContext) async throws {
@@ -267,16 +258,12 @@ final class ProjectViewModel {
         try modelContext.saveAndReloadActivityWidget()
     }
 
-    func eraseAllData(modelContext: ModelContext) {
-        do {
-            try modelContext.delete(model: ProjectTask.self)
-            try modelContext.delete(model: ProjectRelease.self)
-            try modelContext.delete(model: Project.self)
+    func eraseAllData(modelContext: ModelContext) throws {
+        try modelContext.delete(model: ProjectTask.self)
+        try modelContext.delete(model: ProjectRelease.self)
+        try modelContext.delete(model: Project.self)
 
-            try modelContext.saveAndReloadActivityWidget()
-        } catch {
-            assertionFailure("Failed to erase data: \(error)")
-        }
+        try modelContext.saveAndReloadActivityWidget()
     }
 
     func saveAppStoreSyncError(

@@ -19,17 +19,18 @@ struct TaskFormView: View {
     private let parentTask: ProjectTask?
     private let onDelete: (() -> Void)?
 
-    @State private var title = ""
-    @State private var details = ""
-    @State private var note = ""
-    @State private var status: TaskStatus = .default
-    @State private var priority: TaskPriority = .default
-    @State private var hasDueDate: Bool = false
-    @State private var dueDateDraft: Date = TaskFormView.defaultDueDate
+    @State private var title: String
+    @State private var details: String
+    @State private var note: String
+    @State private var status: TaskStatus
+    @State private var priority: TaskPriority
+    @State private var hasDueDate: Bool
+    @State private var dueDateDraft: Date
 
-    @State private var isEditing: Bool = false
+    @State private var isEditing: Bool
     @State private var showCloseAlert: Bool = false
     @State private var showDeleteAlert: Bool = false
+    @State private var errorMessage: String?
 
     init(
         project: Project,
@@ -139,6 +140,11 @@ struct TaskFormView: View {
         } message: {
             Text("This will mark the task as closed.")
         }
+        .alert("Something Went Wrong", item: $errorMessage) { _ in
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text($0)
+        }
         .alert("Delete Task?", isPresented: $showDeleteAlert) {
             Button("Delete Task", role: .destructive) {
                 deleteTask()
@@ -151,8 +157,9 @@ struct TaskFormView: View {
 
     private func saveTask() {
         if let task {
-            updateTask(task)
-            dismiss()
+            if updateTask(task) {
+                dismiss()
+            }
             return
         }
 
@@ -190,23 +197,29 @@ struct TaskFormView: View {
         do {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
-            assertionFailure("Failed to create task: \(error)")
+            // Roll the new task back so a retry doesn't create a duplicate.
+            project.tasks?.removeAll { $0.id == task.id }
+            parentTask?.subtasks?.removeAll { $0.id == task.id }
+            modelContext.delete(task)
+            errorMessage = error.localizedDescription
+            return
         }
 
         crossPromoSignal.bump()
         dismiss()
     }
 
-    private func updateTask(_ task: ProjectTask) {
+    /// Applies the form values to `task` and saves.
+    /// - Returns: `true` if the save succeeded; on failure `errorMessage` is set.
+    private func updateTask(_ task: ProjectTask) -> Bool {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        let previousStatus = task.status
+        let statusChanged = task.updateStatus(status)
 
         task.title = trimmedTitle
         task.details = trimmedDetails.isEmpty ? nil : trimmedDetails
         task.note = trimmedNote.isEmpty ? nil : trimmedNote
-        task.status = status
         task.priority = priority
         task.dueDate = hasDueDate ? dueDateDraft : nil
         task.touch()
@@ -215,19 +228,22 @@ struct TaskFormView: View {
         do {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
-            assertionFailure("Failed to update task: \(error)")
+            errorMessage = error.localizedDescription
+            return false
         }
 
-        if previousStatus != status {
+        if statusChanged {
             crossPromoSignal.bump()
         }
+        return true
     }
 
     private func closeTask() {
         guard let task else { return }
         status = .closed
-        updateTask(task)
-        dismiss()
+        if updateTask(task) {
+            dismiss()
+        }
     }
 
     private func deleteTask() {
@@ -245,7 +261,10 @@ struct TaskFormView: View {
         do {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
-            assertionFailure("Failed to delete task: \(error)")
+            // Restore the task so the form isn't left editing a deleted model.
+            modelContext.rollback()
+            errorMessage = error.localizedDescription
+            return
         }
 
         dismiss()

@@ -178,6 +178,11 @@ struct SettingsView: View {
             } message: { kind in
                 Text(kind.message)
             }
+            .alert("Couldn't Erase Data", item: $viewModel.errorMessage) { _ in
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text($0)
+            }
         }
     }
 }

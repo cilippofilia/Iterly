@@ -83,6 +83,7 @@ final class SettingsViewModel {
 
     var showContactOptions: Bool = false
     var activeAlert: AlertKind?
+    var errorMessage: String?
 
     private let projectViewModel = ProjectViewModel()
     private let supportEmail = "cilia.filippo.dev@gmail.com"
@@ -129,7 +130,11 @@ final class SettingsViewModel {
     }
 
     func eraseAllData(modelContext: ModelContext) {
-        projectViewModel.eraseAllData(modelContext: modelContext)
         activeAlert = nil
+        do {
+            try projectViewModel.eraseAllData(modelContext: modelContext)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }

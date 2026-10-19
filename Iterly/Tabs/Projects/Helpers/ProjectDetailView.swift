@@ -18,6 +18,7 @@ struct ProjectDetailView: View {
     @State private var showAddTaskSheet: Bool = false
     @State private var showBrainstormSheet: Bool = false
     @State private var externalLinkErrorMessage: String?
+    @State private var errorMessage: String?
 
     @Bindable var project: Project
     var onDelete: () -> Void = {}
@@ -102,8 +103,12 @@ struct ProjectDetailView: View {
         .toolbar {
             ToolbarItem(placement: .platformTopBarTrailing) {
                 Button(action: {
-                    if viewModel.togglePin(project: project, modelContext: modelContext) == false {
-                        showPinLimitAlert = true
+                    do {
+                        if try viewModel.togglePin(project: project, modelContext: modelContext) == .limitReached {
+                            showPinLimitAlert = true
+                        }
+                    } catch {
+                        errorMessage = error.localizedDescription
                     }
                 }) {
                     Image(systemName: "pin")
@@ -135,6 +140,11 @@ struct ProjectDetailView: View {
                 ))
             }
             .presentationDetents([.medium])
+        }
+        .alert("Something Went Wrong", item: $errorMessage) { _ in
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text($0)
         }
         .alert("Can't Pin Project", isPresented: $showPinLimitAlert) {
             Button("OK", role: .cancel) {}

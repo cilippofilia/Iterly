@@ -17,6 +17,7 @@ struct ProjectsView: View {
     @State private var projectPendingDeletion: Project?
     @State private var showDeletionAlert: Bool = false
     @State private var showPinLimitAlert: Bool = false
+    @State private var errorMessage: String?
     @State private var showAddProjectSheet: Bool = false
     @State private var path = NavigationPath()
 
@@ -43,9 +44,7 @@ struct ProjectsView: View {
                                     ProjectRowLinkView(
                                         project: project,
                                         onTogglePin: {
-                                            if viewModel.togglePin(project: project, modelContext: modelContext) == false {
-                                                showPinLimitAlert = true
-                                            }
+                                            togglePin(project)
                                         },
                                         onDelete: {
                                             projectPendingDeletion = project
@@ -63,9 +62,7 @@ struct ProjectsView: View {
                                     ProjectRowLinkView(
                                         project: project,
                                         onTogglePin: {
-                                            if viewModel.togglePin(project: project, modelContext: modelContext) == false {
-                                                showPinLimitAlert = true
-                                            }
+                                            togglePin(project)
                                         },
                                         onDelete: {
                                             projectPendingDeletion = project
@@ -97,6 +94,11 @@ struct ProjectsView: View {
             }, message: {
                 Text("This will permanently remove the project and its tasks.")
             })
+            .alert("Something Went Wrong", item: $errorMessage) { _ in
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text($0)
+            }
             .alert("Can't Pin Project", isPresented: $showPinLimitAlert) {
                 Button("OK", role: .cancel) {}
             } message: {
@@ -135,9 +137,23 @@ struct ProjectsView: View {
     }
 
     private func deleteProject(_ project: Project) {
-        viewModel.deleteProject(project, modelContext: modelContext)
+        do {
+            try viewModel.deleteProject(project, modelContext: modelContext)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
         projectPendingDeletion = nil
         showDeletionAlert = false
+    }
+
+    private func togglePin(_ project: Project) {
+        do {
+            if try viewModel.togglePin(project: project, modelContext: modelContext) == .limitReached {
+                showPinLimitAlert = true
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 

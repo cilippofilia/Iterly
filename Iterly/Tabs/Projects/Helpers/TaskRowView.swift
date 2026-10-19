@@ -12,6 +12,7 @@ import IterlyCore
 struct TaskRowView: View {
     let task: ProjectTask
 
+    @Environment(\.modelContext) private var modelContext
     @Environment(CrossPromoSignal.self) private var crossPromoSignal
 
     var body: some View {
@@ -51,13 +52,10 @@ struct TaskRowView: View {
                             Picker("Status", selection: Binding(
                                 get: { task.status },
                                 set: { newStatus in
-                                    let didChange = task.status != newStatus
-                                    task.status = newStatus
-                                    task.touch()
-                                    task.project?.touch()
-                                    if didChange {
+                                    if task.updateStatus(newStatus) {
                                         crossPromoSignal.bump()
                                     }
+                                    modelContext.saveLoggingFailure("task status")
                                 }
                             )) {
                                 ForEach(TaskStatus.allCases, id: \.self) { status in
@@ -116,13 +114,8 @@ struct TaskRowView: View {
 
     private func toggleTaskCompletion() {
         withAnimation(.snappy) {
-            if task.status == .done {
-                task.status = .inProgress
-            } else {
-                task.status = .done
-            }
-            task.touch()
-            task.project?.touch()
+            task.updateStatus(task.status == .done ? .inProgress : .done)
+            modelContext.saveLoggingFailure("task completion")
             crossPromoSignal.bump()
         }
     }

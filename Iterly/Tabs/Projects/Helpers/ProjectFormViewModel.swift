@@ -145,9 +145,17 @@ final class ProjectFormViewModel {
         return await save(modelContext: modelContext)
     }
 
-    func deleteProject(modelContext: ModelContext) {
-        guard let project else { return }
-        projectViewModel.deleteProject(project, modelContext: modelContext)
+    /// Deletes the project being edited.
+    /// - Returns: `true` if the deletion was saved; on failure `syncErrorMessage` is set.
+    func deleteProject(modelContext: ModelContext) -> Bool {
+        guard let project else { return false }
+        do {
+            try projectViewModel.deleteProject(project, modelContext: modelContext)
+            return true
+        } catch {
+            syncErrorMessage = error.localizedDescription
+            return false
+        }
     }
 
     func refreshLinkedRelease(modelContext: ModelContext) async {
