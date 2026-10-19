@@ -15,10 +15,12 @@ struct ActivityHeatmapGridView: View {
     let onSelectDay: (ActivityDaySummary) -> Void
     var isInteractive: Bool = true
 
+    @Environment(\.calendar) private var environmentCalendar
     @State private var scrollableWidth: CGFloat?
 
     private let weekdayLabelWidth: CGFloat = 32
     private let minimumCellSize: CGFloat = 14
+    private let maximumCellSize: CGFloat = 28
     private let gridSpacing: CGFloat = 4
     private let monthHeaderHeight: CGFloat = 20
 
@@ -27,7 +29,8 @@ struct ActivityHeatmapGridView: View {
             availableWidth: scrollableWidth ?? 0,
             weekCount: max(weeks.count, 1),
             spacing: gridSpacing,
-            minimumCellSize: minimumCellSize
+            minimumCellSize: minimumCellSize,
+            maximumCellSize: maximumCellSize
         )
 
         HStack(alignment: .top, spacing: gridSpacing) {
@@ -118,7 +121,10 @@ struct ActivityHeatmapGridView: View {
     }
 
     private var weekdayLabels: [String] {
-        ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        // The heatmap always lays out weeks Monday-first, so keep the labels aligned with the grid.
+        var calendar = environmentCalendar
+        calendar.firstWeekday = 2
+        return WeekdaySymbols.ordered(for: calendar)
     }
 
     private var visibleMonthLabels: [VisibleMonthLabel] {
@@ -138,40 +144,18 @@ struct ActivityHeatmapGridView: View {
         }
     }
 
-    private func accessibilityLabel(for day: ActivityDaySummary) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+    private func accessibilityLabel(for day: ActivityDaySummary) -> Text {
+        let date = day.date.formatted(date: .abbreviated, time: .omitted)
 
         if day.count == 0 {
-            return "\(formatter.string(from: day.date)), no activity"
+            return Text("\(date), no activity")
         }
 
-        return "\(formatter.string(from: day.date)), \(day.count) activities"
+        return Text("\(date), ^[\(day.count) activity](inflect: true)")
     }
 }
 
 private struct VisibleMonthLabel {
     let index: Int
     let label: String
-}
-
-private struct HeatmapLayoutMetrics {
-    let availableWidth: CGFloat
-    let weekCount: Int
-    let spacing: CGFloat
-    let minimumCellSize: CGFloat
-
-    var cellSize: CGFloat {
-        let totalSpacing = CGFloat(max(weekCount - 1, 0)) * spacing
-        let fittedSize = floor((availableWidth - totalSpacing) / CGFloat(max(weekCount, 1)))
-        return max(fittedSize, minimumCellSize)
-    }
-
-    var cornerRadius: CGFloat {
-        min(max(cellSize / 3, 4), 6)
-    }
-
-    func xOffset(forWeekIndex index: Int) -> CGFloat {
-        CGFloat(index) * (cellSize + spacing)
-    }
 }

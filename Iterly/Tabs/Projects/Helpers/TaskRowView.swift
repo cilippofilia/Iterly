@@ -12,6 +12,7 @@ import IterlyCore
 struct TaskRowView: View {
     let task: ProjectTask
 
+    @Environment(\.modelContext) private var modelContext
     @Environment(CrossPromoSignal.self) private var crossPromoSignal
 
     var body: some View {
@@ -34,10 +35,10 @@ struct TaskRowView: View {
             .foregroundStyle(isDone ? .green : .secondary)
             .symbolEffect(.bounce, value: isDone)
             .buttonStyle(.plain)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.rect)
 
-            NavigationLink {
-                TaskDetailView(task: task)
-            } label: {
+            NavigationLink(value: task) {
                 RoundedRectangle(cornerRadius: 2, style: .continuous)
                     .frame(width: 3)
                     .foregroundStyle(isDone ? .secondary.opacity(0.5) : task.priority.backgroundColor)
@@ -53,13 +54,10 @@ struct TaskRowView: View {
                             Picker("Status", selection: Binding(
                                 get: { task.status },
                                 set: { newStatus in
-                                    let didChange = task.status != newStatus
-                                    task.status = newStatus
-                                    task.touch()
-                                    task.project?.touch()
-                                    if didChange {
+                                    if task.updateStatus(newStatus) {
                                         crossPromoSignal.bump()
                                     }
+                                    modelContext.saveLoggingFailure("task status")
                                 }
                             )) {
                                 ForEach(TaskStatus.allCases, id: \.self) { status in
@@ -118,13 +116,8 @@ struct TaskRowView: View {
 
     private func toggleTaskCompletion() {
         withAnimation(.snappy) {
-            if task.status == .done {
-                task.status = .inProgress
-            } else {
-                task.status = .done
-            }
-            task.touch()
-            task.project?.touch()
+            task.updateStatus(task.status == .done ? .inProgress : .done)
+            modelContext.saveLoggingFailure("task completion")
             crossPromoSignal.bump()
         }
     }

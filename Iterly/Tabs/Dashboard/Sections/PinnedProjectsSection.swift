@@ -12,9 +12,7 @@ import IterlyCore
 struct PinnedProjectsSection: View {
     let projects: [Project]?
 
-    var columns: [GridItem] {
-        [GridItem(.flexible()), GridItem(.flexible())]
-    }
+    private let columns = [GridItem(.adaptive(minimum: 160))]
 
     var body: some View {
         if let projects, !projects.isEmpty {

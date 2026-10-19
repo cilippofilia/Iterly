@@ -81,35 +81,14 @@ final class SettingsViewModel {
         }
     }
 
-    var showCompletedTasks: Bool {
-        didSet { userDefaults.set(showCompletedTasks, forKey: Self.showCompletedTasksKey) }
-    }
-    var highlightOverdueTasks: Bool {
-        didSet { userDefaults.set(highlightOverdueTasks, forKey: Self.highlightOverdueTasksKey) }
-    }
-    var compactProjectCards: Bool {
-        didSet { userDefaults.set(compactProjectCards, forKey: Self.compactProjectCardsKey) }
-    }
-
     var showContactOptions: Bool = false
     var activeAlert: AlertKind?
+    var errorMessage: String?
 
-    private let userDefaults: UserDefaults
     private let projectViewModel = ProjectViewModel()
     private let supportEmail = "cilia.filippo.dev@gmail.com"
-    private let appShareURLString = "https://apps.apple.com/app/id0000000000"
+    private let appShareURLString = "https://apps.apple.com/app/id6760037639"
     private let appName = "Iterly"
-
-    private static let showCompletedTasksKey = "settings.showCompletedTasks"
-    private static let highlightOverdueTasksKey = "settings.highlightOverdueTasks"
-    private static let compactProjectCardsKey = "settings.compactProjectCards"
-
-    init(userDefaults: UserDefaults = .standard) {
-        self.userDefaults = userDefaults
-        self.showCompletedTasks = userDefaults.object(forKey: Self.showCompletedTasksKey) as? Bool ?? true
-        self.highlightOverdueTasks = userDefaults.object(forKey: Self.highlightOverdueTasksKey) as? Bool ?? true
-        self.compactProjectCards = userDefaults.object(forKey: Self.compactProjectCardsKey) as? Bool ?? false
-    }
 
     var currentVersion: String {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
@@ -151,7 +130,10 @@ final class SettingsViewModel {
     }
 
     func eraseAllData(modelContext: ModelContext) {
-        projectViewModel.eraseAllData(modelContext: modelContext)
-        activeAlert = nil
+        do {
+            try projectViewModel.eraseAllData(modelContext: modelContext)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }

@@ -8,7 +8,6 @@
 import SwiftUI
 
 private struct BadgeStyleModifier: ViewModifier {
-    @Environment(\.self) private var environment
     @Environment(\.colorScheme) private var colorScheme
     let backgroundColor: Color
 
@@ -25,6 +24,8 @@ private struct BadgeStyleModifier: ViewModifier {
     }
 
     private var foregroundColor: Color {
+        var environment = EnvironmentValues()
+        environment.colorScheme = colorScheme
         let resolved = backgroundColor.resolve(in: environment)
         // Blend semi-transparent backgrounds with the base surface so luminance reflects actual rendering.
         let baseResolved = (colorScheme == .dark ? Color.black : .white).resolve(in: environment)

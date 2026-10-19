@@ -11,8 +11,6 @@ import IterlyCore
 
 @MainActor
 struct ActivityView: View {
-    static let activityTag: String? = "Activity"
-
     @State private var viewModel = ActivityOverviewViewModel()
 
     @Query(sort: [
@@ -42,10 +40,10 @@ struct ActivityView: View {
                     )
                 }
                 .padding()
-                .padding(.bottom, 24)
+                .readableContentWidth()
             }
             .navigationTitle("Activity")
-            .onChange(of: reloadToken, initial: true) { _, _ in
+            .onChange(of: reloadKey, initial: true) { _, _ in
                 viewModel.reload(projects: projects, tasks: tasks)
             }
             .safeAreaInset(edge: .bottom) {
@@ -54,23 +52,8 @@ struct ActivityView: View {
         }
     }
 
-    private var reloadToken: String {
-        let projectToken = projects
-            .map { project in
-                "\(project.id.uuidString)-\(project.lastUpdated.timeIntervalSinceReferenceDate)"
-            }
-            .joined(separator: ",")
-        let taskToken = tasks
-            .map { task in
-                "\(task.id.uuidString)-\(task.creationDate.timeIntervalSinceReferenceDate)-\(task.lastUpdated?.timeIntervalSinceReferenceDate ?? 0)"
-            }
-            .joined(separator: ",")
-
-        return [
-            viewModel.selectedRange.rawValue,
-            projectToken,
-            taskToken
-        ].joined(separator: "|")
+    private var reloadKey: Int {
+        ActivityReloadKey.make(range: viewModel.selectedRange, projects: projects, tasks: tasks)
     }
 }
 

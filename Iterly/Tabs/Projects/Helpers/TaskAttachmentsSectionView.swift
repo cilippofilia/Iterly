@@ -19,7 +19,9 @@ struct TaskAttachmentsSectionView: View {
     @State private var attachmentToView: TaskAttachment?
     @State private var isImporting = false
     @State private var oversizedVideoCount = 0
+    @State private var failedImportCount = 0
     @State private var showOversizedVideoAlert = false
+    @State private var errorMessage: String?
 
     /// Keeps oversized videos out of the SwiftData store; external storage
     /// avoids bloating the database file, but device space still matters.
@@ -95,15 +97,25 @@ struct TaskAttachmentsSectionView: View {
                 await importMedia(items)
             }
         }
-        .fullScreenCover(item: $attachmentToView) { attachment in
+        .platformFullScreenCover(item: $attachmentToView) { attachment in
             TaskAttachmentViewerView(attachment: attachment) {
                 delete(attachment)
             }
+            .macSheetMinimumSize()
         }
         .alert("Video Too Large", isPresented: $showOversizedVideoAlert) {
             Button("OK", role: .cancel) {}
         } message: {
-            Text("Videos larger than 200 MB can't be attached. Skipped: \(oversizedVideoCount).")
+            if failedImportCount > 0 {
+                Text("Videos larger than 200 MB can't be attached. Skipped: \(oversizedVideoCount).\n^[\(failedImportCount) item](inflect: true) couldn't be imported.")
+            } else {
+                Text("Videos larger than 200 MB can't be attached. Skipped: \(oversizedVideoCount).")
+            }
+        }
+        .alert("Something Went Wrong", item: $errorMessage) { _ in
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text($0)
         }
     }
 
@@ -121,9 +133,13 @@ struct TaskAttachmentsSectionView: View {
         defer { isImporting = false }
 
         var skippedVideos = 0
+        var failedItems = 0
 
         for item in items {
-            guard let data = try? await item.loadTransferable(type: Data.self) else { continue }
+            guard let data = try? await item.loadTransferable(type: Data.self) else {
+                failedItems += 1
+                continue
+            }
 
             let videoType = item.supportedContentTypes.first { $0.conforms(to: .movie) }
 
@@ -174,15 +190,25 @@ struct TaskAttachmentsSectionView: View {
         task.touch()
         task.project?.touch()
 
-        if skippedVideos > 0 {
-            oversizedVideoCount = skippedVideos
-            showOversizedVideoAlert = true
-        }
-
+        var saveErrorMessage: String?
         do {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
-            assertionFailure("Failed to save attachments: \(error)")
+            saveErrorMessage = error.localizedDescription
+        }
+
+        let failedMessage = failedItems > 0 ? "^[\(failedItems) item](inflect: true) couldn't be imported." : nil
+
+        // Only one alert can be presented at a time: a save error takes priority,
+        // then oversized videos (which also report failed items), then failed items alone.
+        if let saveErrorMessage {
+            errorMessage = [saveErrorMessage, failedMessage].compactMap(\.self).joined(separator: "\n")
+        } else if skippedVideos > 0 {
+            oversizedVideoCount = skippedVideos
+            failedImportCount = failedItems
+            showOversizedVideoAlert = true
+        } else if let failedMessage {
+            errorMessage = failedMessage
         }
     }
 
@@ -197,7 +223,7 @@ struct TaskAttachmentsSectionView: View {
         do {
             try modelContext.saveAndReloadActivityWidget()
         } catch {
-            assertionFailure("Failed to delete attachment: \(error)")
+            errorMessage = error.localizedDescription
         }
     }
 }

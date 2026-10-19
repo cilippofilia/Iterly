@@ -27,6 +27,7 @@ final class ProjectFormViewModel {
     var isPinned: Bool
     var isSaving = false
     var syncErrorMessage: String?
+    var deleteErrorMessage: String?
     var customLinkLabelPresets: [String]
 
     private let projectViewModel: ProjectViewModel
@@ -94,40 +95,31 @@ final class ProjectFormViewModel {
         }
     }
 
+    /// The current form fields, bundled for `ProjectViewModel`.
+    var input: ProjectInput {
+        ProjectInput(
+            title: title,
+            details: details,
+            note: note,
+            type: type,
+            priority: priority,
+            status: status,
+            isPinned: isPinned,
+            version: version,
+            appStoreURL: appStoreURL,
+            usefulLinks: usefulLinkInputs
+        )
+    }
+
     func save(modelContext: ModelContext) async -> Bool {
         isSaving = true
         defer { isSaving = false }
 
         do {
             if let project {
-                try await projectViewModel.updateProject(
-                    project,
-                    title: title,
-                    details: details,
-                    note: note,
-                    type: type,
-                    priority: priority,
-                    status: status,
-                    isPinned: isPinned,
-                    version: version,
-                    appStoreURL: appStoreURL,
-                    usefulLinks: usefulLinkInputs,
-                    modelContext: modelContext
-                )
+                try await projectViewModel.updateProject(project, with: input, modelContext: modelContext)
             } else {
-                try await projectViewModel.createProject(
-                    title: title,
-                    details: details,
-                    note: note,
-                    type: type,
-                    priority: priority,
-                    status: status,
-                    isPinned: isPinned,
-                    version: version,
-                    appStoreURL: appStoreURL,
-                    usefulLinks: usefulLinkInputs,
-                    modelContext: modelContext
-                )
+                try await projectViewModel.createProject(input, modelContext: modelContext)
             }
 
             try persistCustomLabelPresets()
@@ -145,9 +137,17 @@ final class ProjectFormViewModel {
         return await save(modelContext: modelContext)
     }
 
-    func deleteProject(modelContext: ModelContext) {
-        guard let project else { return }
-        projectViewModel.deleteProject(project, modelContext: modelContext)
+    /// Deletes the project being edited.
+    /// - Returns: `true` if the deletion was saved; on failure `deleteErrorMessage` is set.
+    func deleteProject(modelContext: ModelContext) -> Bool {
+        guard let project else { return false }
+        do {
+            try projectViewModel.deleteProject(project, modelContext: modelContext)
+            return true
+        } catch {
+            deleteErrorMessage = error.localizedDescription
+            return false
+        }
     }
 
     func refreshLinkedRelease(modelContext: ModelContext) async {

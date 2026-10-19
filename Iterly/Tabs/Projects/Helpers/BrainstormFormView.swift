@@ -24,17 +24,12 @@ struct BrainstormFormView: View {
                 .focused($isFieldFocused)
             }
         }
+        .formStyle(.grouped)
         .navigationTitle("Brainstorm")
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button {
-                    dismiss()
-                } label: {
-                    Text("Done")
-                        .foregroundStyle(.white)
-                }
-                .buttonStyle(.borderedProminent)
+                Button("Done", action: dismiss.callAsFunction)
             }
         }
         .onAppear {

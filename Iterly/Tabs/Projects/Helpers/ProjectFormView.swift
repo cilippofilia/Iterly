@@ -84,8 +84,7 @@ struct ProjectFormView: View {
                     }
                 } else {
                     TextField("App Store URL", text: $viewModel.appStoreURL)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
+                        .urlTextFieldConfiguration()
                         .autocorrectionDisabled()
                 }
 
@@ -123,7 +122,7 @@ struct ProjectFormView: View {
                                 Label(ProjectLinkKind.custom.title, systemImage: draft.kind.systemImage)
                                     .foregroundStyle(.secondary)
                                 TextField("Custom label", text: $draft.customLabel)
-                                    .textInputAutocapitalization(.words)
+                                    .wordsTextInputAutocapitalization()
                             } else {
                                 Menu {
                                     ForEach(ProjectLinkKind.allCases.filter { $0 != .custom }) { kind in
@@ -158,19 +157,19 @@ struct ProjectFormView: View {
                                 }
                             }
                             Spacer()
-                            Button(role: .destructive) {
+                            Button("Remove Link", systemImage: "minus.circle.fill", role: .destructive) {
                                 viewModel.removeUsefulLinkDraft(draft.id)
-                            } label: {
-                                Image(systemName: "minus.circle.fill")
-                                    .foregroundStyle(.red)
                             }
+                            .labelStyle(.iconOnly)
                             .buttonStyle(.plain)
+                            .foregroundStyle(.red)
+                            .frame(minWidth: 44, minHeight: 44)
+                            .contentShape(.rect)
                         }
 
                         HStack {
                             TextField("URL", text: $draft.url)
-                                .keyboardType(.URL)
-                                .textInputAutocapitalization(.never)
+                                .urlTextFieldConfiguration()
                                 .autocorrectionDisabled()
                                 .onChange(of: draft.url) { _, _ in
                                     viewModel.applyDetectedKind(toDraftWithID: draft.id)
@@ -204,8 +203,9 @@ struct ProjectFormView: View {
                 }
             }
         }
+        .formStyle(.grouped)
         .navigationTitle(viewModel.navigationTitle)
-        .navigationBarTitleDisplayMode(.inline)
+        .inlineNavigationBarTitle()
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") {
@@ -213,13 +213,9 @@ struct ProjectFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button {
+                Button("Save") {
                     Task { await saveAndBumpSignalIfNeeded() }
-                } label: {
-                    Text("Save")
-                        .foregroundStyle(.white)
                 }
-                .buttonStyle(.borderedProminent)
                 .disabled(!viewModel.canSave)
             }
         }
@@ -237,11 +233,21 @@ struct ProjectFormView: View {
         } message: {
             Text(viewModel.syncErrorMessage ?? "Something went wrong.")
         }
+        .alert("Couldn't Delete Project", item: $viewModel.deleteErrorMessage) { _ in
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text($0)
+        }
         .alert("Delete Project?", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
-                viewModel.deleteProject(modelContext: modelContext)
-                dismiss()
-                onDelete()
+                // Deferred so a failure alert is set after this confirmation alert dismisses.
+                Task {
+                    // Delete first so a failure keeps the sheet and its error alert alive.
+                    if viewModel.deleteProject(modelContext: modelContext) {
+                        dismiss()
+                        onDelete()
+                    }
+                }
             }
             Button("Cancel", role: .cancel) {}
         } message: {

@@ -5,12 +5,14 @@
 //  Created by Filippo Cilia on 10/03/2026.
 //
 
+import SwiftData
 import SwiftUI
 import IterlyCore
 
 struct TaskInfoBoxView: View {
     @Bindable var task: ProjectTask
 
+    @Environment(\.modelContext) private var modelContext
     @Environment(CrossPromoSignal.self) private var crossPromoSignal
 
     var body: some View {
@@ -27,13 +29,10 @@ struct TaskInfoBoxView: View {
                     Picker("Status", selection: Binding(
                         get: { task.status },
                         set: { newStatus in
-                            let didChange = task.status != newStatus
-                            task.status = newStatus
-                            task.touch()
-                            task.project?.touch()
-                            if didChange {
+                            if task.updateStatus(newStatus) {
                                 crossPromoSignal.bump()
                             }
+                            modelContext.saveLoggingFailure("task status")
                         }
                     )) {
                         ForEach(TaskStatus.allCases, id: \.self) { status in
@@ -54,9 +53,8 @@ struct TaskInfoBoxView: View {
                     Picker("Priority", selection: Binding(
                         get: { task.priority },
                         set: {
-                            task.priority = $0
-                            task.touch()
-                            task.project?.touch()
+                            task.updatePriority($0)
+                            modelContext.saveLoggingFailure("task priority")
                         }
                     )) {
                         ForEach(TaskPriority.allCases, id: \.self) { priority in
@@ -78,9 +76,8 @@ struct TaskInfoBoxView: View {
                     selection: Binding(
                         get: { task.dueDate ?? .now },
                         set: {
-                            task.dueDate = $0
-                            task.touch()
-                            task.project?.touch()
+                            task.updateDueDate($0)
+                            modelContext.saveLoggingFailure("task due date")
                         }
                     ),
                     displayedComponents: .date

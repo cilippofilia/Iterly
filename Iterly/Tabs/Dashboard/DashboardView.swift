@@ -10,12 +10,7 @@ import SwiftUI
 import IterlyCore
 
 struct DashboardView: View {
-    static let dashboardTag: String? = "Dashboard"
-
-    @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = ProjectViewModel()
     @State private var dashboardViewModel = DashboardViewModel()
-    @State private var showEraseDataAlert: Bool = false
 
     @Query(
         filter: #Predicate<Project> { $0.isPinned == true },
@@ -54,4 +49,5 @@ struct DashboardView: View {
     DashboardView()
         .modelContainer(SampleData.makePreviewContainer())
         .environment(CrossPromoSignal())
+        .environment(TabSelection())
 }

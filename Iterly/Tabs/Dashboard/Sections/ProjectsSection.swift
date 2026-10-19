@@ -10,14 +10,12 @@ import SwiftUI
 import IterlyCore
 
 struct ProjectsSection: View {
-    @AppStorage("selectedView") private var selectedView: String?
+    @Environment(TabSelection.self) private var tabSelection
     let projects: [Project]?
     let allProjectsCount: Int
     let showMore: Bool
 
-    var columns: [GridItem] {
-        [GridItem(.flexible()), GridItem(.flexible())]
-    }
+    private let columns = [GridItem(.adaptive(minimum: 160))]
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -51,7 +49,7 @@ struct ProjectsSection: View {
                     }
                     if showMore {
                         SeeAllCellView(action: {
-                            selectedView = ProjectsView.projectsTag
+                            tabSelection.selected = .projects
                         })
                         .background(Color.secondary.gradient.opacity(0.2))
                         .clipShape(.rect(cornerRadius: AppCornerRadius.compact))
@@ -68,4 +66,5 @@ struct ProjectsSection: View {
         ProjectsSection(projects: SampleData.makeProjects(), allProjectsCount: 6, showMore: true)
     }
     .modelContainer(SampleData.makePreviewContainer())
+    .environment(TabSelection())
 }

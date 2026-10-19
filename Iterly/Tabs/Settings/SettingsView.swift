@@ -10,8 +10,6 @@ import SwiftData
 
 @MainActor
 struct SettingsView: View {
-    static let settingsTag: String? = "Settings"
-
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
     @Environment(RemoveAdsStore.self) private var removeAdsStore
@@ -116,7 +114,6 @@ struct SettingsView: View {
                         )
                     }
                     .buttonStyle(.plain)
-                    .tint(.red)
                     .confirmationDialog(
                         "Select an option",
                         isPresented: $viewModel.showContactOptions,
@@ -159,6 +156,7 @@ struct SettingsView: View {
                         .font(.footnote)
                 }
             }
+            .formStyle(.grouped)
             .navigationTitle("Settings")
             .safeAreaInset(edge: .bottom) {
                 CrossPromoBannerView()
@@ -167,28 +165,24 @@ struct SettingsView: View {
                 CrossPromoRemoveAdsInfoView()
                     .presentationDetents([.medium])
             }
-            .alert(item: $viewModel.activeAlert) { alertKind in
-                switch alertKind {
+            .alert(viewModel.activeAlert?.title ?? "", item: $viewModel.activeAlert) { kind in
+                switch kind {
                 case .sampleDataAdded:
-                    Alert(
-                        title: Text(alertKind.title),
-                        message: Text(alertKind.message),
-                        dismissButton: .cancel(Text("OK")) {
-                            viewModel.activeAlert = nil
-                        }
-                    )
+                    EmptyView()
                 case .eraseAllDataConfirmation:
-                    Alert(
-                        title: Text(alertKind.title),
-                        message: Text(alertKind.message),
-                        primaryButton: .destructive(Text("Erase")) {
-                            viewModel.eraseAllData(modelContext: modelContext)
-                        },
-                        secondaryButton: .cancel {
-                            viewModel.activeAlert = nil
-                        }
-                    )
+                    Button("Erase", role: .destructive) {
+                        // Deferred so the error alert is set after this confirmation alert dismisses.
+                        Task { viewModel.eraseAllData(modelContext: modelContext) }
+                    }
+                    Button("Cancel", role: .cancel) {}
                 }
+            } message: { kind in
+                Text(kind.message)
+            }
+            .alert("Couldn't Erase Data", item: $viewModel.errorMessage) { _ in
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text($0)
             }
         }
     }

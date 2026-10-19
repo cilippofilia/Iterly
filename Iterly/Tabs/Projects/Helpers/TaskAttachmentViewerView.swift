@@ -33,12 +33,8 @@ struct TaskAttachmentViewerView: View {
                             .scaledToFit()
                             .scaleEffect(zoom)
                             .gesture(magnifyGesture)
-                            .onTapGesture(count: 2) {
-                                withAnimation(.snappy) {
-                                    zoom = 1
-                                    steadyZoom = 1
-                                }
-                            }
+                            .onTapGesture(count: 2, perform: resetZoom)
+                            .accessibilityAction(named: "Reset Zoom", resetZoom)
                             .accessibilityLabel("Attachment image")
                     } else {
                         ProgressView()
@@ -55,15 +51,15 @@ struct TaskAttachmentViewerView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.black)
-            .navigationBarTitleDisplayMode(.inline)
+            .inlineNavigationBarTitle()
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button("Done") {
                         dismiss()
                     }
                 }
 
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .platformTopBarTrailing) {
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         showDeleteAlert = true
                     }
@@ -98,6 +94,13 @@ struct TaskAttachmentViewerView: View {
             .onEnded { _ in
                 steadyZoom = zoom
             }
+    }
+
+    private func resetZoom() {
+        withAnimation(.snappy) {
+            zoom = 1
+            steadyZoom = 1
+        }
     }
 
     private func loadContent() async {
