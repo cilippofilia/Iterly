@@ -10,7 +10,6 @@ import SwiftUI
 import IterlyCore
 
 struct DashboardView: View {
-    static let dashboardTag: String? = "Dashboard"
 
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel = ProjectViewModel()
@@ -54,4 +53,5 @@ struct DashboardView: View {
     DashboardView()
         .modelContainer(SampleData.makePreviewContainer())
         .environment(CrossPromoSignal())
+        .environment(TabSelection())
 }

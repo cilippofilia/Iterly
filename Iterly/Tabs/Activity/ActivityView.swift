@@ -11,7 +11,6 @@ import IterlyCore
 
 @MainActor
 struct ActivityView: View {
-    static let activityTag: String? = "Activity"
 
     @State private var viewModel = ActivityOverviewViewModel()
 

@@ -11,7 +11,7 @@ import IterlyCore
 
 @MainActor
 struct DashboardAvailableView: View {
-    @AppStorage("selectedView") private var selectedView: String?
+    @Environment(TabSelection.self) private var tabSelection
     @State private var activityViewModel = ActivityOverviewViewModel()
 
     let pinnedProjects: [Project]
@@ -43,7 +43,7 @@ struct DashboardAvailableView: View {
                     cornerRadius: AppCornerRadius.regular,
                     isHeatmapInteractive: false,
                     trailingAction: {
-                        selectedView = ActivityView.activityTag
+                        tabSelection.selected = .activity
                     }
                 )
                 .padding(.horizontal)
@@ -105,4 +105,5 @@ struct DashboardAvailableView: View {
         .navigationTitle("Dashboard")
     }
     .modelContainer(SampleData.makePreviewContainer())
+    .environment(TabSelection())
 }

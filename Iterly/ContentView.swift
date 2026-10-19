@@ -11,33 +11,42 @@ import SwiftUI
 import IterlyCore
 
 struct ContentView: View {
-    @AppStorage("selectedView") var selectedView: String?
+    @SceneStorage("selectedTab") private var storedTab: AppTab = .dashboard
     @Environment(\.modelContext) private var modelContext
     @Environment(CrossPromoSignal.self) private var crossPromoSignal
     @Environment(RemoveAdsStore.self) private var removeAdsStore
 
+    @State private var tabSelection = TabSelection()
     @State private var interstitialAd: Ad?
 
     var body: some View {
-        TabView(selection: $selectedView) {
-            Tab("Dashboard", systemImage: "house", value: DashboardView.dashboardTag) {
+        @Bindable var tabSelection = tabSelection
+
+        TabView(selection: $tabSelection.selected) {
+            Tab("Dashboard", systemImage: "house", value: AppTab.dashboard) {
                 DashboardView()
             }
 
-            Tab("Projects", systemImage: "folder", value: ProjectsView.projectsTag) {
+            Tab("Projects", systemImage: "folder", value: AppTab.projects) {
                 ProjectsView()
             }
 
-            Tab("Activity", systemImage: "chart.bar.xaxis", value: ActivityView.activityTag) {
+            Tab("Activity", systemImage: "chart.bar.xaxis", value: AppTab.activity) {
                 ActivityView()
             }
 
-            Tab("Settings", systemImage: "gear", value: SettingsView.settingsTag) {
+            Tab("Settings", systemImage: "gear", value: AppTab.settings) {
                 SettingsView()
             }
         }
         // Tab bar on iPhone; a sidebar on iPad and macOS.
         .tabViewStyle(.sidebarAdaptable)
+        .environment(tabSelection)
+        .onAppear { tabSelection.selected = storedTab }
+        .onChange(of: tabSelection.selected) { _, newTab in storedTab = newTab }
+        .onOpenURL { url in
+            if let tab = AppTab(deepLink: url) { tabSelection.selected = tab }
+        }
         .task {
             backfillProjectTypesIfNeeded()
             backfillUsefulLinksIfNeeded()

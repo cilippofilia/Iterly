@@ -10,7 +10,6 @@ import SwiftUI
 import IterlyCore
 
 struct ProjectsView: View {
-    static let projectsTag: String? = "Projects"
 
     @Environment(\.modelContext) private var modelContext
 

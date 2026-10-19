@@ -10,7 +10,6 @@ import SwiftData
 
 @MainActor
 struct SettingsView: View {
-    static let settingsTag: String? = "Settings"
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
