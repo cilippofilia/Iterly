@@ -41,37 +41,18 @@ struct IntegrationsSettingsView: View {
             viewModel.updateProjects(newProjects)
             viewModel.reloadPresets()
         }
-        .alert("Integration Error", isPresented: isShowingErrorAlert) {
-            Button("OK", role: .cancel) {
-                viewModel.clearError()
-            }
+        .alert("Integration Error", item: $viewModel.activeErrorMessage) { _ in
         } message: {
-            Text(viewModel.activeErrorMessage ?? "Something went wrong.")
+            Text($0)
         }
-        .alert(item: $viewModel.pendingAction) { action in
-            let title = action.title
-            let message = action.message
-
-            return Alert(
-                title: Text(title),
-                message: Text(message),
-                primaryButton: .destructive(Text("Remove")) {
-                    viewModel.perform(action, modelContext: modelContext)
-                },
-                secondaryButton: .cancel()
-            )
-        }
-    }
-
-    private var isShowingErrorAlert: Binding<Bool> {
-        Binding(
-            get: { viewModel.activeErrorMessage != nil },
-            set: { newValue in
-                if newValue == false {
-                    viewModel.clearError()
-                }
+        .alert(viewModel.pendingAction?.title ?? "", item: $viewModel.pendingAction) { action in
+            Button("Remove", role: .destructive) {
+                viewModel.perform(action, modelContext: modelContext)
             }
-        )
+            Button("Cancel", role: .cancel) {}
+        } message: { action in
+            Text(action.message)
+        }
     }
 
     @ViewBuilder
