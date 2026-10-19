@@ -23,38 +23,9 @@ struct ProjectDetailView: View {
     @Bindable var project: Project
     var onDelete: () -> Void = {}
 
-    private var externalDestinations: [ExternalDestination] {
-        var destinations: [ExternalDestination] = []
-
-        if let appStoreURL = project.currentRelease?.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines),
-           appStoreURL.isEmpty == false {
-            destinations.append(
-                ExternalDestination(
-                    title: "App Store",
-                    systemImage: "apple.logo",
-                    rawURL: appStoreURL
-                )
-            )
-        }
-
-        for link in project.currentRelease?.usefulLinks ?? [] {
-            let trimmedURL = link.url.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard trimmedURL.isEmpty == false else { continue }
-
-            destinations.append(
-                ExternalDestination(
-                    title: link.label,
-                    systemImage: link.kind.systemImage,
-                    rawURL: trimmedURL
-                )
-            )
-        }
-
-        return destinations
-    }
-
     var body: some View {
         let sections = TaskSectionsBuilder.sections(for: project.topLevelTasks)
+        let externalDestinations = ExternalDestination.destinations(for: project.currentRelease)
 
         ScrollView {
             VStack(alignment: .leading) {
@@ -178,33 +149,6 @@ struct ProjectDetailView: View {
                 externalLinkErrorMessage = "Unable to open \(destination.displayURL). Check that the link is valid."
             }
         }
-    }
-}
-
-private struct ExternalDestination: Identifiable {
-    let id = UUID()
-    let title: String
-    let systemImage: String
-    let rawURL: String
-
-    var displayURL: String {
-        rawURL.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    var resolvedURL: URL? {
-        let trimmedURL = displayURL
-        guard trimmedURL.isEmpty == false,
-              trimmedURL.localizedStandardContains(" ") == false else {
-            return nil
-        }
-
-        if let url = URL(string: trimmedURL),
-           let scheme = url.scheme,
-           scheme.isEmpty == false {
-            return url
-        }
-
-        return URL(string: "https://\(trimmedURL)")
     }
 }
 

@@ -46,7 +46,7 @@ struct ProjectCell: View {
     }
 
     private var availableTasksCount: Int {
-        tasks.filter { $0.status == .notStarted || $0.status == .inProgress }.count
+        tasks.count { $0.status == .notStarted || $0.status == .inProgress }
     }
 }
 

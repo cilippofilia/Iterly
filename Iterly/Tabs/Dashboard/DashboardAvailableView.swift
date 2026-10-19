@@ -59,24 +59,13 @@ struct DashboardAvailableView: View {
         }
         .appNavigationDestinations()
         .contentMargins(.bottom, 70, for: .scrollContent)
-        .onChange(of: activityReloadToken, initial: true) { _, _ in
+        .onChange(of: activityReloadKey, initial: true) { _, _ in
             activityViewModel.reload(projects: allProjects, tasks: allTasks)
         }
     }
 
-    private var activityReloadToken: String {
-        let projectToken = allProjects
-            .map { project in
-                "\(project.id.uuidString)-\(project.lastUpdated.timeIntervalSinceReferenceDate)"
-            }
-            .joined(separator: ",")
-        let taskToken = allTasks
-            .map { task in
-                "\(task.id.uuidString)-\(task.creationDate.timeIntervalSinceReferenceDate)-\(task.lastUpdated?.timeIntervalSinceReferenceDate ?? 0)"
-            }
-            .joined(separator: ",")
-
-        return [activityViewModel.selectedRange.rawValue, projectToken, taskToken].joined(separator: "|")
+    private var activityReloadKey: Int {
+        ActivityReloadKey.make(range: activityViewModel.selectedRange, projects: allProjects, tasks: allTasks)
     }
 }
 

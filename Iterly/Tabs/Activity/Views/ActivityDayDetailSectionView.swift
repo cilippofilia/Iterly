@@ -31,10 +31,10 @@ struct ActivityDayDetailSectionView: View {
                     Text("\(selectedDay.count) total")
                     Text("•")
                         .padding(.horizontal, 4)
-                    Text("\(selectedDay.projectCount) project")
+                    Text("^[\(selectedDay.projectCount) project](inflect: true)")
                     Text("•")
                         .padding(.horizontal, 4)
-                    Text("\(selectedDay.taskCount) task")
+                    Text("^[\(selectedDay.taskCount) task](inflect: true)")
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)

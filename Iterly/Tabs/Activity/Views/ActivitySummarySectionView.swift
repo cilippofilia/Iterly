@@ -24,7 +24,7 @@ struct ActivitySummarySectionView: View {
                     value: "\(summary.streak)",
                     metricIcon: "flame",
                     iconColor: .red,
-                    detail: summary.streak == 1 ? "active day" : "active days"
+                    detail: LocalizedText.activeDaysLabel(summary.streak)
                 )
                 .frame(maxWidth: .infinity, alignment: .center)
                 metric(

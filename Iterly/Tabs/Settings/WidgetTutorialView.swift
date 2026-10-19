@@ -13,8 +13,7 @@ struct WidgetTutorialView: View {
         WidgetTutorialStep(
             number: 1,
             title: "Open the widget gallery",
-            description: "Control-click the desktop and choose Edit Widgets, or click the date in the menu bar "
-                + "and scroll to the bottom of Notification Center."
+            description: "Control-click the desktop and choose Edit Widgets, or click the date in the menu bar and scroll to the bottom of Notification Center."
         ),
         WidgetTutorialStep(
             number: 2,
@@ -99,12 +98,9 @@ private struct WidgetTutorialHeaderView: View {
 
     private var description: String {
         #if os(macOS)
-        "Track your project activity streak and see the heatmap at a glance, "
-        + "right from your desktop or Notification Center. "
-        + "Available in Small, Medium, and Large sizes."
+        "Track your project activity streak and see the heatmap at a glance, right from your desktop or Notification Center. Available in Small, Medium, and Large sizes."
         #else
-        "Track your project activity streak and see the heatmap at a glance, right from your Home Screen. "
-        + "Available in Small, Medium, and Large sizes."
+        "Track your project activity streak and see the heatmap at a glance, right from your Home Screen. Available in Small, Medium, and Large sizes."
         #endif
     }
 }

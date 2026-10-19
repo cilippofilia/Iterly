@@ -87,7 +87,7 @@ final class ActivityOverviewViewModel {
     ) -> [String?] {
         let formatter = DateFormatter()
         formatter.calendar = calendar
-        formatter.dateFormat = "MMM"
+        formatter.setLocalizedDateFormatFromTemplate("MMM")
 
         return weeks.enumerated().map { index, week in
             guard let firstDay = week.first?.date else { return nil }

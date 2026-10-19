@@ -10,10 +10,7 @@ import SwiftUI
 import IterlyCore
 
 struct DashboardView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var viewModel = ProjectViewModel()
     @State private var dashboardViewModel = DashboardViewModel()
-    @State private var showEraseDataAlert: Bool = false
 
     @Query(
         filter: #Predicate<Project> { $0.isPinned == true },
