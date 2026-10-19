@@ -95,40 +95,31 @@ final class ProjectFormViewModel {
         }
     }
 
+    /// The current form fields, bundled for `ProjectViewModel`.
+    var input: ProjectInput {
+        ProjectInput(
+            title: title,
+            details: details,
+            note: note,
+            type: type,
+            priority: priority,
+            status: status,
+            isPinned: isPinned,
+            version: version,
+            appStoreURL: appStoreURL,
+            usefulLinks: usefulLinkInputs
+        )
+    }
+
     func save(modelContext: ModelContext) async -> Bool {
         isSaving = true
         defer { isSaving = false }
 
         do {
             if let project {
-                try await projectViewModel.updateProject(
-                    project,
-                    title: title,
-                    details: details,
-                    note: note,
-                    type: type,
-                    priority: priority,
-                    status: status,
-                    isPinned: isPinned,
-                    version: version,
-                    appStoreURL: appStoreURL,
-                    usefulLinks: usefulLinkInputs,
-                    modelContext: modelContext
-                )
+                try await projectViewModel.updateProject(project, with: input, modelContext: modelContext)
             } else {
-                try await projectViewModel.createProject(
-                    title: title,
-                    details: details,
-                    note: note,
-                    type: type,
-                    priority: priority,
-                    status: status,
-                    isPinned: isPinned,
-                    version: version,
-                    appStoreURL: appStoreURL,
-                    usefulLinks: usefulLinkInputs,
-                    modelContext: modelContext
-                )
+                try await projectViewModel.createProject(input, modelContext: modelContext)
             }
 
             try persistCustomLabelPresets()

@@ -111,6 +111,19 @@ enum SampleData {
         let calendar = Calendar.current
         let now = Date.now
 
+        return [
+            makeOnboardingProject(calendar: calendar, now: now),
+            makeInsightsProject(calendar: calendar, now: now),
+            makeMarketingProject(calendar: calendar, now: now),
+            makeCleanupProject(calendar: calendar, now: now),
+            makePaymentsProject(calendar: calendar, now: now),
+            makeCommunityProject(calendar: calendar, now: now),
+            makeDesignSystemProject(calendar: calendar, now: now)
+        ]
+    }
+
+    @MainActor
+    private static func makeOnboardingProject(calendar: Calendar, now: Date) -> Project {
         let onboardingDate = calendar.date(byAdding: .day, value: -3, to: now) ?? now
         let onboarding = Project(
             title: "Drinko.",
@@ -126,7 +139,14 @@ enum SampleData {
         onboarding.currentRelease = ProjectRelease(version: "2.2", project: onboarding)
 
         let onboardingTasks = [
-            ProjectTask(title: "Design the welcome flow", details: "Design onboarding to explain key areas of the app - Learn, Cocktails, Cabinet.", note: "Include skip and restore options.", status: .inProgress, priority: .high, project: onboarding),
+            ProjectTask(
+                title: "Design the welcome flow",
+                details: "Design onboarding to explain key areas of the app - Learn, Cocktails, Cabinet.",
+                note: "Include skip and restore options.",
+                status: .inProgress,
+                priority: .high,
+                project: onboarding
+            ),
             ProjectTask(title: "Write onboarding copy", status: .notStarted, priority: .medium, project: onboarding),
             ProjectTask(title: "QA localization", status: .notStarted, priority: .medium, project: onboarding),
             ProjectTask(title: "Migrate analytics events", status: .blocked, priority: .high, project: onboarding),
@@ -146,6 +166,11 @@ enum SampleData {
         onboardingTasks[0].subtasks = onboardingSubtasks
         onboarding.tasks = onboardingTasks + onboardingSubtasks
 
+        return onboarding
+    }
+
+    @MainActor
+    private static func makeInsightsProject(calendar: Calendar, now: Date) -> Project {
         let insightsDate = calendar.date(byAdding: .day, value: -5, to: now) ?? now
         let insights = Project(
             title: "Insights",
@@ -168,6 +193,11 @@ enum SampleData {
         ]
         insights.tasks = insightsTasks
 
+        return insights
+    }
+
+    @MainActor
+    private static func makeMarketingProject(calendar: Calendar, now: Date) -> Project {
         let marketingDate = calendar.date(byAdding: .day, value: -1, to: now) ?? now
         let marketing = Project(
             title: "Launch Plan",
@@ -190,6 +220,11 @@ enum SampleData {
         ]
         marketing.tasks = marketingTasks
 
+        return marketing
+    }
+
+    @MainActor
+    private static func makeCleanupProject(calendar: Calendar, now: Date) -> Project {
         let cleanupDate = calendar.date(byAdding: .day, value: -10, to: now) ?? now
         let cleanup = Project(
             title: "Tech Cleanup",
@@ -212,6 +247,11 @@ enum SampleData {
         ]
         cleanup.tasks = cleanupTasks
 
+        return cleanup
+    }
+
+    @MainActor
+    private static func makePaymentsProject(calendar: Calendar, now: Date) -> Project {
         let paymentsDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
         let payments = Project(
             title: "Payments Revamp",
@@ -240,6 +280,11 @@ enum SampleData {
         paymentsTasks[0].subtasks = paymentsSubtasks
         payments.tasks = paymentsTasks + paymentsSubtasks
 
+        return payments
+    }
+
+    @MainActor
+    private static func makeCommunityProject(calendar: Calendar, now: Date) -> Project {
         let communityDate = calendar.date(byAdding: .day, value: -2, to: now) ?? now
         let community = Project(
             title: "Community Beta",
@@ -263,6 +308,11 @@ enum SampleData {
         ]
         community.tasks = communityTasks
 
+        return community
+    }
+
+    @MainActor
+    private static func makeDesignSystemProject(calendar: Calendar, now: Date) -> Project {
         let designSystemDate = calendar.date(byAdding: .day, value: -14, to: now) ?? now
         let designSystem = Project(
             title: "Design System",
@@ -290,6 +340,6 @@ enum SampleData {
         designSystemTasks[0].subtasks = designSystemSubtasks
         designSystem.tasks = designSystemTasks + designSystemSubtasks
 
-        return [onboarding, insights, marketing, cleanup, payments, community, designSystem]
+        return designSystem
     }
 }

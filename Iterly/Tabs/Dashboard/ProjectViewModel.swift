@@ -8,43 +8,31 @@ final class ProjectViewModel {
     private let maxPinnedProjects = 4
     private let appStoreLookupService = AppStoreLookupService()
 
-    func createProject(
-        title: String,
-        details: String,
-        note: String,
-        type: ProjectType,
-        priority: ProjectPriority,
-        status: ProjectStatus,
-        isPinned: Bool,
-        version: String,
-        appStoreURL: String,
-        usefulLinks: [ProjectLinkInput],
-        modelContext: ModelContext
-    ) async throws {
-        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedAppStoreURL = appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines)
+    func createProject(_ input: ProjectInput, modelContext: ModelContext) async throws {
+        let trimmedTitle = input.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedDetails = input.details.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNote = input.note.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedAppStoreURL = input.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines)
 
         let project = Project(
             title: trimmedTitle,
             details: trimmedDetails.isEmpty ? nil : trimmedDetails,
             note: trimmedNote.isEmpty ? nil : trimmedNote,
-            projectType: type,
-            projectPriority: priority,
-            projectStatus: status,
+            projectType: input.type,
+            projectPriority: input.priority,
+            projectStatus: input.status,
             creationDate: .now,
             lastUpdated: .now,
-            isPinned: isPinned
+            isPinned: input.isPinned
         )
 
         let release = ProjectRelease(
-            version: version,
+            version: input.version,
             appStoreURL: trimmedAppStoreURL,
             project: project
         )
         project.currentRelease = release
-        release.links = makeUsefulLinks(from: usefulLinks, release: release)
+        release.links = makeUsefulLinks(from: input.usefulLinks, release: release)
 
         if trimmedAppStoreURL.isEmpty == false {
             let lookupResult = try await appStoreLookupService.lookup(appID: trimmedAppStoreURL)
@@ -58,22 +46,13 @@ final class ProjectViewModel {
 
     func updateProject(
         _ project: Project,
-        title: String,
-        details: String,
-        note: String,
-        type: ProjectType,
-        priority: ProjectPriority,
-        status: ProjectStatus,
-        isPinned: Bool,
-        version: String,
-        appStoreURL: String,
-        usefulLinks: [ProjectLinkInput],
+        with input: ProjectInput,
         modelContext: ModelContext
     ) async throws {
-        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedDetails = details.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedNote = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        let trimmedAppStoreURL = appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedTitle = input.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedDetails = input.details.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedNote = input.note.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedAppStoreURL = input.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines)
         let previousAppStoreURL = project.currentRelease?.appStoreURL.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let previousAppStoreAppID = project.currentRelease?.extractedAppStoreAppID ?? ""
         let nextAppStoreAppID = trimmedAppStoreURL.isEmpty
@@ -87,23 +66,23 @@ final class ProjectViewModel {
         project.title = trimmedTitle
         project.details = trimmedDetails.isEmpty ? nil : trimmedDetails
         project.note = trimmedNote.isEmpty ? nil : trimmedNote
-        project.type = type
-        project.priority = priority
-        project.status = status
-        project.isPinned = isPinned
+        project.type = input.type
+        project.priority = input.priority
+        project.status = input.status
+        project.isPinned = input.isPinned
         project.touch()
 
         let release = ensureRelease(
             for: project,
-            version: version,
+            version: input.version,
             appStoreURL: trimmedAppStoreURL,
             modelContext: modelContext
         )
-        replaceUsefulLinks(on: release, with: usefulLinks, modelContext: modelContext)
+        replaceUsefulLinks(on: release, with: input.usefulLinks, modelContext: modelContext)
 
         if trimmedAppStoreURL.isEmpty {
             if previousAppStoreURL.isEmpty == false {
-                disconnectAppStoreRelease(for: release, preservingVersion: version)
+                disconnectAppStoreRelease(for: release, preservingVersion: input.version)
             }
             try modelContext.saveAndReloadActivityWidget()
             return

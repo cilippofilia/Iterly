@@ -54,4 +54,26 @@ struct ProjectViewModelTests {
         #expect(result == .toggled)
         #expect(pinned.isPinned == false)
     }
+
+    @Test func createProjectTrimsAndStoresInput() async throws {
+        let input = ProjectInput(
+            title: "  Iterly  ",
+            details: "",
+            note: "",
+            type: .default,
+            priority: .default,
+            status: .default,
+            isPinned: false,
+            version: "1.0",
+            appStoreURL: "",
+            usefulLinks: []
+        )
+
+        try await viewModel.createProject(input, modelContext: context)
+
+        let projects = try context.fetch(FetchDescriptor<Project>())
+        #expect(projects.count == 1)
+        #expect(projects.first?.title == "Iterly")
+        #expect(projects.first?.details == nil)
+    }
 }
