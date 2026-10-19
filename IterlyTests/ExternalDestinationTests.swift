@@ -61,6 +61,18 @@ struct ExternalDestinationTests {
         #expect(destinations.first?.rawURL == "https://apps.apple.com/app/id1")
     }
 
+    @Test func duplicateLinksAreCollapsed() {
+        let release = makeRelease(
+            appStoreURL: "",
+            links: [("Site", "https://example.com"), ("Site", " https://example.com "), ("Docs", "https://example.com")]
+        )
+
+        let destinations = ExternalDestination.destinations(for: release)
+
+        #expect(destinations.map(\.title) == ["Site", "Docs"])
+        #expect(Set(destinations.map(\.id)).count == destinations.count)
+    }
+
     @Test func nilReleaseHasNoDestinations() {
         #expect(ExternalDestination.destinations(for: nil).isEmpty)
     }

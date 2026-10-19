@@ -57,6 +57,8 @@ struct ExternalDestination: Identifiable, Hashable {
             )
         }
 
-        return destinations
+        // Collapse repeats so `id` stays unique within the list (first occurrence wins).
+        var seen = Set<String>()
+        return destinations.filter { seen.insert($0.id).inserted }
     }
 }
