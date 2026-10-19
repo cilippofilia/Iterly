@@ -70,7 +70,6 @@ struct ProjectDetailView: View {
             .padding([.horizontal, .bottom])
         }
         .navigationTitle(project.title)
-        .contentMargins(.bottom, 70, for: .scrollContent)
         .toolbar {
             ToolbarItem(placement: .platformTopBarTrailing) {
                 Button(action: {

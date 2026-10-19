@@ -15,9 +15,7 @@ struct ProjectsSection: View {
     let allProjectsCount: Int
     let showMore: Bool
 
-    var columns: [GridItem] {
-        [GridItem(.flexible()), GridItem(.flexible())]
-    }
+    private let columns = [GridItem(.adaptive(minimum: 160))]
 
     var body: some View {
         VStack(alignment: .leading) {

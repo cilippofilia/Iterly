@@ -58,7 +58,6 @@ struct DashboardAvailableView: View {
             .readableContentWidth()
         }
         .appNavigationDestinations()
-        .contentMargins(.bottom, 70, for: .scrollContent)
         .onChange(of: activityReloadKey, initial: true) { _, _ in
             activityViewModel.reload(projects: allProjects, tasks: allTasks)
         }

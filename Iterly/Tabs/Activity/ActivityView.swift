@@ -40,7 +40,6 @@ struct ActivityView: View {
                     )
                 }
                 .padding()
-                .padding(.bottom, 24)
                 .readableContentWidth()
             }
             .navigationTitle("Activity")

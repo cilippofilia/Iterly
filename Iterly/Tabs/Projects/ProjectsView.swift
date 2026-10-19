@@ -10,15 +10,7 @@ import SwiftUI
 import IterlyCore
 
 struct ProjectsView: View {
-    @Environment(\.modelContext) private var modelContext
-
-    @State private var viewModel = ProjectViewModel()
-    @State private var projectsViewModel = ProjectsViewModel()
-    @State private var projectPendingDeletion: Project?
-    @State private var showDeletionAlert: Bool = false
-    @State private var showPinLimitAlert: Bool = false
-    @State private var errorMessage: String?
-    @State private var showAddProjectSheet: Bool = false
+    @State private var selectedProject: Project?
     @State private var path = NavigationPath()
 
     @Query(sort: [
@@ -27,133 +19,33 @@ struct ProjectsView: View {
     ])
     private var projects: [Project]
 
-    private let orderedStatuses: [TaskStatus] = [.blocked, .inProgress, .done, .notStarted]
-
     var body: some View {
-        NavigationStack(path: $path) {
-            Group {
-                if projects.isEmpty {
-                    UnavailableProjectsView()
-                } else {
-                    let split = projectsViewModel.splitProjects(projects)
-                    List {
-                        // active projects
-                        if !split.active.isEmpty {
-                            Section {
-                                ForEach(split.active) { project in
-                                    ProjectRowLinkView(
-                                        project: project,
-                                        onTogglePin: {
-                                            togglePin(project)
-                                        },
-                                        onDelete: {
-                                            projectPendingDeletion = project
-                                            showDeletionAlert = true
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-                        // closed projects
-                        if !split.closed.isEmpty {
-                            Section("Closed Projects") {
-                                ForEach(split.closed) { project in
-                                    ProjectRowLinkView(
-                                        project: project,
-                                        onTogglePin: {
-                                            togglePin(project)
-                                        },
-                                        onDelete: {
-                                            projectPendingDeletion = project
-                                            showDeletionAlert = true
-                                        }
-                                    )
-                                    .opacity(0.6)
-                                }
-                            }
-                        }
+        NavigationSplitView {
+            ProjectsListView(projects: projects, selection: $selectedProject)
+        } detail: {
+            NavigationStack(path: $path) {
+                Group {
+                    if let selectedProject {
+                        ProjectDetailView(project: selectedProject, onDelete: clearSelection)
+                    } else {
+                        ContentUnavailableView("Select a Project", systemImage: "folder")
                     }
-                    .platformInsetGroupedListStyle()
-                    .contentMargins(.bottom, 50, for: .scrollContent)
                 }
+                .appNavigationDestinations(onProjectDelete: clearSelection)
             }
-            .platformListRowSpacing(8)
-            .navigationTitle("Projects")
-            .appNavigationDestinations(onProjectDelete: {
-                path = NavigationPath()
-            })
-            .alert("Delete Project?", isPresented: $showDeletionAlert, actions: {
-                Button("Delete", role: .destructive) {
-                    guard let project = projectPendingDeletion else { return }
-                    deleteProject(project)
-                }
-                Button("Cancel", role: .cancel) {
-                    projectPendingDeletion = nil
-                }
-            }, message: {
-                Text("This will permanently remove the project and its tasks.")
-            })
-            .alert("Something Went Wrong", item: $errorMessage) { _ in
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text($0)
-            }
-            .alert("Can't Pin Project", isPresented: $showPinLimitAlert) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text("Only 4 projects can be pinned at the same time.")
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .platformTopBarTrailing) {
-                    createProjectButton
-                }
-            }
-            .sheet(isPresented: $showAddProjectSheet) {
-                NavigationStack {
-                    ProjectFormView()
-                }
-            }
-            .overlay(alignment: .bottom) {
-                if !projects.isEmpty {
-                    ProjectsLegendView(orderedStatuses: orderedStatuses)
-                }
-            }
-            .safeAreaInset(edge: .bottom) {                    CrossPromoBannerView()
-                    .padding(.top, -8)
-            }
+        }
+        .onChange(of: projects.map(\.id)) {
+            selectedProject = ProjectSelection.validated(selectedProject, in: projects)
+        }
+        .onChange(of: selectedProject) {
+            // A new selection starts at the project root.
+            path = NavigationPath()
         }
     }
 
-    var createProjectButton: some View {
-        Button(
-            "Add Project",
-            systemImage: "plus",
-            action: {
-                showAddProjectSheet = true
-            }
-        )
-        .keyboardShortcut("n", modifiers: .command)
-    }
-
-    private func deleteProject(_ project: Project) {
-        do {
-            try viewModel.deleteProject(project, modelContext: modelContext)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        projectPendingDeletion = nil
-        showDeletionAlert = false
-    }
-
-    private func togglePin(_ project: Project) {
-        do {
-            if try viewModel.togglePin(project: project, modelContext: modelContext) == .limitReached {
-                showPinLimitAlert = true
-            }
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+    private func clearSelection() {
+        selectedProject = nil
+        path = NavigationPath()
     }
 }
 

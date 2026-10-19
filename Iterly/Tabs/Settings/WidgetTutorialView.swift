@@ -78,7 +78,6 @@ struct WidgetTutorialView: View {
             }
         }
         .formStyle(.grouped)
-        .safeAreaPadding(.bottom, 60)
         .navigationTitle("Add a Widget")
         .inlineNavigationBarTitle()
     }
