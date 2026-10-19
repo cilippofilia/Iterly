@@ -83,11 +83,9 @@ struct ProjectsView: View {
             }
             .platformListRowSpacing(8)
             .navigationTitle("Projects")
-            .navigationDestination(for: Project.self) { project in
-                ProjectDetailView(project: project, onDelete: {
-                    path = NavigationPath()
-                })
-            }
+            .appNavigationDestinations(onProjectDelete: {
+                path = NavigationPath()
+            })
             .alert("Delete Project?", isPresented: $showDeletionAlert, actions: {
                 Button("Delete", role: .destructive) {
                     guard let project = projectPendingDeletion else { return }

@@ -29,9 +29,7 @@ struct TaskListSectionView: View {
 
     var body: some View {
         if showsNavigationLink {
-            NavigationLink {
-                TaskListView(title: title, tasks: tasks, isToned: isToned)
-            } label: {
+            NavigationLink(value: TaskListRoute(title: title, tasks: tasks, isToned: isToned)) {
                 HStack {
                     HStack(spacing: 4) {
                         Text(title)
