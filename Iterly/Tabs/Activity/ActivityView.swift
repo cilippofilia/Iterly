@@ -46,7 +46,7 @@ struct ActivityView: View {
             .onChange(of: reloadKey, initial: true) { _, _ in
                 viewModel.reload(projects: projects, tasks: tasks)
             }
-            .safeAreaInset(edge: .bottom) {
+            .stableTabBottomInset {
                 CrossPromoBannerView()
             }
         }

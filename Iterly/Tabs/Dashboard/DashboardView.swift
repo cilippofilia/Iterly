@@ -38,7 +38,7 @@ struct DashboardView: View {
                 viewModel: dashboardViewModel
             )
             .navigationTitle("Dashboard")
-            .safeAreaInset(edge: .bottom) {
+            .stableTabBottomInset {
                 CrossPromoBannerView()
             }
         }

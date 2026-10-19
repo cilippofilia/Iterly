@@ -53,7 +53,7 @@ struct ProjectsListView: View {
         }
         .platformListRowSpacing(8)
         .navigationTitle("Projects")
-        .safeAreaInset(edge: .bottom) {
+        .stableTabBottomInset {
             VStack {
                 if !projects.isEmpty {
                     ProjectsLegendView(orderedStatuses: orderedStatuses)
