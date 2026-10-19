@@ -42,6 +42,8 @@ struct IntegrationRowView: View {
                     .labelStyle(.iconOnly)
             }
             .buttonStyle(.plain)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.rect)
         }
     }
 }

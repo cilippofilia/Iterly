@@ -13,20 +13,22 @@ struct FormRowView: View {
     let backgroundColor: Color
     let text: String
 
+    @ScaledMetric(relativeTo: .body) private var side = 28.0
+
     var body: some View {
         HStack {
             Image(systemName: imageName)
                 .resizable()
                 .scaledToFit()
                 .padding(4)
-                .frame(width: 28, height: 28, alignment: .center)
+                .frame(width: side, height: side, alignment: .center)
                 .foregroundStyle(foregroundColor)
                 .background(backgroundColor.gradient)
                 .clipShape(.rect(cornerRadius: AppCornerRadius.small))
             Text(text)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .contentShape(Rectangle())
+        .contentShape(.rect)
     }
 }
 

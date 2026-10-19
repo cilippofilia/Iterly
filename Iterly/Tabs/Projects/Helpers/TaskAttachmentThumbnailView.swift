@@ -11,7 +11,7 @@ import IterlyCore
 struct TaskAttachmentThumbnailView: View {
     let attachment: TaskAttachment
 
-    private let side: CGFloat = 76
+    @ScaledMetric(relativeTo: .body) private var side = 76.0
 
     @State private var image: CGImage?
 

@@ -122,13 +122,9 @@ struct TaskFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button {
+                Button("Save") {
                     saveTask()
-                } label: {
-                    Text("Save")
-                        .foregroundStyle(.white)
                 }
-                .buttonStyle(.borderedProminent)
                 .disabled(!canSave)
             }
         }

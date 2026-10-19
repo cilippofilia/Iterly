@@ -27,17 +27,25 @@ struct ProjectRowLinkView: View {
                 doneAmount: project.doneAmount
             )
             .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button(action: onTogglePin) {
-                    Label("Pin", systemImage: "pin")
-                }
+                pinButton
             }
             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                Button(action: onDelete) {
-                    Label("Delete", systemImage: "trash")
-                }
-                .tint(.red)
+                deleteButton
+                    .tint(.red)
+            }
+            .contextMenu {
+                pinButton
+                deleteButton
             }
         }
         .buttonStyle(.plain)
+    }
+
+    private var pinButton: some View {
+        Button(project.isPinned ? "Unpin" : "Pin", systemImage: "pin", action: onTogglePin)
+    }
+
+    private var deleteButton: some View {
+        Button("Delete", systemImage: "trash", role: .destructive, action: onDelete)
     }
 }

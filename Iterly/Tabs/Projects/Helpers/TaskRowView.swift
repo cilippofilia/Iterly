@@ -35,6 +35,8 @@ struct TaskRowView: View {
             .foregroundStyle(isDone ? .green : .secondary)
             .symbolEffect(.bounce, value: isDone)
             .buttonStyle(.plain)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.rect)
 
             NavigationLink(value: task) {
                 RoundedRectangle(cornerRadius: 2, style: .continuous)

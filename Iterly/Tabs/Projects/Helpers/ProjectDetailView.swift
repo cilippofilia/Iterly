@@ -72,22 +72,11 @@ struct ProjectDetailView: View {
         }
         .navigationTitle(project.title)
         .toolbar {
-            ToolbarItem(placement: .platformTopBarTrailing) {
-                Button(action: {
-                    do {
-                        if try viewModel.togglePin(project: project, modelContext: modelContext) == .limitReached {
-                            showPinLimitAlert = true
-                        }
-                    } catch {
-                        errorMessage = error.localizedDescription
-                    }
-                }) {
-                    Image(systemName: "pin")
-                        .rotationEffect(Angle(degrees: 45))
-                        .symbolVariant(project.isPinned ? .fill : .none)
-                }
+            ToolbarItem(placement: .primaryAction) {
+                Button(project.isPinned ? "Unpin" : "Pin", systemImage: "pin", action: togglePin)
+                    .symbolVariant(project.isPinned ? .fill : .none)
             }
-            ToolbarItem(placement: .platformTopBarTrailing) {
+            ToolbarItem(placement: .primaryAction) {
                 Button("Edit", systemImage: "pencil.line") {
                     projectToEdit = project
                 }
@@ -135,6 +124,16 @@ struct ProjectDetailView: View {
             }
         } message: {
             Text(externalLinkErrorMessage ?? "Something went wrong.")
+        }
+    }
+
+    private func togglePin() {
+        do {
+            if try viewModel.togglePin(project: project, modelContext: modelContext) == .limitReached {
+                showPinLimitAlert = true
+            }
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 

@@ -54,6 +54,8 @@ struct ActivitySummarySectionView: View {
             .labelStyle(.iconOnly)
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(.rect)
             .padding()
         }
         .background(.thinMaterial, in: .rect(cornerRadius: AppCornerRadius.regular))

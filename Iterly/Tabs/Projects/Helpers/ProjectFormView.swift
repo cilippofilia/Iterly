@@ -157,13 +157,14 @@ struct ProjectFormView: View {
                                 }
                             }
                             Spacer()
-                            Button(role: .destructive) {
+                            Button("Remove Link", systemImage: "minus.circle.fill", role: .destructive) {
                                 viewModel.removeUsefulLinkDraft(draft.id)
-                            } label: {
-                                Image(systemName: "minus.circle.fill")
-                                    .foregroundStyle(.red)
                             }
+                            .labelStyle(.iconOnly)
                             .buttonStyle(.plain)
+                            .foregroundStyle(.red)
+                            .frame(minWidth: 44, minHeight: 44)
+                            .contentShape(.rect)
                         }
 
                         HStack {
@@ -212,13 +213,9 @@ struct ProjectFormView: View {
                 }
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button {
+                Button("Save") {
                     Task { await saveAndBumpSignalIfNeeded() }
-                } label: {
-                    Text("Save")
-                        .foregroundStyle(.white)
                 }
-                .buttonStyle(.borderedProminent)
                 .disabled(!viewModel.canSave)
             }
         }

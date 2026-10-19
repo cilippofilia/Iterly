@@ -29,13 +29,7 @@ struct BrainstormFormView: View {
         .inlineNavigationBarTitle()
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button {
-                    dismiss()
-                } label: {
-                    Text("Done")
-                        .foregroundStyle(.white)
-                }
-                .buttonStyle(.borderedProminent)
+                Button("Done", action: dismiss.callAsFunction)
             }
         }
         .onAppear {
