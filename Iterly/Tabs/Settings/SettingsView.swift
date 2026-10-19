@@ -10,7 +10,6 @@ import SwiftData
 
 @MainActor
 struct SettingsView: View {
-
     @Environment(\.modelContext) private var modelContext
     @Environment(\.openURL) private var openURL
     @Environment(RemoveAdsStore.self) private var removeAdsStore

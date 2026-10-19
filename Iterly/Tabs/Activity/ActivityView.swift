@@ -11,7 +11,6 @@ import IterlyCore
 
 @MainActor
 struct ActivityView: View {
-
     @State private var viewModel = ActivityOverviewViewModel()
 
     @Query(sort: [

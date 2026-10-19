@@ -10,7 +10,6 @@ import SwiftUI
 import IterlyCore
 
 struct ProjectsView: View {
-
     @Environment(\.modelContext) private var modelContext
 
     @State private var viewModel = ProjectViewModel()

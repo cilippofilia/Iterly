@@ -45,7 +45,10 @@ struct ContentView: View {
         .onAppear { tabSelection.selected = storedTab }
         .onChange(of: tabSelection.selected) { _, newTab in storedTab = newTab }
         .onOpenURL { url in
-            if let tab = AppTab(deepLink: url) { tabSelection.selected = tab }
+            guard let tab = AppTab(deepLink: url) else { return }
+            // Also update storage so a later onAppear restore cannot overwrite the deep link.
+            storedTab = tab
+            tabSelection.selected = tab
         }
         .task {
             backfillProjectTypesIfNeeded()
