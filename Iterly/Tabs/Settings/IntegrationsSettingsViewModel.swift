@@ -51,10 +51,6 @@ final class IntegrationsSettingsViewModel {
         pendingAction = action
     }
 
-    func clearError() {
-        activeErrorMessage = nil
-    }
-
     func perform(_ action: PendingAction, modelContext: ModelContext) {
         pendingAction = nil
 

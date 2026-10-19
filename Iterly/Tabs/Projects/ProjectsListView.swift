@@ -110,12 +110,13 @@ struct ProjectsListView: View {
     }
 
     private func deleteProject(_ project: Project) {
-        // Clear the split-view selection before the model is deleted.
-        if selection?.id == project.id {
-            selection = nil
-        }
+        let wasSelected = selection?.id == project.id
         do {
             try viewModel.deleteProject(project, modelContext: modelContext)
+            // The detail view is gated on the stored projects, so clearing after deletion is safe.
+            if wasSelected {
+                selection = nil
+            }
         } catch {
             errorMessage = error.localizedDescription
         }

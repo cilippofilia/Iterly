@@ -130,7 +130,7 @@ struct TaskFormView: View {
         }
         .alert("Close Task?", isPresented: $showCloseAlert) {
             Button("Close Task", role: .destructive) {
-                closeTask()
+                Task { closeTask() }
             }
             Button("Cancel", role: .cancel) {}
         } message: {
@@ -143,7 +143,7 @@ struct TaskFormView: View {
         }
         .alert("Delete Task?", isPresented: $showDeleteAlert) {
             Button("Delete Task", role: .destructive) {
-                deleteTask()
+                Task { deleteTask() }
             }
             Button("Cancel", role: .cancel) {}
         } message: {

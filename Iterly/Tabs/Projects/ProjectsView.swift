@@ -25,8 +25,8 @@ struct ProjectsView: View {
         } detail: {
             NavigationStack(path: $path) {
                 Group {
-                    if let selectedProject {
-                        ProjectDetailView(project: selectedProject, onDelete: clearSelection)
+                    if let project = ProjectSelection.validated(selectedProject, in: projects) {
+                        ProjectDetailView(project: project, onDelete: clearSelection)
                     } else {
                         ContentUnavailableView("Select a Project", systemImage: "folder")
                     }

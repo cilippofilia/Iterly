@@ -107,7 +107,7 @@ struct TaskAttachmentsSectionView: View {
             Button("OK", role: .cancel) {}
         } message: {
             if failedImportCount > 0 {
-                Text("Videos larger than 200 MB can't be attached. Skipped: \(oversizedVideoCount).\n\(failedImportCount) items couldn't be imported.")
+                Text("Videos larger than 200 MB can't be attached. Skipped: \(oversizedVideoCount).\n^[\(failedImportCount) item](inflect: true) couldn't be imported.")
             } else {
                 Text("Videos larger than 200 MB can't be attached. Skipped: \(oversizedVideoCount).")
             }
@@ -197,7 +197,7 @@ struct TaskAttachmentsSectionView: View {
             saveErrorMessage = error.localizedDescription
         }
 
-        let failedMessage = failedItems > 0 ? "\(failedItems) items couldn't be imported." : nil
+        let failedMessage = failedItems > 0 ? "^[\(failedItems) item](inflect: true) couldn't be imported." : nil
 
         // Only one alert can be presented at a time: a save error takes priority,
         // then oversized videos (which also report failed items), then failed items alone.

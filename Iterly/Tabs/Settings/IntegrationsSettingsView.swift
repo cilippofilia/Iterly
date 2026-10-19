@@ -47,7 +47,7 @@ struct IntegrationsSettingsView: View {
         }
         .alert(viewModel.pendingAction?.title ?? "", item: $viewModel.pendingAction) { action in
             Button("Remove", role: .destructive) {
-                viewModel.perform(action, modelContext: modelContext)
+                Task { viewModel.perform(action, modelContext: modelContext) }
             }
             Button("Cancel", role: .cancel) {}
         } message: { action in
