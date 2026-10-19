@@ -18,6 +18,7 @@ struct ContentView: View {
 
     @State private var tabSelection = TabSelection()
     @State private var interstitialAd: Ad?
+    @State private var tabRootBottomSafeArea: CGFloat?
 
     var body: some View {
         @Bindable var tabSelection = tabSelection
@@ -42,6 +43,14 @@ struct ContentView: View {
         // Tab bar on iPhone; a sidebar on iPad and macOS.
         .tabViewStyle(.sidebarAdaptable)
         .adaptiveTabBarPlacement()
+        // Lets tab content keep bottom banners still while the sidebar overlay is open
+        // (see `StableTabBottomInsetModifier`).
+        .environment(\.tabRootBottomSafeArea, tabRootBottomSafeArea)
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.safeAreaInsets.bottom
+        } action: { newValue in
+            tabRootBottomSafeArea = newValue
+        }
         .environment(tabSelection)
         .onAppear { tabSelection.selected = storedTab }
         .onChange(of: tabSelection.selected) { _, newTab in storedTab = newTab }

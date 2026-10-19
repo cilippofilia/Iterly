@@ -158,7 +158,7 @@ struct SettingsView: View {
             }
             .formStyle(.grouped)
             .navigationTitle("Settings")
-            .safeAreaInset(edge: .bottom) {
+            .stableTabBottomInset {
                 CrossPromoBannerView()
             }
             .sheet(isPresented: $showRemoveAdsPaywall) {
