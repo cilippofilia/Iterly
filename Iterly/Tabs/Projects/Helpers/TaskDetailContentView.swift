@@ -32,7 +32,11 @@ struct TaskDetailContentView: View {
 
                 TaskInfoBoxView(task: task)
 
-                TaskActionsView(project: project, showBrainstormSheet: $showBrainstormSheet)
+                TaskActionsView(
+                    project: project,
+                    showBrainstormSheet: $showBrainstormSheet,
+                    hasBrainstormNote: task.note?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+                )
 
                 TaskAttachmentsSectionView(task: task)
 

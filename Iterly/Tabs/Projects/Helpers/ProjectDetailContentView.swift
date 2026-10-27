@@ -40,6 +40,7 @@ struct ProjectDetailContentView: View {
                     PrimaryCapsuleActionButton(
                         title: "Brainstorm",
                         systemImage: "brain",
+                        showsIndicator: project.note?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false,
                         action: { showBrainstormSheet = true }
                     )
 
