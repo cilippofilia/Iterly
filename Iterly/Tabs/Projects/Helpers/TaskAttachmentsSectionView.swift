@@ -23,10 +23,6 @@ struct TaskAttachmentsSectionView: View {
     @State private var showOversizedVideoAlert = false
     @State private var errorMessage: String?
 
-    /// Keeps oversized videos out of the SwiftData store; external storage
-    /// avoids bloating the database file, but device space still matters.
-    private let maximumVideoByteCount = 200 * 1_000_000
-
     private var attachments: [TaskAttachment] {
         (task.attachments ?? []).sorted { $0.creationDate < $1.creationDate }
     }
@@ -132,52 +128,12 @@ struct TaskAttachmentsSectionView: View {
         isImporting = true
         defer { isImporting = false }
 
-        var skippedVideos = 0
-        var failedItems = 0
+        let result = await TaskMediaImporter.makeAttachments(from: items)
+        let skippedVideos = result.oversizedVideoCount
+        let failedItems = result.failedItemCount
 
-        for item in items {
-            guard let data = try? await item.loadTransferable(type: Data.self) else {
-                failedItems += 1
-                continue
-            }
-
-            let videoType = item.supportedContentTypes.first { $0.conforms(to: .movie) }
-
-            let attachment: TaskAttachment
-            if let videoType {
-                guard data.count <= maximumVideoByteCount else {
-                    skippedVideos += 1
-                    continue
-                }
-
-                let fileExtension = videoType.preferredFilenameExtension ?? "mov"
-                let thumbnailData = await Task.detached(priority: .userInitiated) {
-                    await VideoThumbnailMaker.thumbnailData(
-                        fromVideoData: data,
-                        fileExtension: fileExtension
-                    )
-                }.value
-
-                attachment = TaskAttachment(
-                    kind: .video,
-                    data: data,
-                    thumbnailData: thumbnailData,
-                    fileExtension: fileExtension,
-                    task: task
-                )
-            } else {
-                let thumbnailData = await Task.detached(priority: .userInitiated) {
-                    ImageThumbnailMaker.thumbnailData(from: data)
-                }.value
-
-                attachment = TaskAttachment(
-                    kind: .image,
-                    data: data,
-                    thumbnailData: thumbnailData,
-                    task: task
-                )
-            }
-
+        for attachment in result.attachments {
+            attachment.task = task
             modelContext.insert(attachment)
 
             if task.attachments == nil {

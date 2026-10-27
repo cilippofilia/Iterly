@@ -11,12 +11,14 @@ import IterlyCore
 struct TaskActionsView: View {
     let project: Project
     @Binding var showBrainstormSheet: Bool
+    var hasBrainstormNote: Bool = false
 
     var body: some View {
         HStack {
             PrimaryCapsuleActionButton(
                 title: "Brainstorm",
                 systemImage: "brain",
+                showsIndicator: hasBrainstormNote,
                 action: {
                     showBrainstormSheet = true
                 }

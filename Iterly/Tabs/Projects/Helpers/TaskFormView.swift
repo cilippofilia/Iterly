@@ -26,6 +26,8 @@ struct TaskFormView: View {
     @State private var priority: TaskPriority
     @State private var hasDueDate: Bool
     @State private var dueDateDraft: Date
+    /// Media picked for a new task; editing uses the task detail screen instead.
+    @State private var pendingAttachments: [TaskAttachment] = []
 
     @State private var isEditing: Bool
     @State private var showCloseAlert: Bool = false
@@ -90,6 +92,10 @@ struct TaskFormView: View {
             Section("Brainstorm") {
                 TextField("Note thoughts or features ideas here...", text: $note, axis: .vertical)
                     .lineLimit(3...6)
+            }
+
+            if isEditing == false {
+                TaskFormAttachmentsSectionView(attachments: $pendingAttachments)
             }
 
             if isEditing {
@@ -177,6 +183,12 @@ struct TaskFormView: View {
 
         modelContext.insert(task)
 
+        for attachment in pendingAttachments {
+            attachment.task = task
+            modelContext.insert(attachment)
+        }
+        task.attachments = pendingAttachments
+
         if project.tasks == nil {
             project.tasks = []
         }
@@ -196,6 +208,8 @@ struct TaskFormView: View {
             // Roll the new task back so a retry doesn't create a duplicate.
             project.tasks?.removeAll { $0.id == task.id }
             parentTask?.subtasks?.removeAll { $0.id == task.id }
+            task.attachments = nil
+            pendingAttachments.forEach(modelContext.delete)
             modelContext.delete(task)
             errorMessage = error.localizedDescription
             return

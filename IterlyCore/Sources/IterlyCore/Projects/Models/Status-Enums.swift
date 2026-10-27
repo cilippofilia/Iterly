@@ -11,6 +11,7 @@ import SwiftUI
 public enum ProjectStatus: String, CaseIterable, Codable, Sendable {
     public static let `default` = Self.plan
 
+    case discovery
     case plan
     case dev
     case beta
@@ -20,6 +21,7 @@ public enum ProjectStatus: String, CaseIterable, Codable, Sendable {
 
     public var title: String {
         switch self {
+        case .discovery: "Discovery"
         case .plan: "Planning"
         case .dev: "Development"
         case .beta: "Beta"
@@ -31,6 +33,7 @@ public enum ProjectStatus: String, CaseIterable, Codable, Sendable {
 
     public var backgroundColor: Color {
         switch self {
+        case .discovery: .teal
         case .plan: .blue
         case .dev: .orange
         case .beta: .purple
