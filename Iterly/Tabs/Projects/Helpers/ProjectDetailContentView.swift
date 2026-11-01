@@ -28,6 +28,13 @@ struct ProjectDetailContentView: View {
 
         ScrollView {
             VStack(alignment: .leading) {
+                #if os(macOS)
+                // iOS shows the title as a large navigation title; the macOS toolbar shows "Projects".
+                Text(project.title)
+                    .font(.largeTitle)
+                    .bold()
+                #endif
+
                 if let details = project.details, !details.isEmpty {
                     Text(details)
                         .foregroundStyle(.secondary)

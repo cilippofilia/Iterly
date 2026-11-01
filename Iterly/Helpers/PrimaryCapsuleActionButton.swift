@@ -31,6 +31,8 @@ struct PrimaryCapsuleActionButton: View {
             }
             .primaryCapsuleButtonStyle()
         }
+        // The label draws its own capsule; the default style adds a bezel behind it on macOS.
+        .buttonStyle(.plain)
         .accessibilityValue(showsIndicator ? Text("Has notes") : Text(""))
     }
 }
