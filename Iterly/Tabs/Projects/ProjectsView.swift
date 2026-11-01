@@ -70,7 +70,19 @@ struct ProjectsView: View {
         }
         #if os(iOS)
         // The two layouts use `path` differently (project pushes vs. pushes within a project).
-        .onChange(of: tabBarPlacement) { clearSelection() }
+        .onChange(of: tabBarPlacement) { _, newPlacement in
+            if newPlacement == .bottomBar {
+                // Into the stack: keep the open project by pushing it. `selectedProject` is left as is,
+                // since changing it would reset `path` again.
+                path = NavigationPath()
+                if let project = ProjectSelection.validated(selectedProject, in: projects) {
+                    path.append(project)
+                }
+            } else {
+                // The stack's path doesn't record which project is open, so the split view starts empty.
+                clearSelection()
+            }
+        }
         #endif
         // Set on the container so macOS shows "Projects" in the column header instead of the app name.
         .navigationTitle("Projects")
