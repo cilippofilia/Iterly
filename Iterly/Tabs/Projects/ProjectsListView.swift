@@ -7,10 +7,11 @@ import SwiftData
 import SwiftUI
 import IterlyCore
 
-/// Sidebar column of the Projects split view. Rows drive `selection`.
+/// Sidebar column of the Projects split view. Rows drive `selection`; with no selection (a plain
+/// navigation stack) rows push their project instead.
 struct ProjectsListView: View {
     let projects: [Project]
-    @Binding var selection: Project?
+    let selection: Binding<Project?>?
 
     @Environment(\.modelContext) private var modelContext
 
@@ -30,7 +31,7 @@ struct ProjectsListView: View {
                 UnavailableProjectsView()
             } else {
                 let split = projectsViewModel.splitProjects(projects)
-                List(selection: $selection) {
+                List(selection: selection) {
                     if !split.active.isEmpty {
                         Section {
                             ForEach(split.active) { project in
@@ -57,6 +58,11 @@ struct ProjectsListView: View {
             VStack {
                 if !projects.isEmpty {
                     ProjectsLegendView(orderedStatuses: orderedStatuses)
+                        #if os(macOS)
+                        // No home indicator or tab bar below it on macOS. The banner can be empty
+                        // even with ads on (offline, still loading), so always pad.
+                        .padding(.bottom)
+                        #endif
                 }
                 CrossPromoBannerView()
             }
@@ -110,12 +116,12 @@ struct ProjectsListView: View {
     }
 
     private func deleteProject(_ project: Project) {
-        let wasSelected = selection?.id == project.id
+        let wasSelected = selection?.wrappedValue?.id == project.id
         do {
             try viewModel.deleteProject(project, modelContext: modelContext)
             // The detail view is gated on the stored projects, so clearing after deletion is safe.
             if wasSelected {
-                selection = nil
+                selection?.wrappedValue = nil
             }
         } catch {
             errorMessage = error.localizedDescription

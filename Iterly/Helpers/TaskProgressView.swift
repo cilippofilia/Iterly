@@ -14,16 +14,18 @@ struct TaskProgressView: View {
     let inProgressAmount: Double
     let doneAmount: Double
 
+    // Missing statuses tint `.clear`: a nil tint falls back to the accent color, and macOS
+    // still draws a small leading cap for a zero-value bar.
     var body: some View {
         ProgressView(value: inProgressAmount + blockedAmount + doneAmount)
-            .tint(doneColor)
+            .tint(doneColor ?? .clear)
             .overlay {
                 ProgressView(value: inProgressAmount + blockedAmount)
-                    .tint(inProgressColor)
+                    .tint(inProgressColor ?? .clear)
             }
             .overlay {
                 ProgressView(value: blockedAmount)
-                    .tint(blockedColor)
+                    .tint(blockedColor ?? .clear)
             }
     }
 

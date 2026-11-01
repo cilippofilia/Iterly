@@ -15,7 +15,9 @@ struct CrossPromoBannerView: View {
     @State private var showRemoveAdsPaywall = false
 
     var body: some View {
-        Group {
+        // A real container, not `Group`: modifiers on an empty `Group` have no view to attach to,
+        // so `.task` never ran and the first ad was never fetched.
+        VStack {
             if removeAdsStore.isAdsRemoved == false, let ad {
                 AdBannerView(
                     advert: ad,

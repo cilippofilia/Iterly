@@ -32,6 +32,8 @@ struct TaskRowView: View {
                 toggleTaskCompletion()
             }
             .labelStyle(.iconOnly)
+            // Larger so the icon fills its 44pt tap area instead of floating in empty space.
+            .font(.title2)
             .foregroundStyle(isDone ? .green : .secondary)
             .symbolEffect(.bounce, value: isDone)
             .buttonStyle(.plain)
