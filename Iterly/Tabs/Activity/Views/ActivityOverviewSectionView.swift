@@ -13,6 +13,8 @@ import IterlyCore
 struct ActivityOverviewSectionView: View {
     @Bindable var viewModel: ActivityOverviewViewModel
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     let isDashboardView: Bool
     let cornerRadius: CGFloat
     var isHeatmapInteractive: Bool = true
@@ -48,7 +50,7 @@ struct ActivityOverviewSectionView: View {
             }
 
             Picker("Range", selection: $viewModel.selectedRange) {
-                ForEach(ActivityRange.allCases) { range in
+                ForEach(viewModel.availableRanges) { range in
                     Text(range.title)
                         .tag(range)
                 }
@@ -67,6 +69,9 @@ struct ActivityOverviewSectionView: View {
         }
         .padding()
         .background(.thinMaterial, in: .rect(cornerRadius: cornerRadius))
+        .onChange(of: horizontalSizeClass, initial: true) { _, sizeClass in
+            viewModel.updateAvailableRanges(isRegularWidth: sizeClass == .regular)
+        }
     }
 }
 

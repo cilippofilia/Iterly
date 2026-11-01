@@ -12,11 +12,17 @@ import IterlyCore
 @Observable
 final class ActivityOverviewViewModel {
     var selectedRange: ActivityRange = .threeMonths
+    private(set) var availableRanges = ActivityOverviewViewModel.compactRanges
     var weeks: [[ActivityDaySummary]] = []
     var monthLabels: [String?] = []
     var summary: ActivityOverviewSummary = .empty
     var selectedDay: ActivityDaySummary?
     var selectedDayEvents: [ActivityEvent] = []
+
+    /// Ranges offered in compact width, where a 3-month grid fills the card.
+    private static let compactRanges: [ActivityRange] = [.threeMonths, .sixMonths, .twelveMonths]
+    /// Ranges offered in regular width, where a 3-month grid would leave most of the card empty.
+    private static let regularRanges: [ActivityRange] = [.sixMonths, .twelveMonths, .allTime]
 
     private let provider: any ActivityDataProviding
     private let nowProvider: () -> Date
@@ -35,7 +41,7 @@ final class ActivityOverviewViewModel {
 
     func reload(projects: [Project], tasks: [ProjectTask]) {
         let now = nowProvider()
-        let interval = selectedRange.dateInterval(relativeTo: now, calendar: calendar)
+        var interval = selectedRange.dateInterval(relativeTo: now, calendar: calendar)
         let events = provider.events(
             for: selectedRange,
             now: now,
@@ -43,6 +49,13 @@ final class ActivityOverviewViewModel {
             tasks: tasks,
             calendar: calendar
         )
+
+        if selectedRange == .allTime {
+            // Start at the earliest activity, but never show less than the 12-month grid.
+            let twelveMonthStart = ActivityRange.twelveMonths.dateInterval(relativeTo: now, calendar: calendar).start
+            let earliestEvent = events.map(\.date).min() ?? twelveMonthStart
+            interval = DateInterval(start: min(earliestEvent, twelveMonthStart), end: now)
+        }
 
         eventsByDay = Dictionary(
             grouping: events,
@@ -63,6 +76,13 @@ final class ActivityOverviewViewModel {
         monthLabels = makeMonthLabels(for: weeks, interval: interval)
         summary = makeSummary(from: daySummaries, interval: interval)
         syncSelection(with: daySummaries)
+    }
+
+    func updateAvailableRanges(isRegularWidth: Bool) {
+        availableRanges = isRegularWidth ? Self.regularRanges : Self.compactRanges
+        if !availableRanges.contains(selectedRange), let firstRange = availableRanges.first {
+            selectedRange = firstRange
+        }
     }
 
     func selectDay(_ day: ActivityDaySummary) {
@@ -88,6 +108,11 @@ final class ActivityOverviewViewModel {
         let formatter = DateFormatter()
         formatter.calendar = calendar
         formatter.setLocalizedDateFormatFromTemplate("MMM")
+        // All time can span several years, so January and the first column carry the year.
+        let yearFormatter = DateFormatter()
+        yearFormatter.calendar = calendar
+        yearFormatter.setLocalizedDateFormatFromTemplate("MMM yy")
+        let showsYear = selectedRange == .allTime
 
         return weeks.enumerated().map { index, week in
             guard let firstDay = week.first?.date else { return nil }
@@ -96,11 +121,12 @@ final class ActivityOverviewViewModel {
             })?.date
 
             if let monthStart {
-                return formatter.string(from: monthStart)
+                let isJanuary = calendar.component(.month, from: monthStart) == 1
+                return (showsYear && isJanuary ? yearFormatter : formatter).string(from: monthStart)
             }
 
             if index == 0 {
-                return formatter.string(from: firstDay)
+                return (showsYear ? yearFormatter : formatter).string(from: firstDay)
             }
 
             return nil
